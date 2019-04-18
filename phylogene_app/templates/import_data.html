@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br/>
+<br/>
+<br/>
+<div style="margin-top:15%;">
+{% if error %}
+ <div class="row">
+    <p class="text-danger"><strong>Le format du fichier est invalide.</strong></p>
+</div>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+    <form method="post" action="#" enctype="multipart/form-data">
+         {% csrf_token %}
+        <div class="form-group files">
+        <label class="text-primary">Upload Your File </label>
+        <input name="csv_file" id="csv_file" type="file" class="form-control" multiple="">
+        </div>
+        <button name="import" type="submit"  class="offset-md-5 btn btn-primary"> Valider </button>
+    </form>
+    </div>
+</div>
+</div>
+{% if info_submit %}
+<div class="container">
+<div id="tab_data" class="row">
+<form  id="form1" autocomplete="off" method="POST" action="">
+    {% csrf_token %}
+    <table id="example" class="display" cellspacing="0">
+    {% for row in fichier %}
+    {% if forloop.first %}
+
+    <thead>
+    <tr>
+    {% for column in row %}
+        <th>{{column}}</th>
+    {% endfor %}
+    </tr>
+    <tr class="column-selector">
+    {% for column in row %}
+    <th > <input type="checkbox"> </th>
+    {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% else %}
+    <tr>
+    {% for column in row %}
+        <td>{{column}}</td>
+    {% endfor %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+    </table>
+    <!--le onclick permet de savoir le nom du button submited-->
+    <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
+
+</form>
+</div>
+<br/>
+<br/>
+</div>
+{% endif %}
+
+<style>
+    .files input {
+    outline: 2px dashed #92b0b3;
+    outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    padding: 120px 0px 85px 35%;
+    text-align: center !important;
+    margin: 0;
+    width: 100% !important;
+}
+.files input:focus{     outline: 2px dashed #92b0b3;  outline-offset: -10px;
+    -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+    transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
+ }
+.files{ position:relative}
+.files:after {  pointer-events: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 50px;
+    right: 0;
+    height: 56px;
+    content: "";
+    background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+    display: block;
+    margin: 0 auto;
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+.color input{ background-color:#f1f1f1;}
+.files:before {
+    position: absolute;
+    bottom: 5px;
+    left: 15;  pointer-events: none;
+    width: 100%;
+    right: 0;
+    height: 57px;
+    content: " Ou glisser le ici. ";
+    display: block;
+    margin: 0 auto;
+    color: #2ea591;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+}
+#tab_data
+{
+background-color: #ffffff;
+}
+table
+{
+color:#0073e6;
+font-size: 16px;
+
+}
+color:fff;
+font-size: 20px;
+.column-selector th {
+  cursor: pointer;
+}
+</style>
+
+{% endblock %}
+
+
+{%block javascripts %}
+{{block.super}}
+<script>
+var data_column_selected=[];
+var label=[];
+$(document).ready(function (){
+    var table = $('#example').DataTable({
+       'ordering':false,
+       'paging':false,
+       'searching':false,
+       'select': 'api'
+    });
+     table.column(0).data().each( function ( value, index )
+       {
+        label.push(value);
+       });
+
+    // Handle click event on a checkbox
+    $('#example').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
+       e.stopPropagation();
+       var array=[];
+       var colIdx = $(this).closest('th').index();
+       if(this.checked){
+            table.column(colIdx).select();
+
+            var tmp= table.columns( { selected: true } ).data().each( function ( value, index ) {
+            array.push(value);
+            data_column_selected=array;
+            } );
+       } else {
+            table.column(colIdx).deselect();
+       }
+    });
+
+    // Handle click event on header cell containg a checkbox
+    $('#example').on('click', 'thead .column-selector th', function(e){
+       $('input[type="checkbox"]', this).trigger('click');
+    });
+});
+</script>
+<script>
+$(document).on('submit','#form1',function(e)
+{
+    e.preventDefault();
+    var nom_algo= this.submited;
+    $.ajax
+    ({
+        type:'POST',
+        url: '{% url 'phylogene_ajax1' %}',
+        data:{
+                tasks: JSON.stringify(data_column_selected),
+                algo: nom_algo,
+                labelSeq: JSON.stringify(label),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+             },
+         success: function()
+        {
+            url_algo ='{% url 'phylogene_run_algo' %}';
+           window.open( url_algo , '_blank');
+        }
+    });
+
+});
+</script>
+{% endblock %}
