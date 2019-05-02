@@ -69,14 +69,28 @@ def reduce_table(table,labelSeq):
     index_ban=[]
     tab_reduce=[]
     label_reduce=[]
-    seq_equal=[]
-    for i in range (taille1):
+    index_sommet={}
+    reverse_index={}
+    for i in range(len(labelSeq)):
+        index_sommet[labelSeq[i]]=i
+        reverse_index[i]= [labelSeq[i]]
+
+    for i in range(taille1):
         verif = 0
         taille2= len(table[i])
         for j in range(taille2):
             if table[i][j] ==0:
-                index_ban.append(i)
-                seq_equal.append([labelSeq[i],labelSeq[j]])
+                if i not in index_ban:
+                    index_ban.append(i)
+                tab1=reverse_index[index_sommet[labelSeq[i]]]
+                tab2=reverse_index[index_sommet[labelSeq[j]]]
+                for elmt in tab1 :
+                    if elmt not in tab2:
+                        tab2.append(elmt)
+                reverse_index[index_sommet[labelSeq[j]]]=tab2
+                reverse_index.pop(index_sommet[labelSeq[i]], None)
+                for bct in reverse_index[index_sommet[labelSeq[j]]]:
+                    index_sommet[bct]=index_sommet[labelSeq[j]]
                 verif=1
 
         if verif==0:
@@ -86,7 +100,7 @@ def reduce_table(table,labelSeq):
                    tmp.append(table[i][cpt])
             tab_reduce.append(tmp)
             label_reduce.append(labelSeq[i])
-    return tab_reduce,label_reduce,seq_equal
+    return tab_reduce,label_reduce,index_sommet,reverse_index
 
 ####################
     # kruskal #
@@ -96,7 +110,7 @@ def fusion(L_1, L_2):
     k, l = len(L_1), len(L_2)
     i, j = 0, 0
     while i < k and j < l:
-        if L_1[i][2] <= L_2[j][2]:
+        if L_1[i][0] <= L_2[j][0]:
             L.append(L_1[i])
             i += 1
         else:

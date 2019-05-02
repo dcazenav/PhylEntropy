@@ -57,6 +57,13 @@
     </table>
     <!--le onclick permet de savoir le nom du button submited-->
     <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
+    <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
+    <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
+    <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
+    <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
+    <input id="submit6" name="test"   class="btn btn-primary" type="submit" value="test" onclick="this.form.submited=this.value;" >
+
+
 
 </form>
 </div>
@@ -150,19 +157,23 @@ $(document).ready(function (){
 
     // Handle click event on a checkbox
     $('#example').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
-       e.stopPropagation();
-       var array=[];
-       var colIdx = $(this).closest('th').index();
-       if(this.checked){
+        e.stopPropagation();
+        var array=[];
+        var colIdx = $(this).closest('th').index();
+        if(this.checked)
+        {
             table.column(colIdx).select();
-
-            var tmp= table.columns( { selected: true } ).data().each( function ( value, index ) {
+        }
+        else
+        {
+            table.column(colIdx).deselect();
+        }
+        var tmp= table.columns( { selected: true } ).data().each( function ( value, index )
+        {
             array.push(value);
             data_column_selected=array;
-            } );
-       } else {
-            table.column(colIdx).deselect();
-       }
+        } );
+
     });
 
     // Handle click event on header cell containg a checkbox
@@ -188,7 +199,7 @@ $(document).on('submit','#form1',function(e)
              },
          success: function()
         {
-            url_algo ='{% url 'phylogene_run_algo' %}';
+           url_algo ='{% url 'phylogene_run_algo' %}';
            window.open( url_algo , '_blank');
         }
     });

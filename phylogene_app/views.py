@@ -53,6 +53,7 @@ def run_algo(request):
         nb_bact = len(data[0])
         chaine = []
         tab_distance=[]
+        nb_var= len(data)
         #création des chaines sring a partir du caractère de chaque colonnes
         for i in range(nb_bact):
             tmp = ''
@@ -66,41 +67,33 @@ def run_algo(request):
         for i in range (len(chaine)):
             for j in range (i+1,len(chaine)):
                 count = sum(1 for a, b in zip(chaine[i], chaine[j]) if a != b)
-                matrice[i][j]=count
-                matrice[j][i]=count
+                matrice[i][j] =count
+                matrice[j][i] =count
         for j in range (nb_bact):
             new=[]
             for i in range (j):
                 if j != 0:
                     new.append(matrice[j][i])
             tab_distance.append(new)
-        tab_reduce, label_reduce, seq_euqal = reduce_table(tab_distance, labelSeq)
+        tab_reduce, label_reduce,index_sommet,reverse_index = reduce_table(tab_distance, labelSeq)
         if algo == "upgma":
             #faire attention a la fontion UPGMA car elle vide les variables tab_reduce et label_reduce
             algo_upgma=UPGMA(tab_reduce,label_reduce)
-            return render(request, 'upgma.html', {"tab_distance": tab_distance, "algo_upgma": algo_upgma})
+            return render(request, 'upgma.html', locals())
         if algo == "kruskal":
-            liste_sommet=label_reduce
-            triplet=[]
-            sommet=[]
-            minimal_tree=[]
-
-            for i in range(len(tab_reduce)):
-                for j in range (len(tab_reduce[i])):
-                    triplet.append((tab_reduce[i][j],liste_sommet[j],liste_sommet[i]))
-            triplet=tri_fusion(triplet)
-            cpt=0
-            while len(sommet) < len(liste_sommet):
-                elmt=triplet[cpt]
-                if elmt[0] and elmt[1] not in sommet:
-                    minimal_tree.append(elmt)
-                    if elmt[0] not in sommet:
-                        sommet.append(elmt[0])
-                    if elmt[1] not in sommet:
-                        sommet.append(elmt[1])
-                cpt+=1
+            minimal_tree=kruskal(tab_reduce,label_reduce)
             return render(request, 'kruskal.html', locals())
-
+        if algo == "neighbor-joining":
+            labels,branche,nom_noeud = neighbor_joining(tab_reduce,label_reduce)
+            return render(request, 'neighbor_joining.html', locals())
+        if algo == "boxplot":
+            data = [list(map(int, elmt)) for elmt in data]
+            return render(request, 'boxplot.html', locals())
+        if algo == "heatmap":
+            return render(request, 'boxplot.html', locals())
+        if algo == "test":
+            # data = [list(map(int, elmt)) for elmt in data]
+            return render(request, 'test2.html', locals())
 
 
 

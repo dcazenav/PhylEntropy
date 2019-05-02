@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="container" style="height: 400px; margin: auto; min-width: 310px; max-width: 600px"></div>
+{% endblock %}
+
+
+{%block javascripts %}
+{{block.super}}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script>
+Highcharts.chart('container', {
+
+    chart: {
+        type: 'boxplot'
+    },
+
+    title: {
+        text: 'Highcharts Box Plot Example'
+    },
+
+    legend: {
+        enabled: false
+    },
+
+    xAxis: {
+        categories:  ['1','2'],
+        title: {
+            text: 'Experiment No.'
+        }
+    },
+
+    yAxis: {
+        title: {
+            text: 'Observations'
+        },
+    },
+
+    series: [
+    {
+        name: 'Observations',
+        data:
+        [
+         [2, 2, 3, 2, 2, 3, 3, 3, 3],
+         [6, 4, 3, 2, 10, 3, 3, 3, 3]
+        ],
+
+    },
+    ]
+
+});
+</script>
+{% endblock %}
