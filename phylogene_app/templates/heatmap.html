@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<br/>
+<br/>
+<br/>
+<br/>
+ <div id="myDiv">
+ </div>
+<style>
+#myDiv
+{
+        background-color: #ffffff;
+}
+</style>
+{% endblock %}
+
+
+{%block javascripts %}
+{{block.super}}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+function generateData(table,entete)
+{
+      var i = 0;
+      var series = [];
+      while (i < table.length)
+      {
+
+        var x = entete[i];
+        var y = table[i];
+        console.log(x);
+        console.log(y);
+        series.push({
+          x: x,
+          y: y
+        });
+        i+=1;
+      }
+      return series;
+}
+var table= {{rows_bact}};
+var series=[];
+var labelSeq={{labelSeq|safe}};
+var entete={{entete_colonne_selected | safe }};
+var cpt=0;
+table.forEach(function(element)
+{
+var tmp={
+      name: labelSeq[cpt],
+      data: generateData(element,entete)
+    }
+series.push(tmp);
+cpt++;
+
+});
+series= series.reverse();
+
+var options = {
+      chart: {
+        height: 350,
+        type: 'heatmap',
+      },
+      stroke: {
+        width: 0
+      },
+      plotOptions: {
+        heatmap: {
+          shadeIntensity: 0.5,
+          colorScale: {
+            ranges: [{
+                from: 0,
+                to: 1,
+                name: '1',
+                color: '#ccffff'
+              },
+              {
+                from: 2,
+                to: 2,
+                name: '2',
+                color: '#00ffff'
+              },
+              {
+                from: 3,
+                to: 3,
+                name: '3',
+                color: '#33cccc'
+              },
+              {
+                from: 4,
+                to: 4,
+                name: '4',
+                color: '#006699'
+              },
+            ],
+          },
+
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          colors: ['#000000']
+        }
+      },
+      series: series,
+
+      xaxis: {
+        type: 'category',
+      },
+      title: {
+        text: 'Rounded (Range without Shades)'
+      },
+
+    }
+
+    var chart = new ApexCharts(
+      document.querySelector("#myDiv"),
+      options
+    );
+
+    chart.render();
+
+</script>
+{% endblock %}

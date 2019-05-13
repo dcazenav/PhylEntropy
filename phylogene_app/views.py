@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import json
 import numpy as np
 from .algo import *
+from django.utils.safestring import SafeString
 
 # Create your views here.
 
@@ -27,9 +28,6 @@ def import_data(request):
     else:
         info_submit = False
 
-    if 'kruskal' in request.POST:
-        return redirect(run_algo)
-
     return render(request,'import_data.html', locals())
 
 
@@ -38,29 +36,41 @@ def ajax_1(request):
     if request.method == 'POST':
         data = json.loads(request.POST['tasks'])
         data2= json.loads(request.POST['labelSeq'])
+        index_entete= json.loads(request.POST['entete'])
         request.session['data_file']=data
         request.session['algo']= request.POST['algo']
         request.session['labelSeq']= data2
-
+        request.session['entete'] = index_entete
         return HttpResponse('')
+
 
 def run_algo(request):
 
     if 'data_file' in request.session and 'algo' in request.session:
         data= request.session['data_file']
+        fichier = request.session['info']
+        entete_colonne_selected = []
+        index_entete= request.session['entete']
         algo= request.session['algo']
         labelSeq= request.session['labelSeq']
         nb_bact = len(data[0])
         chaine = []
+        rows_bact=[]
         tab_distance=[]
         nb_var= len(data)
+        #entete sélectionnersur la première ligne du fichier
+        for j in index_entete:
+            entete_colonne_selected.append(fichier[0][j])
         #création des chaines sring a partir du caractère de chaque colonnes
         for i in range(nb_bact):
             tmp = ''
+            tmp2=[]
             #nombre de variable
             for j in range(len(data)):
                 tmp = tmp + data[j][i]
+                tmp2.append(data[j][i])
             chaine.append(tmp)
+            rows_bact.append(tmp2)
         matrice= (nb_bact,nb_bact)
         matrice = np.zeros(matrice,dtype='int')
 
@@ -75,29 +85,31 @@ def run_algo(request):
                 if j != 0:
                     new.append(matrice[j][i])
             tab_distance.append(new)
-        tab_reduce, label_reduce,index_sommet,reverse_index = reduce_table(tab_distance, labelSeq)
+        tab_reduce, label_reduce,ensemble_seq = reduce_table(tab_distance, labelSeq)
         if algo == "upgma":
             #faire attention a la fontion UPGMA car elle vide les variables tab_reduce et label_reduce
-            algo_upgma=UPGMA(tab_reduce,label_reduce)
+            algo_upgma=UPGMA(tab_distance,labelSeq)
             return render(request, 'upgma.html', locals())
         if algo == "kruskal":
             minimal_tree=kruskal(tab_reduce,label_reduce)
+            minimal_tree=[SafeString(elmt)for elmt in minimal_tree]
             return render(request, 'kruskal.html', locals())
+
         if algo == "neighbor-joining":
-            labels,branche,nom_noeud = neighbor_joining(tab_reduce,label_reduce)
+            labels= neighbor_joining(tab_distance,labelSeq)
             return render(request, 'neighbor_joining.html', locals())
         if algo == "boxplot":
             data = [list(map(int, elmt)) for elmt in data]
             return render(request, 'boxplot.html', locals())
         if algo == "heatmap":
-            return render(request, 'boxplot.html', locals())
+            rows_bact = [list(map(int, elmt)) for elmt in rows_bact]
+            return render(request, 'heatmap.html', locals())
         if algo == "test":
-            # data = [list(map(int, elmt)) for elmt in data]
             return render(request, 'test2.html', locals())
 
 
-
-
+def test(request):
+    return render(request, 'test.html', locals())
 
 
 

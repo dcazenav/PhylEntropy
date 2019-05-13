@@ -29,7 +29,7 @@ def kruskal(table,labels):
     reverse_index = {}
     for i in range(len(table)):
         for j in range(len(table[i])):
-            triplet.append((table[i][j], liste_sommet[j], liste_sommet[i]))
+            triplet.append((int(table[i][j]), liste_sommet[j], liste_sommet[i]))
     triplet = tri_fusion(triplet)
     for i in range(len(liste_sommet)):
         index_sommet[liste_sommet[i]] = i
@@ -57,9 +57,6 @@ def kruskal(table,labels):
 
 def neighbor_joining(table, labels):
     N = len(table)
-    labels_noeud = {}
-    branche = []
-    nb_noeud = 0
     while N > 1:
         if N != 2:
             r = {}
@@ -85,17 +82,12 @@ def neighbor_joining(table, labels):
                 M.append(t)
             i = min_M[0][1]
             j = min_M[0][2]
-        nb_noeud += 1
-        noeud = "U" + str(nb_noeud)
         if N != 2:
             val1 = table[i][j] / 2 + (r[labels[j]] - r[labels[i]]) / (2 * (N - 2))
             val2 = table[i][j] - val1
-            branche.append([val1, labels[j], noeud])
-            branche.append([val2, labels[i], noeud])
+            labels[i] = "(" + labels[j] + ":" + str(val1) + "," + labels[i] + ":" + str(val2) + ")"
         else:
-            branche.append([table[i][j], labels[i], noeud])
-        labels_noeud[noeud] = "(" + labels[j] + "," + labels[i] + ")"
-        labels[i] = "(" + labels[j] + "," + labels[i] + ")"
+            labels[i] = "(" + labels[j] + "," + labels[i] + ":" + str(table[i][j]) + ")"
         del labels[j]
         if N != 2:
             for cpt1 in range(len(table)):
@@ -122,7 +114,7 @@ def neighbor_joining(table, labels):
 
         N -= 1
 
-    return labels,branche,labels_noeud
+    return labels[0]
 
 
 

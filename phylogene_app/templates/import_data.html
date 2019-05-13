@@ -33,7 +33,7 @@
     {% if forloop.first %}
 
     <thead>
-    <tr>
+     <tr>
     {% for column in row %}
         <th>{{column}}</th>
     {% endfor %}
@@ -128,8 +128,6 @@ color:#0073e6;
 font-size: 16px;
 
 }
-color:fff;
-font-size: 20px;
 .column-selector th {
   cursor: pointer;
 }
@@ -142,6 +140,8 @@ font-size: 20px;
 {{block.super}}
 <script>
 var data_column_selected=[];
+var column_name_selected=[];
+var index_column_name_selected=[];
 var label=[];
 $(document).ready(function (){
     var table = $('#example').DataTable({
@@ -159,6 +159,7 @@ $(document).ready(function (){
     $('#example').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
         e.stopPropagation();
         var array=[];
+        var array2=[];
         var colIdx = $(this).closest('th').index();
         if(this.checked)
         {
@@ -168,12 +169,18 @@ $(document).ready(function (){
         {
             table.column(colIdx).deselect();
         }
+        //les données des colonnes sélectionner par l'utilisateurs
         var tmp= table.columns( { selected: true } ).data().each( function ( value, index )
         {
             array.push(value);
-            data_column_selected=array;
         } );
-
+        data_column_selected=array;
+        //les indexes des colonnes selectionné par l'utilisateur
+        var tmp2=table.columns({ selected: true }).indexes().each(function ( value)
+        {
+            array2.push(value);
+        });
+        index_column_name_selected=array2;
     });
 
     // Handle click event on header cell containg a checkbox
@@ -195,6 +202,7 @@ $(document).on('submit','#form1',function(e)
                 tasks: JSON.stringify(data_column_selected),
                 algo: nom_algo,
                 labelSeq: JSON.stringify(label),
+                entete: JSON.stringify(index_column_name_selected),
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
              },
          success: function()

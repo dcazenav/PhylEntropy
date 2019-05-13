@@ -71,6 +71,7 @@ def reduce_table(table,labelSeq):
     label_reduce=[]
     index_sommet={}
     reverse_index={}
+    ensemble=[]
     for i in range(len(labelSeq)):
         index_sommet[labelSeq[i]]=i
         reverse_index[i]= [labelSeq[i]]
@@ -82,13 +83,13 @@ def reduce_table(table,labelSeq):
             if table[i][j] ==0:
                 if i not in index_ban:
                     index_ban.append(i)
+
                 tab1=reverse_index[index_sommet[labelSeq[i]]]
                 tab2=reverse_index[index_sommet[labelSeq[j]]]
                 for elmt in tab1 :
                     if elmt not in tab2:
                         tab2.append(elmt)
                 reverse_index[index_sommet[labelSeq[j]]]=tab2
-                reverse_index.pop(index_sommet[labelSeq[i]], None)
                 for bct in reverse_index[index_sommet[labelSeq[j]]]:
                     index_sommet[bct]=index_sommet[labelSeq[j]]
                 verif=1
@@ -99,8 +100,21 @@ def reduce_table(table,labelSeq):
                 if cpt not in index_ban:
                    tmp.append(table[i][cpt])
             tab_reduce.append(tmp)
-            label_reduce.append(labelSeq[i])
-    return tab_reduce,label_reduce,index_sommet,reverse_index
+    deja=[]
+    for key,value in index_sommet.items():
+        if value not in deja:
+            ensemble.append(reverse_index[value])
+            deja.append(value)
+
+    for i in range(len(ensemble)):
+        chn = ""
+        for j in range(len(ensemble[i])):
+            chn += ensemble[i][j]
+            if j < len(ensemble[i]) - 1:
+                chn += "+"
+        label_reduce.append(chn)
+
+    return tab_reduce,label_reduce,ensemble
 
 ####################
     # kruskal #
