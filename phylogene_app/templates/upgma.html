@@ -18,8 +18,8 @@
 <script src="{% static 'js/raphael-min.js' %}"></script>
 <script src="{% static 'js/jsphylosvg-min.js' %}"></script>
 <script>
-    str_nexus="{{algo_upgma}}"+";";
-    dataObject={newick: str_nexus};
+    str_newick="{{algo_upgma}}"+";";
+    dataObject={newick: str_newick};
     phylocanvas = new Smits.PhyloCanvas
     (
     dataObject,

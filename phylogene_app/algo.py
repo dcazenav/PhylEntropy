@@ -1,4 +1,5 @@
 from .utils import *
+import numpy as np
 
 
 # UPGMA:
@@ -10,10 +11,10 @@ def UPGMA(table, labels):
         x, y = lowest_cell(table)
 
         # Join the table on the cell co-ordinates
-        join_table(table, x, y)
+        val=join_table(table, x, y)
 
         # Update the labels accordingly
-        join_labels(labels, x, y)
+        join_labels(labels, x, y,val)
 
     # Return the final label
     return labels[0]
@@ -87,7 +88,7 @@ def neighbor_joining(table, labels):
             val2 = table[i][j] - val1
             labels[i] = "(" + labels[j] + ":" + str(val1) + "," + labels[i] + ":" + str(val2) + ")"
         else:
-            labels[i] = "(" + labels[j] + "," + labels[i] + ":" + str(table[i][j]) + ")"
+            labels[i] = "(" + labels[j] +":" + str(table[i][j]/2) +"," + labels[i] + ":" + str(table[i][j]/2) + ")"
         del labels[j]
         if N != 2:
             for cpt1 in range(len(table)):
@@ -117,7 +118,16 @@ def neighbor_joining(table, labels):
     return labels[0]
 
 
-
-
+def score_entropy(data):
+    l=len(data)
+    tab=[]
+    for elmt in data:
+        value, counts = np.unique(elmt, return_counts=True)
+        norm_counts = counts / counts.sum()
+        val=-sum([x1*np.log2(x1) for x1 in norm_counts])
+        tab.append(1-val)
+    score=(sum(tab)/l)*100
+    tab=[x2*100 for x2 in tab]
+    return tab,score
 
 

@@ -1,11 +1,31 @@
-{% load static %}
-<html>
-    <head>
-        <title>Phylogène</title>
-    </head>
-
-<body>
-{{entete_colonne_selected}}
+{% extends 'base.html' %}
+{% block content %}
+ <div id="myDiv1">
+ </div>
 <br/>
-</body>
-</html>
+<br/>
+ <div id="myDiv2">
+ </div>
+<style>
+#myDiv
+{
+        background-color: #ffffff;
+}
+</style>
+{% endblock %}
+
+
+{%block javascripts %}
+{{block.super}}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+var info1={{info1|safe}};
+var layout1={{layout1|safe}};
+Plotly.newPlot('myDiv1', info1, layout1);
+
+var info2={{info2|safe}};
+var layout2={{layout2|safe}};
+Plotly.newPlot('myDiv2', info2, layout2);
+
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+ <div id="myDiv1">
+ </div>
+
+{% endblock %}
+
+
+{%block javascripts %}
+{{block.super}}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+var info1={{info1|safe}};
+console.log(info1);
+Plotly.newPlot('myDiv1', info1);
+
+</script>
+{% endblock %}

@@ -4,7 +4,10 @@
 ###############################
 # lowest_cell:
 #   Locates the smallest cell in the table
+
+
 def lowest_cell(table):
+
     # Set default to infinity
     min_cell = float("inf")
     x, y = -1, -1
@@ -22,13 +25,13 @@ def lowest_cell(table):
 
 # join_labels:
 #   Combines two labels in a list of labels
-def join_labels(labels, a, b):
+def join_labels(labels, a, b,val):
     # Swap if the indices are not ordered
     if b < a:
         a, b = b, a
 
     # Join the labels in the first index
-    labels[a] = "(" + labels[a] + "," + labels[b] + ")"
+    labels[a] = "(" + labels[a] + ":"+ str(val)+ "," + labels[b] + ":" + str(val) + ")"
 
     # Remove the (now redundant) label in the second index
     del labels[b]
@@ -38,6 +41,7 @@ def join_labels(labels, a, b):
 #   Joins the entries of a table on the cell (a, b) by averaging their data entries
 def join_table(table, a, b):
     # Swap if the indices are not ordered
+    val= table[a][b] /2
     if b < a:
         a, b = b, a
 
@@ -60,6 +64,8 @@ def join_table(table, a, b):
 
     # Remove the (now redundant) second index row
     del table[b]
+
+    return val
 
 ################################
         # COMMUN #
@@ -136,9 +142,28 @@ def fusion(L_1, L_2):
         L = L + L_1[i:]
     return L
 
+
 def tri_fusion(L):
     if len(L) <= 1:
         return (L)
     else:
         m = len(L) // 2
     return fusion(tri_fusion(L[0:m]), tri_fusion(L[m:]))
+
+
+def countFreq(arr, n):
+    visited = [False for i in range(n)]
+    result=[]
+    for i in range(n):
+
+        if (visited[i] == True):
+            continue
+
+        count = 1
+        for j in range(i + 1, n, 1):
+            if (arr[i] == arr[j]):
+                visited[j] = True
+                count += 1
+        result.append(count/n)
+    return result
+
