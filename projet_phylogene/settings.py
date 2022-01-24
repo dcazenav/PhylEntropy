@@ -76,14 +76,21 @@ WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2', # on utilise l'adaptateur postgresql
+#         'NAME': 'phylogene', # le nom de notre base de donnees creee precedemment
+#         'USER': 'postgres', # attention : remplacez par votre nom d'utilisateur
+#         'PASSWORD': 'groscap971',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # on utilise l'adaptateur postgresql
-        'NAME': 'phylogene', # le nom de notre base de donnees creee precedemment
-        'USER': 'postgres', # attention : remplacez par votre nom d'utilisateur
-        'PASSWORD': 'groscap971',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 

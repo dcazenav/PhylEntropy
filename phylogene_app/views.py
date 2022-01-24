@@ -35,6 +35,11 @@ def import_data(request):
 
     return render(request,'import_data.html', locals())
 
+def base(request):
+    return render(request, 'base.html')
+
+def intro(request):
+    return render(request, 'intro.html')
 
 def ajax_1(request):
 
@@ -96,6 +101,7 @@ def run_algo(request):
             algo_upgma=UPGMA(tab_distance,labelSeq)
             return render(request, 'upgma.html', locals())
         if algo == "kruskal":
+            
             minimal_tree=kruskal(tab_reduce,label_reduce)
             minimal_tree=[SafeString(elmt)for elmt in minimal_tree]
             return render(request, 'kruskal.html', locals())

@@ -1,8 +1,12 @@
-{% extends 'base.html' %}
+
 {% block content %}
 
-  <script src="http://visjs.org/dist/vis.js"></script>
-  <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
+  <!-- <script src="http://visjs.org/dist/vis.js"></script> -->
+  <script src="https://unpkg.com/vis-network@9.1.0/standalone/umd/vis-network.min.js"></script>
+
+  <!-- <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" /> -->
+  <link href="https://unpkg.com/browse/vis-network@9.1.0/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+  
 
  <div id="graph"></div>
 <style>
@@ -13,7 +17,7 @@
 </style>
 {% endblock%}
 {%block javascripts %}
-{{block.super}}
+
 <script type="text/javascript">
 var table= {{minimal_tree | safe}};
 
@@ -23,7 +27,8 @@ var dico= new Map();
 labelSeq.forEach(function(element,i)
 {
     dico.set(element,i);
-    nodes.push({id:i ,label:element,font:{size:15,align:'middle'},shape: 'circle'});
+    // nodes.push({id:i ,label:element,font:{size:15,align:'middle'},shape: 'circle'});
+    nodes.push({id:i ,label:element,font:{size:15,align:'middle',color:"red"},shape: 'circle'});
 });
 var edges = [];
 
@@ -46,5 +51,6 @@ table.forEach(function(element)
 
    var options = {physics:{enabled:false}};
    var graph = new vis.Network(container, data, options);
+
 </script>
 {% endblock%}

@@ -130,4 +130,17 @@ def score_entropy(data):
     tab=[x2*100 for x2 in tab]
     return tab,score
 
+def simpson_di(data):
+    def p(n, N):
+        """ Relative abundance """
+        if n ==  0:
+            return 0
+        else:
+            return float(n)/N
+
+    N = sum(data.values())
+
+    return sum(p(n, N)**2 for n in data.values() if n != 0)
+
+
 

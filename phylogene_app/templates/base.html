@@ -1,5 +1,5 @@
 <html>
-{% load static %}
+ 
 
     <head>
     {% block head %}
@@ -8,275 +8,127 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="keywords" content="">
         <meta name="description" content="">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.css">
+        <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../static/css/phylotree.css"> 
+
     {% endblock %}
-        <title>Phylogène</title>
+    <title>PhylEntropy</title>
 
+    <style>
+      h1 {
+        text-align: center;
+      }
+    </style>
     </head>
-
+    
     <body>
-      <div id="page">
-
-        <div id="header">
-
-        <div class='menu'>
-        <span class='toggle'>
-        <i></i>
-        <i></i>
-        <i></i>
-        </span>
-        <div class='menuContent'>
-        <ul>
-        <li class="text-primary">Home</li>
-        <li class="text-primary">About</li>
-        <li class="text-primary">Contact</li>
-        <li class="text-primary">Testimonial</li>
-        <li class="text-primary">About us </li>
-        </ul>
+      <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
+        <a class="navbar-brand" href="#">PhylEntropy</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'intro' %}">Home </a>
+            
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'phylogene_import' %}">Analysis<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://www.pasteur-guadeloupe.fr/karubionet.html">KaruBioNet</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+          </ul>
+          <!-- <form class="form-inline mt-2 mt-md-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form> -->
         </div>
-        </div>
-
-        </div>
-
-            <div id="content">
-                <br/>
-                <br/>
-              <div class="container">
-                      {% block content %}
-                      {% endblock %}
+        </nav>
+    
+    <div class="container-fluid" style="background-color: #a6aaa9;" >
+    
+      <!--BANDEAU -->
+      <div class="container" style="background-color: #ffffff;">
+        <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col>
+          <div class="col-lg-4"  style="float:none;margin:auto;">
+            <div class="d-flex flex-column text-center height100">
+              <div>
+              </br>
+            </br>
+                <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
               </div>
             </div>
+          </a>	
+          </div>
+          <p>Cliquer sur le logo pour télécharger le fichier csv test:
+
+          <a href="../static/files/exemple_csv.csv" download>
+            <img src="../static/img/index.jpg" alt="csvfiletest" width="104" height="104">
+          </a>
+        </p>
+                      {% block content %}
+                      {% endblock %}
+            
+            <script>
+              function openNav() {
+                document.getElementById("mySidenav").style.width = "250px";
+                document.getElementById("main").style.marginRight = "250px";
+              }
+              
+              function closeNav() {
+                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("main").style.marginRight= "0";
+              }
+
+            </script>
 
 
-            <style>
-            html, body
-            {
-            height:100%;
-            width:100%;
-            padding:0;
-            margin:0;
-            }
-            body
-            {
-            background: url('../static/image_footer.jpg') 50% 0 repeat-y fixed;
-            -webkit-background-size: cover;
-            background-size: cover;
-            //background-position: center;
-            color: rgb(0, 0, 0);
-            }
-            #page {
-              min-height: 100vh;
-              display:flex;
-              flex-direction: column;
+            <center>
+              <table class="footer" width="100%" border="0">
+                
+                <tr> 
+                  
+                  <td align="left" width="37%"><div id="info"><i>Copyright &copy; 2022, <a href="http://web.pasteur-guadeloupe.fr/" target="_blank">Institut Pasteur de la Guadeloupe</a>.   All rights reserved.  </i> </div></td>                
+                  <td height="21" colspan="2"><div id="info" align="right">You can also follow us on <a href="https://www.facebook.com/Institut.Pasteur.Guadeloupe/" target="_blank">Facebook</a></div></td>
+                </tr>
+            <!-- <tr>
+                  <td height="21" colspan="2">&nbsp;</td>
+                  <td width="37%"><div id="info" align="right"><a href="mailto:tburguiere@pasteur-guadeloupe.fr">Thomas Burguiere</a> &nbsp; <a href="mailto:dcouvin@pasteur-guadeloupe.fr">David Couvin</a> </div></td>
+                </tr>-->
+                
+            <tr>
+            <td height="21" colspan="3"><hr></td>
+            </tr>
 
-            }
-            #content{
+            <tr>
+                  <td align="left" width="50%" height="46">Portions of this page are reproduced from work created and <a href="https://google-developers.appspot.com/site-policies" target="_blank">shared by Google</a> and used according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative Commons 3.0 Attribution License</a>.</td>
+            <!--<a href="http://validator.w3.org/check?uri=referer" target="_blank">
+            <img src="http://www.w3.org/Icons/valid-html401" alt="w3c" width="88" height="31" border="0" longdesc="http://validator.w3.org/check?uri=referer" >	</a></td>-->
+                  <td >
+            <div align="center">version &#946; 2.0 </div></td>
+                  <td width="50%">
+            <div align="right"><em>This site uses </em>&nbsp;
+            <a href="https://www.djangoproject.com/" target="_blank">
+            <img src="../static/img/djangologo.png" alt="django" width="68" height="35" border="0">				</a>&nbsp;
+            <a href="https://getbootstrap.com/" target="_blank">
+            <img src="../static/img/bootstraplogo.png" alt="bootstrap" width="68" height="35" border="0">				</a>&nbsp;				
+            </div>
+            </td>
+            </tr>
+            
+              </table>
+            </center>
 
-              flex-grow:1;
-
-            }
-            .footer{
-                min-height:auto;
-                max-height: auto;
-                min-width:auto;
-                max-width: auto;
-                background-color: ivory;
-                text-align: center;
-            }
-            .footer .icon {
-            color: #0073a4;
-            font-size: 20px;
-            padding: 10px;
-            border-right: 1px solid #70726F;
-            transition: all .5s ease;
-            }
-            .footer .icon:first-child {
-            border-left: 1px solid #70726F;
-            }
-            .footer .icon:hover {
-            color: #0073a4;
-            }
-
-            #copyright {
-            color: #000000;
-            }
-            #copyright p {
-            color: #000000;
-            }
-            .menu {
-            height: 70px;
-            width: 70px;
-            right: 70px;
-            top: 20px;
-            text-align: center;
-            position: absolute;
-            background: #fff;
-            overflow: hidden;
-            transition: all 0.2s ease;
-            z-index: 999;
-            }
-            .menu.active {
-            width: calc(100% - 140px);
-            }
-            .menu.active .menuContent * {
-            opacity: 1;
-            }
-            .menu.active span i:nth-child(1) {
-            transform: rotate(-45deg) translate(-50%, -50%);
-            top: 50%;
-            }
-            .menu.active span i:nth-child(2) {
-            transform: translateX(-100px);
-            opacity: 0;
-            }
-            .menu.active span i:nth-child(3) {
-            transform: rotate(45deg) translate(-50%, -50%);
-            top: 50%;
-            }
-            .menu span {
-            width: 70px;
-            height: 70px;
-            position: absolute;
-            right: 0;
-            cursor: pointer;
-            background: #fff;
-            z-index: 1;
-            }
-            .menu span i {
-            position: absolute;
-            transform-origin: 50% 50%;
-            width: 45%;
-            height: 2px;
-            left: 0;
-            right: 0;
-            margin: auto;
-            background-color: #ccc;
-            transition: transform 0.3s ease, opacity 0.1s ease 0.1s;
-            }
-            .menu span i:nth-child(1) {
-            top: 40%;
-            }
-            .menu span i:nth-child(2) {
-            top: 50%;
-            }
-            .menu span i:nth-child(3) {
-            top: 60%;
-            }
-            .menu .menuContent {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            line-height: 40px;
-            right: 0px;
-            text-align: center;
-            }
-            .menu .menuContent * {
-            opacity: 0;
-            }
-            .menu .menuContent ul li {
-            display: inline-block;
-            margin-left: 50px;
-            margin-right: 50px;
-            color: #2d3235;
-            transition: opacity 0.3s ease 0.3s;
-            cursor: pointer;
-            position: relative;
-            }
-            .menu .menuContent ul li:hover:before {
-            opacity: 0.8;
-            top: 13px;
-            left: 20px;
-            }
-            .menu .menuContent ul li:hover:after {
-            opacity: 0.8;
-            bottom: 13px;
-            left: -20px;
-            }
-            .menu .menuContent ul li:before, .menu .menuContent ul li:after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 2px;
-            background: #ccc;
-            transition: all 0.3s ease;
-            }
-            .menu .menuContent ul li:before {
-            transform: rotate(-55deg);
-            left: 60px;
-            top: -30px;
-            opacity: 0;
-            right: 0;
-            margin: auto;
-            }
-            .menu .menuContent ul li:after {
-            transform: rotate(-55deg);
-            left: -60px;
-            bottom: -30px;
-            opacity: 0;
-            right: 0;
-            margin: auto;
-            }
-
-            </style>
-            <div class="footer">
-                <div class="container">
-                    <div class="row text-center d-flex justify-content-center pt-5 mb-3">
-                    <!-- Grid column -->
-                    <div class="col-md-2 mb-3">
-                    <h6 class="text-uppercase font-weight-bold">
-                    <a href="#!">About us</a>
-                    </h6>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-md-2 mb-3">
-                    <h6 class="text-uppercase font-weight-bold">
-                    <a href="#!">Products</a>
-                    </h6>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-md-2 mb-3">
-                    <h6 class="text-uppercase font-weight-bold">
-                    <a href="#!">Awards</a>
-                    </h6>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-md-2 mb-3">
-                    <h6 class="text-uppercase font-weight-bold">
-                    <a href="#!">Help</a>
-                    </h6>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-md-2 mb-3">
-                    <h6 class="text-uppercase font-weight-bold">
-                    <a href="#!">Contact</a>
-                    </h6>
-                    </div>
-                    <!-- Grid column -->
-                    </div>
-                    <div class="row">
-                     <div class="offset-md-8">
-                        <a class="icon" href="#"><i class="fa fa-facebook"></i></a>
-                        <a class="icon" href="#"><i class="fa fa-twitter"></i></a>
-                        <a class="icon" href="#"><i class="fa fa-linkedin"></i></a>
-                        <a class="icon" href="#"><i class="fa fa-google-plus"></i></a>
-                        <a class="icon" href="#"><i class="fa fa-skype"></i></a>
-                     </div>
-                    </div>
-                     <!-- Copyright -->
-                    <div class="footer-copyright text-center py-3">© 2019 Copyright: Institut Pasteur Guadeloupe
-                    </div>
-                </div>
             </div>
       </div>
 {%block javascripts %}

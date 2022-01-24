@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<br/>
-<br/>
-<br/>
+
 <div style="margin-top:15%;">
 {% if error %}
  <div class="row">
@@ -18,7 +16,10 @@
         <label class="text-primary">Upload Your File </label>
         <input name="csv_file" id="csv_file" type="file" class="form-control" multiple="">
         </div>
-        <button name="import" type="submit"  class="offset-md-5 btn btn-primary"> Valider </button>
+        
+       
+            <button name="import" type="submit"  class="offset-md-6 btn btn-primary" > Valider </button>
+        
     </form>
     </div>
 </div>
@@ -27,7 +28,7 @@
 
 <div class="container">
 <div id="tab_data" class="row">
-<form  id="form1" autocomplete="off" method="POST" action="">
+<form  id="form1" autocomplete="on" method="POST" action="">
     {% csrf_token %}
     <table id="example" class="display" cellspacing="0">
     {% for row in fichier %}
