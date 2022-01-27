@@ -6,9 +6,14 @@
 
   <!-- <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" /> -->
   <link href="https://unpkg.com/browse/vis-network@9.1.0/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
-  
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
 
- <div id="graph"></div>
+
+<div class="container-fluid" style="background-color: #a6aaa9;" >
+    <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
+    <div id="graph"></div>
+    <p id="selection"></p>
+     
 <style>
 #graph
 {
@@ -19,16 +24,39 @@
 {%block javascripts %}
 
 <script type="text/javascript">
+
 var table= {{minimal_tree | safe}};
 
 labelSeq={{label_reduce | safe}};
 var nodes=[];
 var dico= new Map();
-labelSeq.forEach(function(element,i)
+
+var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+		  '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+
+//var rand = Math.floor(Math.random()*colorArray.length);
+//var rValue = colorArray[rand];
+
+labelSeq.forEach(function(element,i,color,groupname)
 {
-    dico.set(element,i);
+    dico.set(element,i,color,groupname);
     // nodes.push({id:i ,label:element,font:{size:15,align:'middle'},shape: 'circle'});
-    nodes.push({id:i ,label:element,font:{size:15,align:'middle',color:"red"},shape: 'circle'});
+    nodes.push({
+        id:i ,
+        label:element, 
+        font:{size:15,align:'middle'},
+        color: colorArray[i] ,
+        groupname: "a definir",
+        //color: rValue[i],
+        shape: 'circle'});
 });
 var edges = [];
 
@@ -43,7 +71,9 @@ table.forEach(function(element)
 
 });
 
-   var container = document.getElementById('graph');
+
+var container = document.getElementById('graph');
+
    var data = {
     nodes: nodes,
     edges: edges,
@@ -52,5 +82,9 @@ table.forEach(function(element)
    var options = {physics:{enabled:false}};
    var graph = new vis.Network(container, data, options);
 
+   
 </script>
 {% endblock%}
+
+</div>
+</div>
