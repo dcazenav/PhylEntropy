@@ -150,8 +150,8 @@ $(document).ready(function (){
     var table = $('#example').DataTable({
        'ordering':false,
        'paging':true,
-       'searching':false,
-       'select': 'api'
+       'searching':true,
+       'select': 'multi'
     });
      table.column(0).data().each( function ( value, index )
        {
