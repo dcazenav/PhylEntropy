@@ -1,4 +1,5 @@
 
+
 {% block content %}
 
   <!-- <script src="http://visjs.org/dist/vis.js"></script> -->
@@ -11,7 +12,8 @@
 
 <div class="container-fluid" style="background-color: #a6aaa9;" >
     <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
-    <div id="graph"></div>
+    
+      <div id="graph"></div>
     <p id="selection"></p>
      
 <style>
@@ -82,7 +84,10 @@ var container = document.getElementById('graph');
    var options = {physics:{enabled:false}};
    var graph = new vis.Network(container, data, options);
 
+   //information colonne
    
+  // var tableData = $('#example').DataTable();
+  // var allData = table.columns().data();
 </script>
 {% endblock%}
 
