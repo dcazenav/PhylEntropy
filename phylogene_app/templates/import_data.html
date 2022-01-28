@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
 <div style="margin-top:15%;">
 {% if error %}
  <div class="row">
@@ -147,7 +149,7 @@ var label=[];
 $(document).ready(function (){
     var table = $('#example').DataTable({
        'ordering':false,
-       'paging':false,
+       'paging':true,
        'searching':false,
        'select': 'api'
     });
@@ -186,8 +188,13 @@ $(document).ready(function (){
 
     // Handle click event on header cell containg a checkbox
     $('#example').on('click', 'thead .column-selector th', function(e){
-       $('input[type="checkbox"]', this).trigger('click');
+        $('input[type="checkbox"]', this).trigger('click');
     });
+  
+//      $(function(){
+//    $('#elements input[type="checkbox"]').prop("checked", true).trigger("change");
+//      });
+
 });
 </script>
 <script>
@@ -215,4 +222,5 @@ $(document).on('submit','#form1',function(e)
 
 });
 </script>
+
 {% endblock %}
