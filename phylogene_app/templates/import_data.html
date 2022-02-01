@@ -37,7 +37,14 @@
     {% if forloop.first %}
 
     <thead>
+        
      <tr>
+
+        <!-- Ajout checkboxes "select all" -->
+        <input type="checkbox" id="option-all" onchange="checkAll(this)">
+        <label for="option-all">Select All</label>
+        <br>
+        <!-- Fin ajout-->
          
     {% for column in row %}
         <th>{{column}}</th>
@@ -157,15 +164,16 @@ var data_column_selected=[];
 var column_name_selected=[];
 var index_column_name_selected=[];
 var label=[];
-
-$(document).ready(function (){
-    var table = $('#example').DataTable({
+var table = $('#example').DataTable({
        'ordering':false,
        'paging':true,
        'searching':true,
        'select': 'multi'
     });
-    
+var checkboxes = document.querySelectorAll("input[type = 'checkbox']");
+
+$(document).ready(function (){
+        
      table.column(0).data().each( function ( value, index )
        {
         label.push(value);
@@ -210,6 +218,45 @@ $(document).ready(function (){
 //      });
 
 });
+
+//js pour faire fonctionner la checkboxes "select all"
+
+var array=[];
+var array2=[];
+var colIdx = $(this).closest('th').index();
+
+function checkAll(myCheckbox){
+
+    if(myCheckbox.checked == true){
+        checkboxes.forEach(function(checkbox){
+        checkbox.checked = true;
+         
+        table.columns().select();
+            
+        });
+    }
+    else{
+        checkboxes.forEach(function(checkbox){
+        checkbox.checked = false;
+            
+        table.columns().deselect();
+        
+        });
+    }
+    //les données des colonnes sélectionner par l'utilisateurs
+    var tmp= table.columns().data().each( function ( value, index )
+        {
+            array.push(value);
+        } );
+        data_column_selected=array;
+
+     //les indexes des colonnes selectionné par l'utilisateur
+     var tmp2=table.columns().indexes().each(function ( value)
+        {
+            array2.push(value);
+        });
+        index_column_name_selected=array2;
+}
 </script>
 <script>
 $(document).on('submit','#form1',function(e)
