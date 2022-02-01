@@ -47,6 +47,10 @@ var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
 //var rand = Math.floor(Math.random()*colorArray.length);
 //var rValue = colorArray[rand];
 
+//idée pour selectionner dernier index d'un array
+//var lastItem = anArray.pop();
+var lastItem = window.opener.parent.array[window.opener.parent.array.length-2];
+
 labelSeq.forEach(function(element,i,color,groupname)
 {
     dico.set(element,i,color,groupname);
@@ -56,7 +60,7 @@ labelSeq.forEach(function(element,i,color,groupname)
         label:element, 
         font:{size:15,align:'middle'},
         color: colorArray[i] ,
-        groupname: "a definir",
+        groupname: element.lastItem,
         //color: rValue[i],
         shape: 'circle'});
 });
