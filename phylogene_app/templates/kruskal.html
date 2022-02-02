@@ -33,6 +33,9 @@ labelSeq={{label_reduce | safe}};
 var nodes=[];
 var dico= new Map();
 
+
+
+
 var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
 		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
@@ -49,22 +52,52 @@ var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
 
 //idée pour selectionner dernier index d'un array
 //var lastItem = anArray.pop();
+var firstcolumn = window.opener.parent.array.length ;
+var reachID = window.opener.parent.array[window.opener.parent.array.length-firstcolumn];
 var lastItem = window.opener.parent.array[window.opener.parent.array.length-2];
 
-labelSeq.forEach(function(element,i,color,groupname)
+var maptype = {};
+for(var i = 0; i < reachID.length; i += 1) {
+  maptype[ reachID[i] ] = lastItem[i];
+}
+
+var mapcolor = {};
+for(var i = 0; i < lastItem.length; i += 1) {
+  mapcolor[ lastItem[i] ] = colorArray[i];
+}
+
+
+//arraytest = labelSeq[0].split("+")
+//arraytest.includes("Bact1")
+
+//const array3 = reachID.concat(lastItem);
+//lastItem.forEach(function())
+// function myarray(arraytest, element, i) {
+//   var arraytest = labelSeq[1].split("+"); 
+// }
+
+
+
+labelSeq.forEach(function(element,i,color,groupname,test)
 {
-    dico.set(element,i,color,groupname);
+  
+  dico.set(element,i,color,groupname,test);
     // nodes.push({id:i ,label:element,font:{size:15,align:'middle'},shape: 'circle'});
+    testbact = element.split("+");
+    
     nodes.push({
         id:i ,
         label:element, 
         font:{size:15,align:'middle'},
-        color: colorArray[i] ,
-        groupname: element.lastItem,
+        //color: mapcolor[maptype[element]] ,
+        color: mapcolor[maptype[testbact[0]]] ,
+        groupname: maptype[testbact[0]],
+        //groupname: maptype[element],
         //color: rValue[i],
         shape: 'circle'});
 });
 var edges = [];
+
 
 table.forEach(function(element)
 {
