@@ -14,12 +14,20 @@
     <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
     
       <div id="graph"></div>
+      
     <p id="selection"></p>
      
 <style>
 #graph
 {
         background-color: #ffffff;
+        
+}
+
+#mylegend {
+  float: left;
+  width: 400px;
+  height: 600px;
 }
 </style>
 {% endblock%}
@@ -32,9 +40,6 @@ var table= {{minimal_tree | safe}};
 labelSeq={{label_reduce | safe}};
 var nodes=[];
 var dico= new Map();
-
-
-
 
 var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
@@ -78,9 +83,35 @@ for(var i = 0; i < lastItem.length; i += 1) {
 
 
 
+
+for (var i = 0; i < Object.keys(mapcolor).length; i++) {
+  var container = document.getElementById('graph');
+  var x = -container.clientWidth / 2 + 50;
+  var y = -container.clientHeight / 2 + 50;
+  // var x = -container.clientWidth / 2 + 50;
+  // var y = -container.clientHeight / 2 + 50;
+  var step = 80;
+    nodes.push({
+        fixed: true ,
+        label: Object.keys(mapcolor)[i],
+        font:{size:15,align:'middle'},
+        color: mapcolor[Object.keys(mapcolor)[i]],
+        shape: 'square',
+        x: x,
+        y: y + i * step,
+// ​​    groupname: maptype[testbact[0]],
+// ​​    id: 1000 ,
+// ​​    label: "Internet",
+// ​​    physics: false,
+       
+  });
+}
+  
+
 labelSeq.forEach(function(element,i,color,groupname,testbact)
 {
   
+
   dico.set(element,i,color,groupname,testbact);
     // nodes.push({id:i ,label:element,font:{size:15,align:'middle'},shape: 'circle'});
     testbact = element.split("+");
@@ -95,6 +126,7 @@ labelSeq.forEach(function(element,i,color,groupname,testbact)
         //groupname: maptype[element],
         //color: rValue[i],
         shape: 'circle'});
+
 });
 var edges = [];
 
@@ -110,7 +142,6 @@ table.forEach(function(element)
 
 });
 
-
 var container = document.getElementById('graph');
 
    var data = {
@@ -118,8 +149,18 @@ var container = document.getElementById('graph');
     edges: edges,
    };
 
-   var options = {physics:{enabled:false}};
-   var graph = new vis.Network(container, data, options);
+   
+
+var options = {
+  physics:{
+    enabled:true,
+    
+  },
+  
+};
+
+
+  var graph = new vis.Network(container, data, options);
 
    //information colonne
    
