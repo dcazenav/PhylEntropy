@@ -34,7 +34,7 @@
 {% if info_submit %}
 
 <div class="container">
-<div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 350px; height: 350px;">
+<div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 700px; height: 700px;">
 <form  id="form1" autocomplete="off" method="POST" action="">
     {% csrf_token %}
     <table id="example" class="display" cellspacing="0">
@@ -238,8 +238,10 @@ var array2=[];
 var colIdx = $(this).closest('th').index();
 
 function checkAll(myCheckbox){
+    //var IDbutton = document.getElementById("form1")[4];
 
     if(myCheckbox.checked == true){
+
         checkboxes.forEach(function(checkbox){
         checkbox.checked = true;
          
@@ -255,19 +257,32 @@ function checkAll(myCheckbox){
         
         });
     }
+    
     //les données des colonnes sélectionner par l'utilisateurs
     var tmp= table.columns().data().each( function ( value, index )
         {
             array.push(value);
         } );
-        data_column_selected=array;
+
+        if(array.length=15){
+            data_column_selected=array.slice(1);  
+        }else{
+            data_column_selected=array;
+        }
+        
 
      //les indexes des colonnes selectionné par l'utilisateur
      var tmp2=table.columns().indexes().each(function ( value)
         {
             array2.push(value);
         });
-        index_column_name_selected=array2;
+
+        if(array2.length=15){
+            index_column_name_selected=array2.slice(1);  
+        }else{
+            index_column_name_selected=array2;
+        }
+        
 }
 </script>
 <script>
