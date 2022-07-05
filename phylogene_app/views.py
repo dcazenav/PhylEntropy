@@ -1,11 +1,20 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from django.http import JsonResponse
 import json
 import numpy as np
 from .algo import *
 from django.utils.safestring import SafeString
 from sklearn.decomposition import PCA as sklearnPCA
 from sklearn.preprocessing import StandardScaler
+
+#test map
+
+# Include the `fusioncharts.py` file that contains functions to embed the charts.
+from phylogene_app.static.fusioncharts import FusionCharts
+from collections import OrderedDict
+
+#test map
 
 import pandas as pd
 
@@ -63,6 +72,7 @@ def run_algo(request):
         index_entete= request.session['entete']
         algo= request.session['algo']
         labelSeq= request.session['labelSeq']
+        
         nb_bact = len(data[0])
         chaine = []
         rows_bact=[]
@@ -96,12 +106,13 @@ def run_algo(request):
                     new.append(matrice[j][i])
             tab_distance.append(new)
         tab_reduce, label_reduce,ensemble_seq = reduce_table(tab_distance, labelSeq)
+        
         if algo == "upgma":
             #faire attention a la fontion UPGMA car elle vide les variables tab_reduce et label_reduce
             algo_upgma=UPGMA(tab_distance,labelSeq)
             return render(request, 'upgma.html', locals())
+        
         if algo == "kruskal":
-            
             minimal_tree=kruskal(tab_reduce,label_reduce)
             minimal_tree=[SafeString(elmt)for elmt in minimal_tree]
             return render(request, 'kruskal.html', locals())
@@ -109,12 +120,15 @@ def run_algo(request):
         if algo == "neighbor-joining":
             labels= neighbor_joining(tab_distance,labelSeq)
             return render(request, 'neighbor_joining.html', locals())
+        
         if algo == "boxplot":
             data = [list(map(int, elmt)) for elmt in data]
             return render(request, 'boxplot.html', locals())
+        
         if algo == "heatmap":
             rows_bact = [list(map(int, elmt)) for elmt in rows_bact]
             return render(request, 'heatmap.html', locals())
+        
         if algo =="enthropie":
             tab,score=score_entropy(data)
             trace= dict(x=[xi for xi in entete_colonne_selected ],
@@ -123,6 +137,7 @@ def run_algo(request):
                         type='bar')
             info1=[trace]
             return render(request, 'enthropie.html', locals())
+        
         if algo == "pca":
             panel_color = ['#ff0066', ' #9966ff', ' #ff0000', '#ff9900', '#669900', '#006600', '#cc00ff', '#00ffff',
                            '#ff9900', '#993300']
@@ -209,9 +224,71 @@ def run_algo(request):
             )
             return render(request, 'test2.html', locals())
 
+        #début implementation chartguadeloupe
+        if algo == "chart":
+            minimal_tree=chart(tab_reduce,label_reduce)
+            minimal_tree=[SafeString(elmt)for elmt in minimal_tree]
+        return render(request, 'kruskal.html', locals())
+         #fin implementation chartguadeloupe
 
-def test(request):
-    return render(request, 'test.html', locals())
+# def test(request):
+#     return render(request, 'test.html', locals())
+
+# def testmap(request):
+#     return render(request, 'testmap.html', locals())
+
+""" def chart(request):
+
+  # Chart data is passed to the `dataSource` parameter, as dict, in the form of key-value pairs.
+  dataSource = OrderedDict()
+
+  # The `mapConfig` dict contains key-value pairs data for chart attribute
+  mapConfig = OrderedDict()
+  mapConfig["caption"] = "Average Annual Population Growth"
+  mapConfig["subcaption"] = "1955-2015"
+  mapConfig["numbersuffix"] = "%"
+  mapConfig["includevalueinlabels"] = "1"
+  mapConfig["labelsepchar"] = ":"
+  mapConfig["theme"] = "fusion"
+
+  # Map color range data
+  colorDataObj = { "minvalue": "0", "code" : "#FFE0B2", "gradient": "1",
+    "color" : [
+        { "minValue" : "0.5", "maxValue" : "1", "code" : "#FFD74D" },
+        { "minValue" : "1.0", "maxValue" : "2.0", "code" : "#FB8C00" },
+        { "minValue" : "2.0", "maxValue" : "3.0", "code" : "#E65100" }
+    ]
+  }
+
+  dataSource["chart"] = mapConfig
+  dataSource["colorrange"] = colorDataObj
+  dataSource["data"] = []
+
+
+  # Map data array
+  mapDataArray = [
+    ["NA", "0.82", "1"],
+    ["SA", "2.04", "1"],
+    ["AS", "1.78", "1"],
+    ["EU", "0.40", "1"],
+    ["AF", "2.58", "1"],
+    ["AU", "1.30", "1"]
+  ]
+
+
+  # Iterate through the data in `mapDataArray` and insert in to the `dataSource["data"]` list.
+  # The data for the `data` should be in an array wherein each element of the array is a JSON object
+  # having the `id`, `value` and `showlabel` as keys.
+  for i in range(len(mapDataArray)):
+      dataSource["data"].append({"id": mapDataArray[i][0], "value": mapDataArray[i][1], "showLabel": mapDataArray[i][2] })
+
+  # Create an object for the world map using the FusionCharts class constructor
+  # The chart data is passed to the `dataSource` parameter.
+  fusionMap = FusionCharts("maps/world", "ex1" , "650", "450", "chart-1", "json", dataSource)
+ 
+  # returning complete JavaScript and HTML code, which is used to generate map in the browsers.
+  return  render(request, 'chart.html', {'output' : fusionMap.render(), 'chartTitle': 'Simple Map Using Array'})
+"""
 
 
 
