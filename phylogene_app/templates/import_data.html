@@ -1,91 +1,91 @@
+<!DOCTYPE html>
 {% extends 'base.html' %}
 
 {% block content %}
 
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
 
 
 <div style="margin-top:15%;">
-{% if error %}
- <div class="row">
-    <p class="text-danger"><strong>Le format du fichier est invalide.</strong></p>
-</div>
-{% endif %}
-<div class="row">
-    <div class="col-md-12">
-    <form method="post" action="#" enctype="multipart/form-data">
-         {% csrf_token %}
-        <div class="form-group files">
-        <label class="text-primary">Upload Your File </label>
-        <input name="csv_file" id="csv_file" type="file" class="form-control" multiple="">
-        </div>
-        
-       
-            <button name="import" type="submit"  class="offset-md-6 btn btn-primary" > Valider </button>
-        
-    </form>
+    {% if error %}
+     <div class="row">
+        <p class="text-danger"><strong>Le format du fichier est invalide.</strong></p>
     </div>
-</div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" action="#" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group files">
+                <label class="text-primary">Upload Your File </label>
+                <input name="csv_file" id="csv_file" type="file" class="form-control" multiple="">
+                </div>
+                <button name="import" type="submit"  class="offset-md-6 btn btn-primary" > Valider </button>
+
+            </form>
+        </div>
+    </div>
 </div>
 {% if info_submit %}
 
 <div class="container">
-<div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 700px; height: 700px;">
-<form  id="form1" autocomplete="off" method="POST" action="">
-    {% csrf_token %}
-    <table id="example" class="display" cellspacing="0">
-    {% for row in fichier %}
-    {% if forloop.first %}
+    <div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 700px; height: 700px;">
+        <form  id="form1" autocomplete="off" method="POST" action="">
+            {% csrf_token %}
+            <table id="example" class="display" cellspacing="0">
+            {% for row in fichier %}
+            {% if forloop.first %}
 
-    <thead>
-        
-     <tr>
+                <thead>
+                     <tr>
+                        <!-- Ajout checkboxes "select all" -->
+                        <input type="checkbox" id="option-all" onchange="checkAll(this)">
+                        <label for="option-all">Select All</label>
+                        <br>
+                        <!-- Fin ajout-->
 
-        <!-- Ajout checkboxes "select all" -->
-        <input type="checkbox" id="option-all" onchange="checkAll(this)">
-        <label for="option-all">Select All</label>
-        <br>
-        <!-- Fin ajout-->
-         
-    {% for column in row %}
-        <th>{{column}}</th>
-    {% endfor %}
-    </tr>
-    <tr class="column-selector">
-    {% for column in row %}
-    <th > <input type="checkbox"> </th>
-    {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% else %}
-    <tr>
-    {% for column in row %}
-        <td>{{column}}</td>
-    {% endfor %}
-    </tr>
-    {% endif %}
-    {% endfor %}
-    </tbody>
-    </table>
-</div>
-    <!--le onclick permet de savoir le nom du button submited-->
-    <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
-    <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
-    <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
-    <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
-    <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
-    <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
-    <input id="submit7" name="enthropie"   class="btn btn-primary" type="submit" value="enthropie" onclick="this.form.submited=this.value;" >
-    <input id="submit8" name="chart"   class="btn btn-primary" type="submit" value="chart" onclick="this.form.submited=this.value;" >
-</form>
+                        {% for column in row %}
+                            <th>{{column}}</th>
+                        {% endfor %}
+                    </tr>
 
-<br/>
-<br/>
+                    <tr class="column-selector">
+                        {% for column in row %}
+                            <th > <input type="checkbox"> </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% else %}
+                    <tr>
+                    {% for column in row %}
+                        <td>{{column}}</td>
+                    {% endfor %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        <!--le onclick permet de savoir le nom du button submited-->
+        <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
+        <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
+        <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
+        <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
+        <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
+        <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
+        <input id="submit7" name="enthropie"   class="btn btn-primary" type="submit" value="enthropie" onclick="this.form.submited=this.value;" >
+        <input id="submit8" name="chart"   class="btn btn-primary" type="submit" value="chart" onclick="this.form.submited=this.value;" >
+        <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
+
+    </form>
+    </div>
+    <br/>
+    <br/>
 </div>
 {% endif %}
 
@@ -170,7 +170,6 @@ var data_column_selected=[];
 var column_name_selected=[];
 var index_column_name_selected=[];
 var label=[];
-
 var table = $('#example').DataTable({
        'ordering':false,
        'paging':true,
@@ -258,7 +257,7 @@ function checkAll(myCheckbox){
         });
     }
     
-    //les données des colonnes sélectionner par l'utilisateurs
+     //les données des colonnes sélectionner par l'utilisateurs + on ignore la première colonne du tableau
     var tmp= table.columns().data().each( function ( value, index )
         {
             array.push(value);
@@ -271,7 +270,7 @@ function checkAll(myCheckbox){
         }
         
 
-     //les indexes des colonnes selectionné par l'utilisateur
+     //les indexes des colonnes selectionné par l'utilisateur  on ignore la première colonne du tableau
      var tmp2=table.columns().indexes().each(function ( value)
         {
             array2.push(value);
