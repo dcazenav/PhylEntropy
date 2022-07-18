@@ -1,0 +1,141 @@
+<!-- import math, itertools
+
+def table(labels):
+	count = labels.count
+	return [count(item) for item in set(labels)]
+
+
+def diShannon(tx):
+	s = sum(tx)
+	tx = [x /float(s) for x in tx]
+	return - sum([x*math.log(x) for x in tx])
+
+
+def diSimpson(tx):
+	nn = sum(tx)
+	return sum([x * (x-1) for x in tx])/ float(nn* (nn-1))
+
+out = []
+
+for n in range(14):
+	# between 1 and 17 responses
+	for resp in range(16):
+		lx = itertools.combinations_with_replacement(range(n+2), resp+2)
+		for x in lx:
+			tx = table(x)
+
+			r = (diShannon(tx),diSimpson(tx))
+			if not r in out:
+				out.append(r)
+				print n,resp,r[0],r[1]
+-->
+
+
+	 {% block content %}
+	 <!-- <script src="http://visjs.org/dist/vis.js"></script> -->
+	 <script src="https://unpkg.com/vis-network@9.1.0/standalone/umd/vis-network.min.js"></script>
+
+	 <!-- <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" /> -->
+	 <link href="https://unpkg.com/browse/vis-network@9.1.0/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+	 <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+
+
+   <style>
+   #hunter-gaston
+   {
+		   background-color: #ffffff;
+		   text-align: center;
+
+
+   }
+
+   #mylegend {
+	 float: left;
+	 width: 400px;
+	 height: 600px;
+   }
+   </style>
+   {% endblock%}
+   {%block javascripts %}
+
+   <script type="text/javascript">
+
+   var table= {{minimal_tree | safe}};
+
+   labelSeq={{label_reduce | safe}};
+   var nodes=[];
+   var dico= new Map();
+
+   var firstcolumn = window.opener.parent.array.length ;
+   var reachID = window.opener.parent.array[window.opener.parent.array.length-firstcolumn];
+   var lastItem = window.opener.parent.array[window.opener.parent.array.length-2];
+
+
+	// Début HGDI
+var numberstraintested = lastItem.length ;
+
+var difftypenum = [], count = 0, i = 0;
+for(i=0; i<lastItem.length; i++) {
+    if(difftypenum[lastItem[i]] == undefined) {
+        difftypenum[lastItem[i]] = 1;
+        count++;
+    }
+}
+//console.log(count);
+//test comptage
+var numberstrainpertype = {};
+lastItem.forEach(function (x) { numberstrainpertype[x] = (numberstrainpertype[x] || 0) + 1; });
+
+var sum = 0;
+
+for (const [key, value] of Object.entries(numberstrainpertype)) {
+    console.log(`${key}: ${value}`);
+    //sum =  ${value} ;
+}
+
+//tester dans la console : Object.values(numberstrainpertype).forEach(val => console.log(val));
+
+// fin test
+
+//début fonction calcul somme des souches
+
+function sumStrain(a){
+    var total=0;
+    for(var i in a) {
+        total += a[i]*(a[i]-1);
+    }
+    return total;
+}
+
+//fin fonction calcul somme des souches
+
+var SumNumbDiffStrain = sumStrain(numberstrainpertype) ;
+
+var hdgi1 = 1 / (numberstraintested * (numberstraintested-1));
+
+var hdgi2 = 1-(hdgi1 * SumNumbDiffStrain) ;
+
+// Fin HGDI
+
+document.getElementById('hunter-gaston').innerHTML = hgdi2;
+
+
+
+
+       //window.alert(hdgi2);
+
+
+   </script>
+
+   <div class="container-fluid" style="background-color: #a6aaa9;" >
+	   <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
+
+		 <div id="hunter-gaston" style="text-align: center;">
+             HGDI : <script type="text/javascript">
+            document.write(hdgi2)
+         </script>
+         </div>
+   {% endblock%}
+
+   </div>
+   </div>
