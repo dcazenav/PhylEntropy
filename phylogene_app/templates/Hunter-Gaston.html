@@ -65,7 +65,7 @@ for n in range(14):
    labelSeq={{label_reduce | safe}};
    var nodes=[];
    var dico= new Map();
-
+   
    var firstcolumn = window.opener.parent.array.length ;
    var reachID = window.opener.parent.array[window.opener.parent.array.length-firstcolumn];
    var lastItem = window.opener.parent.array[window.opener.parent.array.length-2];
@@ -86,16 +86,44 @@ for(i=0; i<lastItem.length; i++) {
 var numberstrainpertype = {};
 lastItem.forEach(function (x) { numberstrainpertype[x] = (numberstrainpertype[x] || 0) + 1; });
 
-var sum = 0;
+//var sum = 0;
 
 for (const [key, value] of Object.entries(numberstrainpertype)) {
     console.log(`${key}: ${value}`);
     //sum =  ${value} ;
 }
 
-//tester dans la console : Object.values(numberstrainpertype).forEach(val => console.log(val));
+//tester dans la console : Object.values(numberstrainpertype).forEach(val => console.log(val)); JSON.parse(localStorage.getItem('TableauduCSV'));
 
 // fin test
+
+//test var data
+/* var numbervar = {};
+JSON.parse(localStorage.getItem('TableauduCSV')).forEach(function (x) { numbervar[x] = (numbervar[x] || 0) + 1; });
+
+var sum = 0;
+
+for (const [key, value] of Object.entries(numbervar)) {
+    console.log(`${key}: ${value}`);
+    //sum =  ${value} ;
+}
+ 
+
+ function printArray(arr){
+    for(var i = 0; i < arr.length; i++){
+        if(arr[i] instanceof Array){
+            printArray(arr[i]);
+        }else{
+            console.log(arr[i]);
+        }
+    }
+}
+
+printArray(JSON.parse(localStorage.getItem('TableauduCSV')));
+*/
+
+
+//fin test var data
 
 //début fonction calcul somme des souches
 
@@ -116,10 +144,6 @@ var hdgi1 = 1 / (numberstraintested * (numberstraintested-1));
 var hdgi2 = 1-(hdgi1 * SumNumbDiffStrain) ;
 
 // Fin HGDI
-
-document.getElementById('hunter-gaston').innerHTML = hgdi2;
-
-
 
 
        //window.alert(hdgi2);
