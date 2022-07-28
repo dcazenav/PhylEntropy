@@ -209,8 +209,18 @@ $(document).ready(function (){
         var tmp= table.columns( { selected: true } ).data().each( function ( value, index )
         {
             array.push(value);
+            
         } );
         data_column_selected=array;
+
+       /*  $('#store').on('click', function(){
+            sessionStorage.setItem('myArray', array);
+        });
+
+        $('#get').on('click', function(){
+            var myArraytable = sessionStorage.getItem('myArray');
+            alert(array);
+        }); */
         //les indexes des colonnes selectionné par l'utilisateur
         var tmp2=table.columns({ selected: true }).indexes().each(function ( value)
         {
@@ -223,7 +233,7 @@ $(document).ready(function (){
     $('#example').on('click', 'thead .column-selector th', function(e){
         $('input[type="checkbox"]', this).trigger('click');
     });
-  
+
 //      $(function(){
 //    $('#elements input[type="checkbox"]').prop("checked", true).trigger("change");
 //      });
@@ -263,7 +273,7 @@ function checkAll(myCheckbox){
             array.push(value);
         } );
 
-        if(array.length=15){
+        if(array.length >= 5){
             data_column_selected=array.slice(1);  
         }else{
             data_column_selected=array;
@@ -276,11 +286,17 @@ function checkAll(myCheckbox){
             array2.push(value);
         });
 
-        if(array2.length=15){
+        if(array2.length >= 5){
             index_column_name_selected=array2.slice(1);  
         }else{
             index_column_name_selected=array2;
         }
+
+    $("#option-all").click(function(){
+        localStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
+        var retrievedObject = localStorage.getItem('TableauduCSV');
+        console.log('retrievedObject: ', JSON.parse(retrievedObject));
+    })
         
 }
 </script>
