@@ -45,6 +45,10 @@
                         <input type="checkbox" id="option-all" onchange="checkAll(this)">
                         <label for="option-all">Select All</label>
                         <br>
+
+                        <button name="store" type="button" id="store" class="offset-md-6 btn btn-primary" > Store </button>
+
+                        <button name="reset" type="button" id="reset" class="offset-md-6 btn btn-primary" > Reset </button>
                         <!-- Fin ajout-->
 
                         {% for column in row %}
@@ -214,11 +218,11 @@ $(document).ready(function (){
         data_column_selected=array;
 
        /*  $('#store').on('click', function(){
-            sessionStorage.setItem('myArray', array);
+            localStorage.setItem('myArray', array);
         });
 
         $('#get').on('click', function(){
-            var myArraytable = sessionStorage.getItem('myArray');
+            var myArraytable = localStorage.getItem('myArray');
             alert(array);
         }); */
         //les indexes des colonnes selectionné par l'utilisateur
@@ -292,13 +296,24 @@ function checkAll(myCheckbox){
             index_column_name_selected=array2;
         }
 
-    $("#option-all").click(function(){
+    }
+
+    $("#store").click(function(){
         localStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
         var retrievedObject = localStorage.getItem('TableauduCSV');
-        console.log('retrievedObject: ', JSON.parse(retrievedObject));
+        console.log('retrievedObject: ', JSON.parse(retrievedObject));        
     })
+
+    $("#reset").click(function(){
+        localStorage.clear('TableauduCSV');
+    })
+
+
+
+
+    
         
-}
+
 </script>
 <script>
 $(document).on('submit','#form1',function(e)
