@@ -1,46 +1,14 @@
-<!-- import math, itertools
-
-def table(labels):
-	count = labels.count
-	return [count(item) for item in set(labels)]
-
-
-def diShannon(tx):
-	s = sum(tx)
-	tx = [x /float(s) for x in tx]
-	return - sum([x*math.log(x) for x in tx])
-
-
-def diSimpson(tx):
-	nn = sum(tx)
-	return sum([x * (x-1) for x in tx])/ float(nn* (nn-1))
-
-out = []
-
-for n in range(14):
-	# between 1 and 17 responses
-	for resp in range(16):
-		lx = itertools.combinations_with_replacement(range(n+2), resp+2)
-		for x in lx:
-			tx = table(x)
-
-			r = (diShannon(tx),diSimpson(tx))
-			if not r in out:
-				out.append(r)
-				print n,resp,r[0],r[1]
--->
-
-
 	 {% block content %}
-	 <!-- <script src="http://visjs.org/dist/vis.js"></script> -->
-	 <script src="https://unpkg.com/vis-network@9.1.0/standalone/umd/vis-network.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-
-	 <!-- <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" /> -->
-	 <link href="https://unpkg.com/browse/vis-network@9.1.0/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
-	 <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-
+<script src="https://unpkg.com/vis-network@9.1.0/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<link href="https://unpkg.com/browse/vis-network@9.1.0/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 
    <style>
    #hunter-gaston
@@ -61,9 +29,13 @@ for n in range(14):
    {%block javascripts %}
 
    <script type="text/javascript">
+    $(function() {
+    $(document).ready(function() {
+        $('#example').DataTable();
+      });
+    });
 
    var table= {{minimal_tree | safe}};
-
    labelSeq={{label_reduce | safe}};
    var nodes=[];
    var dico= new Map();
@@ -71,10 +43,9 @@ for n in range(14):
    var firstcolumn = window.opener.parent.array.length ;
    var reachID = window.opener.parent.array[window.opener.parent.array.length-firstcolumn];
    var lastItem = window.opener.parent.array[window.opener.parent.array.length-2];
-
-
+   
 	// Début HGDI
-    var retrievedObject = localStorage.getItem('TableauduCSV');
+    var retrievedObject = sessionStorage.getItem('TableauduCSV');
 
 damienitem = JSON.parse(retrievedObject).length
 
@@ -93,15 +64,14 @@ for (var i = 0; i < damienitem; i++) {
       	  count++;
     	}
 
-	
 	damien.forEach(function (x) { numberstrainpertype[x] = (numberstrainpertype[x] || 0) + 1; });
 
 	for (const [key, value] of Object.entries(numberstrainpertype)) {
   	  console.log(`${key}: ${value}`);
     	sumStrain(numberstrainpertype[`${key}`])
-    	//sum =  ${value} ;
 	}
 
+  //fonction permettant de compter le nombre de souches dans une colonne
 	function sumStrain(a){
   	  var total=0;
     	for(var k in a) {
@@ -109,76 +79,63 @@ for (var i = 0; i < damienitem; i++) {
     	}
     	return total;
 	}
+  //fin fonction
 	
-  
-  
-	var SumNumbDiffStrain = sumStrain(numberstrainpertype) ;
-  
+  //compte le nombre total de souche dans la colonne
+	var SumNumbDiffStrain = sumStrain(numberstrainpertype) ;  
+
+  //calcul découpé en deux partie car je n'ai pas réussi à l'écrire en une seule fois
   hdgi1.push(1 / (numberstraintested * (numberstraintested-1)));
-
   hdgi2.push(1-(hdgi1[i] * SumNumbDiffStrain));
-  
-  
-
 }
 // Fin HGDI
-
-$(document).ready(function () {
-    $('#example').DataTable({
-        data: hdgi2,
-    });
-});
-
-
-       //window.alert(hdgi2);
-
-
    </script>
 
    <div class="container-fluid" style="background-color: #a6aaa9;" >
 	   <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
         <div class="container">
-            <div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 700px; height: 700px;">
-                <form  id="form1" autocomplete="off" method="POST" action="">
-                    {% csrf_token %}
-                    <table id="example" class="display" cellspacing="0">
-                    {% for row in fichier %}
-                    {% if forloop.first %}
-        
-                        <thead>
-                             <tr>    
-                                {% for column in row %}
-                                    <th>{{column}}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
+          <div id="tab_data" class="table-responsive" >
+            <form  id="form1" autocomplete="off" method="POST" action="">
+            
+                <table id="example"style="width:100%" class="table table-striped table-bordered">
+                     <thead>
+                       <tr>
+                           <th scope="col" class="col-3">Column tested</th>
+                           <th scope="col" class="col-3">HGDI value</th>
+                       </tr>
+                     </thead>
+                       <tbody id="tbody"></tbody>
 
-                        <tbody>
-                            {% else %}
-                            <tr>
-                            {% for column in row %}
-                                <td>{{column}}</td>
-                            {% endfor %}
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
-                        </tbody>
+                        <script> 
+
+                            var toto = sessionStorage.getItem('test_head');
+
+                            var tata = JSON.parse(toto) ;
+
+                            var re = /\s*(\t|$)\s*/;
+
+                            var nameList = tata.split(re);
+
+                            nameList.forEach((item, index, arr) => {
+                              if (item === "\t") {
+                                arr.splice(index, 1);
+                              }
+                            });
                         
+                            var tbody = document.getElementById('tbody');
 
+                            for (var i = 0; i < hdgi2.length; i++) {
+                                var tr = "<tr>";
+                                tr += "<td>"+nameList[i+1]+"</td>" + "<td>" + hdgi2[i] + "</td></tr>";
+                                tbody.innerHTML += tr;
+                            }</script>
                     </table>
                 </form>
             </div>
         </div>
        </div>
    </div>
-   {% endblock %}
-
-		 <div id="hunter-gaston" style="text-align: center;">
-             HGDI : <script type="text/javascript">
-            document.write(hdgi2)
-         </script>
-         </div>
-   
+   {% endblock %} 
 
    </div>
    </div>
