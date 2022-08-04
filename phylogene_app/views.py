@@ -119,6 +119,11 @@ def run_algo(request):
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'Hunter-Gaston.html', locals())
+        
+        if algo == "Shannon-Entropy":
+            minimal_tree = kruskal(tab_reduce, label_reduce)
+            minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
+            return render(request, 'Shannon-Entropy.html', locals())
 
         if algo == "neighbor-joining":
             labels = neighbor_joining(tab_distance, labelSeq)
@@ -132,14 +137,14 @@ def run_algo(request):
             rows_bact = [list(map(int, elmt)) for elmt in rows_bact]
             return render(request, 'heatmap.html', locals())
 
-        if algo == "enthropie":
+        if algo == "Entropy":
             tab, score = score_entropy(data)
             trace = dict(x=[xi for xi in entete_colonne_selected],
                          y=[yi for yi in tab],
                          name="conservation",
                          type='bar')
             info1 = [trace]
-            return render(request, 'enthropie.html', locals())
+            return render(request, 'Entropy.html', locals())
 
         if algo == "pca":
             panel_color = ['#ff0066', ' #9966ff', ' #ff0000', '#ff9900', '#669900', '#006600', '#cc00ff', '#00ffff',
@@ -227,14 +232,12 @@ def run_algo(request):
             )
             return render(request, 'test2.html', locals())
 
-        # début implementation chartguadeloupe
-        if algo == "chart":
-            minimal_tree = chart(tab_reduce, label_reduce)
+        
+        if algo == "Global Map":
+            minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-        return render(request, 'kruskal.html', locals())
-        # fin implementation chartguadeloupe
-
-
+            return render(request, 'chart.html', locals())
+        
 # def test(request):
 #     return render(request, 'test.html', locals())
 
