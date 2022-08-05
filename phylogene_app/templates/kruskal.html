@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+{% load static %}
+
+<head>
+  {% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
+  <title>Kruskal</title>
+  {% endblock %}
+</head> 
 
 {% block content %}
 
@@ -12,6 +21,7 @@
 
 
 <div class="container-fluid" style="background-color: #a6aaa9;" >
+  <h1 style="text-align: center;" >Kruskal</h1>
     <div class="col-lg-12" style="float:none;margin:auto;background-color: #ffffff;">
     
       <div id="graph"></div>

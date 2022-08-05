@@ -1,4 +1,14 @@
-	 {% block content %}
+{% load static %}
+
+<head>
+  {% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
+  <title>Hunter-Gaston</title>
+  {% endblock %}
+</head> 
+
+{% block content %}
 <script src="https://unpkg.com/vis-network@9.1.0/standalone/umd/vis-network.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -92,6 +102,7 @@ for (var i = 0; i < damienitem; i++) {
    </script>
 
    <div class="container-fluid" style="background-color: #a6aaa9;" >
+    <h1 style="text-align: center;" >Hunter-Gaston</h1>
 	   <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
         <div class="container">
           <div id="tab_data" class="table-responsive" >
