@@ -1,0 +1,78 @@
+{% load static %}
+
+<head>
+  {% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
+  <title>Global City Map</title>
+  {% endblock %}
+</head> 
+
+{% block content %}
+<html>
+  <head>
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      var retrievedObject = sessionStorage.getItem('TableauduCSV');
+      var damienitem = JSON.parse(retrievedObject).length
+      var damien = JSON.parse(retrievedObject)[damienitem-1]
+      
+      var testchart = [];
+      var numberstrainpertype = {};
+
+      google.charts.load('current', {
+        callback: function () {
+          var data=[];
+          var numberstrainpertype = {};
+          var city = [] ;
+          var cityvalue = [] ;
+          //var area = ["181.76", "15151", "42.0", "874.8", "117.27", "130.17", "158.9", "243.60", "140.7", "102.41", "213.44", "43.43", "11", "987"] ;
+          var Header= ['City', 'Population'];
+          data.push(Header);
+          damien.forEach(function (x) { numberstrainpertype[x] = (numberstrainpertype[x] || 0) + 1; });
+
+          city = Object.keys(numberstrainpertype);
+          cityvalue = Object.values(numberstrainpertype);
+          console.log(city);
+          console.log(cityvalue);
+          //console.log(area[1]);
+
+          for (var i = 0; i < damienitem; i++) {
+            var temp=[];
+            temp.push(city[i]);
+            temp.push(cityvalue[i]);
+            //temp.push(area[i]);
+            data.push(temp);
+          }     
+           
+          var options = {
+            //region: 'FR',
+            displayMode: 'markers',
+            colorAxis: {colors: ['green', 'blue']}                    
+           };
+
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+          var chartdata = new google.visualization.arrayToDataTable(data);
+              
+          chart.draw(chartdata, options);
+        },
+        'packages':['geochart'],
+        'mapsApiKey': 'AIzaSyB-lhH2kDyJ5t5ZSmFG7lksEwukziCA3pc'
+      });
+
+    </script>
+    {% endblock%}
+  </head>
+  <body>
+    <h1 style="text-align: center;" >Global City Map</h1>
+    <div id="regions_div" style="width: 900px; height: 500px; margin: 0 auto;"></div>
+  </body>
+</html>
+
+
+
+
+
+      
+     
