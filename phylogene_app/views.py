@@ -237,6 +237,12 @@ def run_algo(request):
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'chart.html', locals())
+
+        if algo == "Global City Map":
+            minimal_tree = kruskal(tab_reduce, label_reduce)
+            minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
+            return render(request, 'chartcity.html', locals())
+        
         
 # def test(request):
 #     return render(request, 'test.html', locals())
