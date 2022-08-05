@@ -6,6 +6,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 
 
 
@@ -32,7 +33,7 @@
 {% if info_submit %}
 
 <div class="container">
-    <div id="tab_data" class="row" style="position: relative; overflow: scroll; width: 100%; max-height: 700px; height: 700px;">
+    <div id="tab_data" class="row" style="position: relative; width: 100%; max-height: 800px; height: 800px;">
         <form  id="form1" autocomplete="off" method="POST" action="">
             {% csrf_token %}
             <table id="example" class="display" cellspacing="0">
@@ -46,9 +47,11 @@
                         <label for="option-all">Select All</label>
                         <br>
 
-                        <button name="store" type="button" id="store" class="offset-md-6 btn btn-primary" > Store </button>
-
-                        <button name="reset" type="button" id="reset" class="offset-md-6 btn btn-primary" > Reset </button>
+                        <div class="row">
+                            <button name="store" type="button" id="store" class="col-md-3 offset-md-3 btn btn-primary" > Store </button>
+                            <button name="reset" type="button" id="reset" class="col-md-3 offset-md-2 btn btn-primary" > Reset </button>
+                        </div>
+                        <br>
                         <!-- Fin ajout-->
                         <tr id="test_head">
                         {% for column in row %}
@@ -87,6 +90,7 @@
         <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
         <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
         <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
+        <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
     </form>
     </div>
     <br/>
@@ -311,6 +315,12 @@ function checkAll(myCheckbox){
     })
 
     var test_head = document.getElementById("test_head"); 
+
+    $("#submit3").click(function(){
+        data_column_selected = array.slice(0, array.length-2);
+        console.log(array);
+        index_column_name_selected = array2.slice(0, array2.length-2) ;
+    })
     
     $("#submit9").click(function(){
         sessionStorage.setItem('test_head', JSON.stringify(test_head.innerText));
@@ -319,12 +329,6 @@ function checkAll(myCheckbox){
     $("#submit10").click(function(){
         sessionStorage.setItem('test_head', JSON.stringify(test_head.innerText));
     })
-
-
-
-
-    
-        
 
 </script>
 <script>
