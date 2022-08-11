@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-
 {% block content %}
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 
-
-
-<div style="margin-top:15%;">
+<div style="margin-top: 1em;">
     {% if error %}
      <div class="row">
         <p class="text-danger"><strong>Le format du fichier est invalide.</strong></p>
@@ -32,11 +27,11 @@
 </div>
 {% if info_submit %}
 
-<div class="container">
-    <div id="tab_data" class="row" style="position: relative; width: 100%; max-height: 800px; height: 800px;">
-        <form  id="form1" autocomplete="off" method="POST" action="">
+<div class="container" style="margin-bottom: 1em;">
+    <div id="tab_data" class="row" style="position: relative; table-layout: auto;">
+        <form  id="form1" autocomplete="off" method="POST" action="" >
             {% csrf_token %}
-            <table id="example" class="display" cellspacing="0">
+            <table id="example" class="display table table-striped table-bordered table-hover responsive nowrap cell-border compact stripe" cellspacing="0" cellpadding="0">
             {% for row in fichier %}
             {% if forloop.first %}
 
@@ -79,19 +74,29 @@
                 </tbody>
             </table>
 
-        <!--le onclick permet de savoir le nom du button submited-->
-        <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
-        <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
-        <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
-        <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
-        <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
-        <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
-        <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
-        <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
-        <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
-        <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
-        <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
-    </form>
+            <!--le onclick permet de savoir le nom du button submited-->
+            <div>
+                <h6>Graph :
+                    <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
+                    <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
+                    <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
+                </h6>
+                <h6>Statistics :
+                    <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
+                    <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
+                </h6>                       
+                <h6>Maps :
+                    <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
+                    <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
+                </h6>
+                <h6>Metrics :
+                    <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
+                    <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
+                    <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
+                    <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
+                </h6>         
+            </div>       
+        </form>
     </div>
     <br/>
     <br/>
@@ -184,7 +189,7 @@ var table = $('#example').DataTable({
        'paging':true,
        'searching':true,
        'select': 'multi',
-        
+
         scrollCollapse: true,
         fixedColumns:   {
             left: 1
@@ -316,10 +321,27 @@ function checkAll(myCheckbox){
 
     var test_head = document.getElementById("test_head"); 
 
+    $("#submit1").click(function(){
+        console.log("1:"+array);
+        console.log("2:"+data_column_selected);
+    })
+
+
     $("#submit3").click(function(){
-        data_column_selected = array.slice(0, array.length-2);
-        console.log(array);
-        index_column_name_selected = array2.slice(0, array2.length-2) ;
+        //data_column_selected = data_column_selected.slice(0, data_column_selected.length-2);
+        //data_column_selected.slice(0, data_column_selected.length-2);
+        //var retrievedObject = sessionStorage.getItem('TableauduCSV');
+        //data_column_selected =  JSON.parse(retrievedObject);
+        //console.log("1:" + data_column_selected);
+        //index_column_name_selected = array2.slice(0, array2.length-2) ;
+        
+        //index_column_name_selected = [];
+        if (document.getElementById("option-all").checked == true)
+	{
+		data_column_selected = array.slice(0, array.length-2);
+        console.log("2:"+data_column_selected);
+        index_column_name_selected = array2.slice(0, array2.length-2);
+	}
     })
     
     $("#submit9").click(function(){
@@ -330,8 +352,6 @@ function checkAll(myCheckbox){
         sessionStorage.setItem('test_head', JSON.stringify(test_head.innerText));
     })
 
-</script>
-<script>
 $(document).on('submit','#form1',function(e)
 {
     e.preventDefault();
