@@ -20,36 +20,51 @@
         var retrievedObject = sessionStorage.getItem('TableauduCSV');
 
         var test = JSON.parse(retrievedObject)
+        var typecol = test.slice(test.length-2, test.length-1);
+        var countrycol = test.slice(test.length-1, test.length);
         var damienitem = JSON.parse(retrievedObject).length
         var typo = [];
         var countrymen = [];
         var dataset1 = [];
-        var number = [142297, 272200, 285511, 310924, 312368, 336490, 400272, 424141, 549956, 557211, 659606, 785194, 903406, 975969];
+        var newArray2 = new Map();
+        var newArray = typecol.map((e, i) => e + "+" + countrycol[i]);
         // set the data
         anychart.onDocumentReady(function() {
-         for(var i = damienitem-2; i < damienitem; i ++) {
+         /*
+         console.log(newArray[1].substring(0, newArray[1].indexOf('+')));
+         console.log(newArray[1].substring(newArray[1].indexOf('+')+ 1));
+*/
 
-          for (var j = 0; j < damienitem; j++) {
-           if (i = damienitem-2){
-            typo.push(test[i][j]) ;
-            console.log("Type: " + typo[i]) ;
-           }if (i = damienitem-1){
-            countrymen.push(test[i][j]) ;
-            console.log("Country: " + countrymen[i])
-           }
+         for (var j = 0; j < typecol[0].length; j++) {
+          var temp = typecol[0][j] + "+" + countrycol[0][j]
+          console.log(typecol[0][j] + "+" + countrycol[0][j]);
+          newArray2.set(temp, newArray2.get(temp) + 1 || 1);
+
+         }
+
+         var newArray2keys = Array.from( newArray2.keys() );
+         var newArray2values = Array.from( newArray2.values() );
+
+         for(var i = 0; i < newArray2keys.length; i ++) {
+
+          typo.push(newArray2keys[i].substring(0, newArray2keys[i].indexOf('+'))) ;
+          countrymen.push(newArray2keys[i].substring(newArray2keys[i].indexOf('+')+ 1));
 
            //Object of object dataset pour remplacer data
            var dataset = {};
-           dataset["x"] = typo[j];
-           dataset["value"] = number[j];
-           dataset["category"] = countrymen[j];
+           //var tmpdataset = ;
+           dataset["x"] = typo[i];
+           dataset["value"] = newArray2values[i];
+           dataset["category"] = countrymen[i];
 
            dataset1.push(dataset);
 
 
           }
-         }
 
+
+
+          /* entrée de référence
 
           var data = [
             {"x": "Mandarin chinese", "value": 1090000000, category: "Sino-Tibetan"},
@@ -67,14 +82,14 @@
             {"x": "Japanese", "value": 129000000, category: "Japonic"},
             {"x": "German", "value": 129000000, category: "Indo-European"},
             {"x": "Persian", "value": 121000000, category: "Indo-European"}
-          ];
+          ];*/
 
          // create a tag (word) cloud chart
           //var chart = anychart.tagCloud(data);
          var chart = anychart.tagCloud(dataset1);
 
            // set a chart title
-          chart.title('15 most spoken languages')
+          chart.title('Wordcloud based on the two last columns')
           // set an array of angles at which the words will be laid out
           chart.angles([0])
           // enable a color range
