@@ -31,7 +31,7 @@
     <div id="tab_data" class="row" style="position: relative; table-layout: auto;">
         <form  id="form1" autocomplete="off" method="POST" action="" >
             {% csrf_token %}
-            <table id="example" class="display table table-striped table-bordered table-hover responsive nowrap cell-border compact stripe" cellspacing="0" cellpadding="0">
+            <table id="example" style="width:100%;" class="display table table-striped table-bordered table-hover responsive nowrap cell-border compact stripe" cellspacing="0" cellpadding="0">
             {% for row in fichier %}
             {% if forloop.first %}
 
@@ -94,7 +94,11 @@
                     <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                     <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                     <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
-                </h6>         
+                </h6>
+                <h6>Machine Learning :
+                    <input id="submit12" name="Rtest"   class="btn btn-primary" type="submit" value="Rtest" onclick="this.form.submited=this.value;" >
+                </h6>
+
             </div>       
         </form>
     </div>
@@ -102,9 +106,8 @@
     <br/>
 </div>
 {% endif %}
-
 <style>
-    .files input {
+.files input {
     outline: 2px dashed #92b0b3;
     outline-offset: -10px;
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
@@ -176,7 +179,6 @@ font-size: 16px;
 
 {% endblock %}
 
-
 {%block javascripts %}
 {{block.super}}
 <script>
@@ -189,11 +191,8 @@ var table = $('#example').DataTable({
        'paging':true,
        'searching':true,
        'select': 'multi',
-
-        scrollCollapse: true,
-        fixedColumns:   {
-            left: 1
-        }
+        scrollX: true,
+        scrollCollapse: false,
     });
 var checkboxes = document.querySelectorAll("input[type = 'checkbox']");
 
@@ -205,7 +204,7 @@ $(document).ready(function (){
        });
 
     // Handle click event on a checkbox
-    $('#example').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
+    $('#example_wrapper').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
         e.stopPropagation();
         var array=[];
         var array2=[];
@@ -255,7 +254,6 @@ $(document).ready(function (){
 });
 
 //js pour faire fonctionner la checkboxes "select all"
-
 var array=[];
 var array2=[];
 var colIdx = $(this).closest('th').index();

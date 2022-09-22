@@ -9,52 +9,51 @@
 </head>
 {% block content %}
 <style>
-#svgCanvas
-{
-    background-color: #ffffff;
-}
+    #svgCanvas {
+        background-color: #ffffff;
+    }
 </style>
 {% endblock %}
 
-<div class="container-fluid" style="background-color: #a6aaa9;" >
-    <h1 style="text-align: center;" >NEIGHBOR_JOINING</h1>
+<div class="container-fluid" style="background-color: #a6aaa9;">
+    <h1 style="text-align: center;">NEIGHBOR_JOINING</h1>
     <div class="col-lg-10" style="float:none;margin:auto;background-color: #ffffff;">
-     <div class="container">
-       <div id="tab_data" class="table-responsive" >
-         <form  id="form1" autocomplete="off" method="POST" action="">
-         
-            {%block javascripts %}
-            <script src="{% static 'js/raphael-min.js' %}"></script>
-            <script src="{% static 'js/jsphylosvg-min.js' %}"></script>
-            
-            <div id="svgCanvas" style="width: 1000px; height: 1000px; margin: 0 auto;"> </div>
+        <div class="container">
+            <div id="tab_data" class="table-responsive">
+                <form id="form1" autocomplete="off" method="POST" action="">
 
-            <script>
-                str_newick="{{labels}}"+";";
-                dataObject={newick: str_newick};
-                phylocanvas = new Smits.PhyloCanvas
-                (
-                dataObject,
-                'svgCanvas',
-                1000, 1000
-                );
-            </script>
+                    {%block javascripts %}
+                    <script src="{% static 'js/raphael-min.js' %}"></script>
+                    <script src="{% static 'js/jsphylosvg-min.js' %}"></script>
 
-            <label for="message">Newick Format :</label>
-            <div class="full-width">
-                <textarea id="message" rows="5" cols="150"></textarea>
+                    <div id="svgCanvas" style="width: 1000px; height: 1000px; margin: 0 auto;"> </div>
+
+                    <script>
+                        str_newick = "{{labels}}" + ";";
+                        dataObject = { newick: str_newick };
+                        phylocanvas = new Smits.PhyloCanvas
+                            (
+                                dataObject,
+                                'svgCanvas',
+                                1000, 1000
+                            );
+                    </script>
+
+                    <label for="message">Newick Format :</label>
+                    <div class="full-width">
+                        <textarea id="message" rows="5" cols="150"></textarea>
+                    </div>
+
+                    <script>
+                        var textarea = document.getElementById('message');
+                        textarea.value = str_newick;
+                    </script>
+                </form>
             </div>
-            
-            <script>
-                var textarea = document.getElementById('message');
-                textarea.value = str_newick;
-            </script>
-            </form>
-         </div>
-     </div>
+        </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
 
 </div>
 </div>

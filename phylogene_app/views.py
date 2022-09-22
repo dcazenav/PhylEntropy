@@ -110,6 +110,9 @@ def run_algo(request):
             algo_upgma = UPGMA(tab_distance, labelSeq)
             return render(request, 'upgma.html', locals())
 
+        if algo == "Rtest":
+            return render(request, 'Rtest.html', locals())
+
         if algo == "kruskal":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
@@ -119,7 +122,7 @@ def run_algo(request):
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'Hunter-Gaston.html', locals())
-        
+
         if algo == "Shannon-Entropy":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
@@ -164,13 +167,32 @@ def run_algo(request):
             df.dropna(how="all", inplace=True)  # drops the empty line at file-end
             X = df.iloc[:, 0:l].values
             y = df.iloc[:, l].values
+
             X_std = StandardScaler().fit_transform(X)
-            # variable  graphique Axe components #
-            mean_vec = np.mean(X_std, axis=0)
-            cov_mat = (X_std - mean_vec).T.dot((X_std - mean_vec)) / (X_std.shape[0] - 1)
+            # print(X_std.shape[0])
+            # print(X_std)
+            #### variable  graphique Axe components ####
+            # mean_vec = np.mean(X_std, axis=0, dtype=np.float64)
+            # mean_vec = np.mean(X_std, axis=0, dtype=np.dtype('<U928'))
+            print(type(mean_vec))
+            # pd.options.display.float_format = '{:.20f}'.format
+            # pd.set_option('display.float_format', lambda x: '%.5f' % x)
+            # print(mean_vec.apply(lambda x: '%.10f' % x, axis=1))
+            # format(float('-2.00897500e-16'), 'f')
+            test = list(map('{:.80f}'.format, mean_vec))
+            testnp = "[{0}]".format('  '.join(map(str, test)))
+            testnp2 = np.array(testnp)
+
+            # cov_mat = (X_std - mean_vec).T.dot((X_std - mean_vec)) / (X_std.shape[0] - 1)
+            cov_mat = (X_std - testnp2).T.dot((X_std - testnp2)) / (X_std.shape[0] - 1)
+            # print(cov_mat)
             cov_mat = np.cov(X_std.T)
+            ##problème exponentiel: print(cov_mat)
+            # print(cov_mat)
             eig_vals, eig_vecs = np.linalg.eig(cov_mat)
+            # print(eig_vals)
             tot = sum(eig_vals)
+
             var_exp = [(i / tot) * 100 for i in sorted(eig_vals, reverse=True)]
             cum_var_exp = np.cumsum(var_exp)
             trace1 = dict(
@@ -204,7 +226,7 @@ def run_algo(request):
                     )
                 ])
             )
-            # fin #
+            #### fin ####
             sklearn_pca = sklearnPCA(n_components=2)
             Y_sklearn = sklearn_pca.fit_transform(X_std)
             info2 = []
@@ -232,7 +254,6 @@ def run_algo(request):
             )
             return render(request, 'test2.html', locals())
 
-        
         if algo == "Global Map":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
@@ -242,8 +263,8 @@ def run_algo(request):
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'chartcity.html', locals())
-        
-        
+
+
 # def test(request):
 #     return render(request, 'test.html', locals())
 

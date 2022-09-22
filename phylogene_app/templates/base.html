@@ -1,149 +1,167 @@
 <html>
- 
 
-    <head>
-    {% block head %}
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE-Edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="keywords" content="">
-        <meta name="description" content="">
-        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-        <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.css">
-        <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../static/css/phylotree.css"> 
 
-    {% endblock %}
-    <title>PhylEntropy</title>
+<head>
+  {% block head %}
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE-Edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.css">
+  <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/css/phylotree.css">
 
-    <style>
-      h1 {
-        text-align: center;
-      }
-    </style>
-    </head>
-    
-    <body>
-      <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
-        <a class="navbar-brand" href="#">PhylEntropy</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="{% url 'intro' %}">Home </a>
-            
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'phylogene_import' %}">Analysis<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="http://www.pasteur-guadeloupe.fr/karubionet.html">KaruBioNet</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-          </li>
-          </ul>
-          <!-- <form class="form-inline mt-2 mt-md-0">
+  {% endblock %}
+  <title>PhylEntropy</title>
+
+  <style>
+    h1 {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="#">PhylEntropy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'intro' %}">Home </a>
+
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'phylogene_import' %}">Analysis<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank">KaruBioNet</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+      </ul>
+      <!-- <form class="form-inline mt-2 mt-md-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form> -->
-        </div>
-        </nav>
-    
-    <div class="container-fluid" style="background-color: #a6aaa9;" >
-    
-      <!--BANDEAU -->
-      <div class="container" style="background-color: #ffffff;">
-        <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col>
-          <div class="col-lg-4"  style="float:none;margin:auto;">
-            <div class="d-flex flex-column text-center height100">
-              <div>
+    </div>
+  </nav>
+
+  <div class="container-fluid" style="background-color: #a6aaa9;">
+
+    <!--BANDEAU -->
+    <div class="container" style="background-color: #ffffff;">
+      <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col>
+        <div class="col-lg-4" style="float:none;margin:auto;">
+          <div class="d-flex flex-column text-center height100">
+            <div>
               </br>
-            </br>
-                <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
-              </div>
+              </br>
+              <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded" />
             </div>
-          </a>	
           </div>
-          <p>Cliquer sur le logo pour télécharger le fichier csv test:
+      </a>
+    </div>
+    <p>Cliquer sur le logo pour télécharger le fichier csv test:
+      <a href="../static/files/exemple_csv.csv" download>
+        <img src="../static/img/index.jpg" alt="csvfiletest" width="70" height="70">
+      </a>
+    </p>
+    {% block content %}
+    {% endblock %}
 
-          <a href="../static/files/exemple_csv.csv" download>
-            <img src="../static/img/index.jpg" alt="csvfiletest" width="104" height="104">
-          </a>
-        </p>
-                      {% block content %}
-                      {% endblock %}
-            
-            <script>
-              function openNav() {
-                document.getElementById("mySidenav").style.width = "250px";
-                document.getElementById("main").style.marginRight = "250px";
-              }
-              
-              function closeNav() {
-                document.getElementById("mySidenav").style.width = "0";
-                document.getElementById("main").style.marginRight= "0";
-              }
+    <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginRight = "250px";
+      }
 
-            </script>
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginRight = "0";
+      }
+
+    </script>
 
 
-            <center>
-              <table class="footer" width="100%" border="0">
-                
-                <tr> 
-                  
-                  <td align="left" width="37%"><div id="info"><i>Copyright &copy; 2022, <a href="http://web.pasteur-guadeloupe.fr/" target="_blank">Institut Pasteur de la Guadeloupe</a>.   All rights reserved.  </i> </div></td>                
-                  <td height="21" colspan="2"><div id="info" align="right">You can also follow us on <a href="https://www.facebook.com/Institut.Pasteur.Guadeloupe/" target="_blank">Facebook</a></div></td>
-                </tr>
-            <!-- <tr>
+      <footer>
+        <table class="footer" width="100%" style="margin-top: 1em;">
+      
+
+        <tr>
+
+          <td width="37%">
+            <div id="info"><i>Copyright &copy; 2022, <a href="http://web.pasteur-guadeloupe.fr/"
+                  target="_blank">Institut Pasteur de la Guadeloupe</a>. All rights reserved. </i> </div>
+          </td>
+          <td height="21" colspan="2">
+            <div id="info" >You can also follow us on <a
+                href="https://www.facebook.com/Institut.Pasteur.Guadeloupe/" target="_blank">Facebook</a></div>
+          </td>
+        </tr>
+        <!-- <tr>
                   <td height="21" colspan="2">&nbsp;</td>
                   <td width="37%"><div id="info" align="right"><a href="mailto:tburguiere@pasteur-guadeloupe.fr">Thomas Burguiere</a> &nbsp; <a href="mailto:dcouvin@pasteur-guadeloupe.fr">David Couvin</a> </div></td>
                 </tr>-->
-                
-            <tr>
-            <td height="21" colspan="3"><hr></td>
-            </tr>
 
-            <tr>
-                  <td align="left" width="50%" height="46">Portions of this page are reproduced from work created and <a href="https://google-developers.appspot.com/site-policies" target="_blank">shared by Google</a> and used according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative Commons 3.0 Attribution License</a>.</td>
-            <!--<a href="http://validator.w3.org/check?uri=referer" target="_blank">
+        <tr>
+          <td height="21" colspan="3">
+            <hr>
+          </td>
+        </tr>
+
+        <tr>
+          <td width="50%" height="46">Portions of this page are reproduced from work created and <a
+              href="https://google-developers.appspot.com/site-policies" target="_blank">shared by Google</a> and used
+            according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0/"
+              target="_blank">Creative Commons 3.0 Attribution License</a>.</td>
+          <!--<a href="http://validator.w3.org/check?uri=referer" target="_blank">
             <img src="http://www.w3.org/Icons/valid-html401" alt="w3c" width="88" height="31" border="0" longdesc="http://validator.w3.org/check?uri=referer" >	</a></td>-->
-                  <td >
-            <div align="center">version &#946; 2.0 </div></td>
-                  <td width="50%">
-            <div align="right"><em>This site uses </em>&nbsp;
-            <a href="https://www.djangoproject.com/" target="_blank">
-            <img src="../static/img/djangologo.png" alt="django" width="68" height="35" border="0">				</a>&nbsp;
-            <a href="https://getbootstrap.com/" target="_blank">
-            <img src="../static/img/bootstraplogo.png" alt="bootstrap" width="68" height="35" border="0">				</a>&nbsp;
-            <a href="https://www.python.org/" target="_blank">
-            <img src="../static/img/pythonlogo.jpg" alt="bootstrap" width="68" height="35" border="0">				</a>&nbsp;				
+          <td>
+            <div>version &#946; 2.0 </div>
+          </td>
+          <td width="50%">
+            <div><em>This site uses </em>&nbsp;
+              <a href="https://www.djangoproject.com/" target="_blank">
+                <img src="../static/img/djangologo.png" alt="django" width="68" height="35" border="0"> </a>&nbsp;
+              <a href="https://getbootstrap.com/" target="_blank">
+                <img src="../static/img/bootstraplogo.png" alt="bootstrap" width="68" height="35" border="0"> </a>&nbsp;
+              <a href="https://www.python.org/" target="_blank">
+                <img src="../static/img/pythonlogo.jpg" alt="bootstrap" width="68" height="35" border="0"> </a>&nbsp;
             </div>
-            </td>
-            </tr>
-            
-              </table>
-            </center>
+          </td>
+        </tr>
 
-            </div>
-      </div>
-{%block javascripts %}
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.js"></script>
+      </table>
+    </footer>
+    
 
-<script>
-        $('.toggle').on('click', function() {
-        $('.menu').toggleClass('active');
-        });
-</script>
+  </div>
+  </div>
+  {%block javascripts %}
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.js"></script>
 
-      {% endblock %}
-    </body>
+  <script>
+    $('.toggle').on('click', function () {
+      $('.menu').toggleClass('active');
+    });
+  </script>
+
+  {% endblock %}
+</body>
+
 </html>

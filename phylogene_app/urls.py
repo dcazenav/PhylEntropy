@@ -8,5 +8,6 @@ urlpatterns=[
     path('run_algo/', views.run_algo, name='phylogene_run_algo'),
     #path('test/', views.test, name='phylogene_test'),
     path('base/', views.base, name='base'),
+    #path('Rtest/', views.run_algo, name='Rtest'),
     #path('chart/', views.chart, name='chart'),
 ]

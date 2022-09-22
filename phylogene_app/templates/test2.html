@@ -13,8 +13,6 @@
 }
 </style>
 {% endblock %}
-
-
 {%block javascripts %}
 {{block.super}}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -22,10 +20,9 @@
 var info1={{info1|safe}};
 var layout1={{layout1|safe}};
 Plotly.newPlot('myDiv1', info1, layout1);
-
 var info2={{info2|safe}};
+alert(info2);
 var layout2={{layout2|safe}};
 Plotly.newPlot('myDiv2', info2, layout2);
-
 </script>
 {% endblock %}
