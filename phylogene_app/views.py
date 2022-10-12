@@ -110,8 +110,8 @@ def run_algo(request):
             algo_upgma = UPGMA(tab_distance, labelSeq)
             return render(request, 'upgma.html', locals())
 
-        if algo == "Rtest":
-            return render(request, 'Rtest.html', locals())
+        if algo == "Wordcloud":
+            return render(request, 'Wordcloud.html', locals())
 
         if algo == "kruskal":
             minimal_tree = kruskal(tab_reduce, label_reduce)
