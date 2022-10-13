@@ -166,4 +166,3 @@ def countFreq(arr, n):
                 count += 1
         result.append(count/n)
     return result
-
