@@ -2,8 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import JsonResponse
 import json
+import csv
 import numpy as np
 from .algo import *
+from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 from django.utils.safestring import SafeString
 from sklearn.decomposition import PCA as sklearnPCA
 from sklearn.preprocessing import StandardScaler
@@ -162,17 +167,21 @@ def run_algo(request):
                     colors[col_qualitative[i]] = panel_color[i]
                     cpt += 1
             l = len(entete_colonne_selected) - 1
+            # print(entete_colonne_selected)
             df = pd.DataFrame(rows_bact)
+            print(df)
             df.columns = [entete_colonne_selected]
             df.dropna(how="all", inplace=True)  # drops the empty line at file-end
             X = df.iloc[:, 0:l].values
+            # print(X)
             y = df.iloc[:, l].values
+            # print(y)
 
             X_std = StandardScaler().fit_transform(X)
             # print(X_std.shape[0])
             # print(X_std)
             #### variable  graphique Axe components ####
-            # mean_vec = np.mean(X_std, axis=0, dtype=np.float64)
+            mean_vec = np.mean(X_std, axis=0, dtype=np.float64)
             # mean_vec = np.mean(X_std, axis=0, dtype=np.dtype('<U928'))
             print(type(mean_vec))
             # pd.options.display.float_format = '{:.20f}'.format
@@ -263,6 +272,65 @@ def run_algo(request):
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'chartcity.html', locals())
+
+        if algo == "Decision Tree":
+            # dataframe ou read_csv ?
+            # df remplace tb_data présent dans les script python machine_learning et test
+            df = pd.DataFrame(rows_bact,
+                              columns=['var1', 'var2', 'var3', 'var4', 'var5', 'var6', 'var7', 'var8', 'var9',
+                                       'var10',
+                                       'var11', 'var12', 'var13', 'var14', 'var15', 'var16', 'var17', 'var18',
+                                                'var19',
+                                                'var20',
+                                                'var21', 'var22', 'var23', 'var24', 'var25', 'var26', 'var27', 'var28',
+                                                'var29',
+                                                'var30',
+                                                'var31', 'var32', 'var33', 'var34', 'var35', 'var36', 'var37', 'var38',
+                                                'var39',
+                                                'var40',
+                                                'var41', 'var42', 'var43', 'Type'])
+            #print(df)
+            X = df.drop(columns=['Type'])
+            #print(X)
+            y = df['Type']
+            #print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            print("The variable, name is of type:", type(x_d_1))
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            model_option = DecisionTreeClassifier()
+            model_option.fit(X_train, y_train)
+            tree.export_graphviz(model_option, out_file='graph.dot',
+                                 feature_names=['var1', 'var2', 'var3', 'var4', 'var5', 'var6', 'var7', 'var8', 'var9',
+                                                'var10',
+                                                'var11', 'var12', 'var13', 'var14', 'var15', 'var16', 'var17', 'var18',
+                                                'var19',
+                                                'var20',
+                                                'var21', 'var22', 'var23', 'var24', 'var25', 'var26', 'var27', 'var28',
+                                                'var29',
+                                                'var30',
+                                                'var31', 'var32', 'var33', 'var34', 'var35', 'var36', 'var37', 'var38',
+                                                'var39',
+                                                'var40',
+                                                'var41', 'var42', 'var43'],
+                                 class_names=sorted(y.unique()),
+                                 label='all',
+                                 rounded=True,
+                                 filled=True)
+            predictions = model_option.predict(X_test)
+            prediction2 = model_option.predict(x_d)
+
+            score_dt = accuracy_score(y_test, predictions)
+            print("Prediction of X_test: ", predictions)
+            print("Prediction of 2 spoligo: ", prediction2)
+            print("dt score :")
+            print(score_dt)
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1}
+            # return render(request, 'Decision_Tree.html', locals())
+            return render(request, 'Decision_Tree.html', context)
 
 
 # def test(request):
