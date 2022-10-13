@@ -103,23 +103,48 @@
                     <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                     <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
                 </h6>
-                <h6>Machine Learning :
-                    <input id="submit12" name="Regression"   class="btn btn-primary" type="submit" value="Regression" onclick="this.form.submited=this.value;" >
-                    <input id="submit12" name="Prediction"   class="btn btn-primary" type="submit" value="Prediction" onclick="this.form.submited=this.value;" >
-                    <input id="submit12" name="Decison Tree"   class="btn btn-primary" type="submit" value="Decison Tree" onclick="this.form.submited=this.value;" >
-                        <div class="dropdown">
+                <h6>Machine Learning :                        <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                            Action
+                            Supervized Learning
                           </button>
                           <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Dompteurs</a>
-                            <a class="dropdown-item" href="#">Zoos</a>
-                            <a class="dropdown-item" href="#">Chasseurs</a>
+                              <input id="submit12" name="Decision Tree" type="submit" value="Decision Tree" onclick="this.form.submited=this.value;" >
+                              <input id="submit13" name="Support Vector Machines" type="submit" value="Support Vector Machines" onclick="this.form.submited=this.value;" >
+                              <input id="submit14" name="Neural Network" type="submit" value="Neural Network" onclick="this.form.submited=this.value;" >
+                              <input id="submit15" name="Nayve Bayes" type="submit" value="Nayve Bayes" onclick="this.form.submited=this.value;" >
+                              <input id="submit16" name="Random Forest" type="submit" value="Random Forest" onclick="this.form.submited=this.value;" >
+                              <input id="submit17" name="Extra Trees" type="submit" value="Extra Trees" onclick="this.form.submited=this.value;" >
+                              <input id="submit18" name="Ada Boost" type="submit" value="Ada Boost" onclick="this.form.submited=this.value;" >
+                              <input id="submit19" name="K Neighbors" type="submit" value="K Neighbors" onclick="this.form.submited=this.value;" >
                           </div>
                         </div>
-                </h6>
+                    <!--<select form="myGeeks" id="myCourses" autofocus>
+                        <option id="submit12" name="Regression" value="Regression">Regression</option>
+                        <option id="submit13" name="Prediction" value="Prediction">Prediction</option>
+                        <option id="submit14" name="Decison Tree" value="Decison Tree">Decison Tree</option>
+                        <option id="submit1" name="kruskal" value="kruskal">Kruskal</option>
+                        <input id="submit1" name="kruskal" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
+                    </select>
+                    <br>
+                    <form id="myGeeks">
+                        <input id="var_div" type="submit" onclick="this.form.submited=this.value;">
+                    </form>
+                    <script>
 
-            </div>       
+
+                         $("#var_div").click(function(){
+                             var option_name = document.getElementById("myCourses").value
+                             var submit_value = document.getElementById("myCourses").selectedOptions[0].id
+                             //document.getElementById('output').innerHTML = lengthOfName;
+                             document.getElementById("var_div").setAttribute("id", submit_value);
+                             console.log(submit_value)
+                             console.log(option_name)
+                            })
+
+                    </script>
+                </h6>-->
+
+            </div>
         </form>
     </div>
     <br/>
@@ -138,14 +163,14 @@
     width: 100% !important;
 }
 
-.files input:focus{    
-    outline: 2px dashed #92b0b3;  
+.files input:focus{
+    outline: 2px dashed #92b0b3;
     outline-offset: -10px;
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
     transition: outline-offset .15s ease-in-out, background-color .15s linear; border:1px solid #92b0b3;
  }
 
-.files { 
+.files {
     position:relative
 }
 
@@ -163,7 +188,7 @@
     background-size: 100%;
     background-repeat: no-repeat;
 }
-.color input { 
+.color input {
     background-color:#f1f1f1;
 }
 
@@ -202,6 +227,10 @@ font-size: 16px;
 {%block javascripts %}
 {{block.super}}
 <script>
+var colIdx = $(this).closest('th').index();
+var uniq = [];
+var array=[];
+var array2=[];
 var data_column_selected=[];
 var column_name_selected=[];
 var index_column_name_selected=[];
@@ -217,7 +246,7 @@ var table = $('#example').DataTable({
 var checkboxes = document.querySelectorAll("input[type = 'checkbox']");
 
 $(document).ready(function (){
-        
+
      table.column(0).data().each( function ( value, index )
        {
         label.push(value);
@@ -226,30 +255,34 @@ $(document).ready(function (){
     // Handle click event on a checkbox
     $('#example_wrapper').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
         e.stopPropagation();
-        var array=[];
-        var array2=[];
-        var colIdx = $(this).closest('th').index();
+
         if(this.checked)
         {
             table.column(colIdx).select();
-            
+            uniq = [...new Set(array)];
         }
         else
         {
+            while(array.length > 0) {
+               array.length = 0;
+               array2.length = 0;
+               data_column_selected.length = 0;
+               index_column_name_selected.length = 0;
+            }
             table.column(colIdx).deselect();
+
         }
         //les données des colonnes sélectionner par l'utilisateurs
         var tmp= table.columns( { selected: true } ).data().each( function ( value, index )
         {
             array.push(value);
-            
+
         } );
         data_column_selected=array;
 
        /*  $('#store').on('click', function(){
             sessionStorage.setItem('myArray', array);
         });
-
         $('#get').on('click', function(){
             var myArraytable = sessionStorage.getItem('myArray');
             alert(array);
@@ -274,31 +307,33 @@ $(document).ready(function (){
 });
 
 //js pour faire fonctionner la checkboxes "select all"
-var array=[];
-var array2=[];
-var colIdx = $(this).closest('th').index();
+//var array=[];
+//var array2=[];
+//var colIdx = $(this).closest('th').index();
 
 function checkAll(myCheckbox){
     //var IDbutton = document.getElementById("form1")[4];
 
     if(myCheckbox.checked == true){
-
         checkboxes.forEach(function(checkbox){
         checkbox.checked = true;
-         
         table.columns().select();
-            
         });
+        uniq = [...new Set(array)];
     }
     else{
+        while(array.length > 0) {
+            array.length = 0;
+            array2.length = 0;
+            data_column_selected.length = 0;
+            index_column_name_selected.length = 0;
+        }
         checkboxes.forEach(function(checkbox){
         checkbox.checked = false;
-            
         table.columns().deselect();
-        
         });
     }
-    
+
      //les données des colonnes sélectionner par l'utilisateurs + on ignore la première colonne du tableau
     var tmp= table.columns().data().each( function ( value, index )
         {
@@ -306,20 +341,19 @@ function checkAll(myCheckbox){
         } );
 
         if(array.length >= 5){
-            data_column_selected=array.slice(1);  
+            data_column_selected=array.slice(1);
         }else{
             data_column_selected=array;
         }
-        
 
-     //les indexes des colonnes selectionné par l'utilisateur  on ignore la première colonne du tableau
+    //les indexes des colonnes selectionné par l'utilisateur  on ignore la première colonne du tableau
      var tmp2=table.columns().indexes().each(function ( value)
         {
             array2.push(value);
         });
 
         if(array2.length >= 5){
-            index_column_name_selected=array2.slice(1);  
+            index_column_name_selected=array2.slice(1);
         }else{
             index_column_name_selected=array2;
         }
@@ -329,7 +363,7 @@ function checkAll(myCheckbox){
     $("#store").click(function(){
         sessionStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
         var retrievedObject = sessionStorage.getItem('TableauduCSV');
-        console.log('retrievedObject: ', JSON.parse(retrievedObject));        
+        console.log('retrievedObject: ', JSON.parse(retrievedObject));
     })
 
 
@@ -337,7 +371,7 @@ function checkAll(myCheckbox){
         sessionStorage.clear('TableauduCSV');
     })
 
-    var test_head = document.getElementById("test_head"); 
+    var test_head = document.getElementById("test_head");
 
     $("#submit1").click(function(){
         console.log("1:"+array);
@@ -352,16 +386,17 @@ function checkAll(myCheckbox){
         //data_column_selected =  JSON.parse(retrievedObject);
         //console.log("1:" + data_column_selected);
         //index_column_name_selected = array2.slice(0, array2.length-2) ;
-        
+
         //index_column_name_selected = [];
         if (document.getElementById("option-all").checked == true)
 	{
+
 		data_column_selected = array.slice(0, array.length-2);
         console.log("2:"+data_column_selected);
         index_column_name_selected = array2.slice(0, array2.length-2);
 	}
     })
-    
+
     $("#submit9").click(function(){
         sessionStorage.setItem('test_head', JSON.stringify(test_head.innerText));
     })
@@ -369,6 +404,8 @@ function checkAll(myCheckbox){
     $("#submit10").click(function(){
         sessionStorage.setItem('test_head', JSON.stringify(test_head.innerText));
     })
+
+
 
 $(document).on('submit','#form1',function(e)
 {
