@@ -1,26 +1,32 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.http import JsonResponse
+import os
 import json
 import csv
 import numpy as np
+import pandas as pd
+
 from .algo import *
-from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from django.http import HttpResponse
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
+from sklearn import svm
+from sklearn import tree
 from sklearn.decomposition import PCA as sklearnPCA
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
+from sklearn.metrics import accuracy_score, precision_score
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 
 # test map
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
 from phylogene_app.static.fusioncharts import FusionCharts
 from collections import OrderedDict
+
+
 # test map
-
-import pandas as pd
-
 
 # Create your views here.
 
@@ -37,6 +43,7 @@ def import_data(request):
             for elmt in csv_file:
                 info.append(elmt.split(";"))
             request.session['info'] = info
+            print("import_data", info)
             return redirect(import_data)
 
     if 'info' in request.session:
@@ -276,24 +283,22 @@ def run_algo(request):
         if algo == "Decision Tree":
             # dataframe ou read_csv ?
             # df remplace tb_data présent dans les script python machine_learning et test
+            fichier = request.session['info']
+            print("fichier", type(fichier))
+
             df = pd.DataFrame(rows_bact,
-                              columns=['var1', 'var2', 'var3', 'var4', 'var5', 'var6', 'var7', 'var8', 'var9',
-                                       'var10',
-                                       'var11', 'var12', 'var13', 'var14', 'var15', 'var16', 'var17', 'var18',
-                                                'var19',
-                                                'var20',
-                                                'var21', 'var22', 'var23', 'var24', 'var25', 'var26', 'var27', 'var28',
-                                                'var29',
-                                                'var30',
-                                                'var31', 'var32', 'var33', 'var34', 'var35', 'var36', 'var37', 'var38',
-                                                'var39',
-                                                'var40',
-                                                'var41', 'var42', 'var43', 'Type'])
-            #print(df)
+                              columns=entete_colonne_selected)
+            # print(df)
+
+
+            # important!
+            print("bact?:",fichier[3])
+
+
             X = df.drop(columns=['Type'])
-            #print(X)
+            # print(X)
             y = df['Type']
-            #print(y)
+            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown']
             df.isin(array)
@@ -304,18 +309,7 @@ def run_algo(request):
             model_option = DecisionTreeClassifier()
             model_option.fit(X_train, y_train)
             tree.export_graphviz(model_option, out_file='graph.dot',
-                                 feature_names=['var1', 'var2', 'var3', 'var4', 'var5', 'var6', 'var7', 'var8', 'var9',
-                                                'var10',
-                                                'var11', 'var12', 'var13', 'var14', 'var15', 'var16', 'var17', 'var18',
-                                                'var19',
-                                                'var20',
-                                                'var21', 'var22', 'var23', 'var24', 'var25', 'var26', 'var27', 'var28',
-                                                'var29',
-                                                'var30',
-                                                'var31', 'var32', 'var33', 'var34', 'var35', 'var36', 'var37', 'var38',
-                                                'var39',
-                                                'var40',
-                                                'var41', 'var42', 'var43'],
+                                 feature_names=entete_colonne_selected[:-1],
                                  class_names=sorted(y.unique()),
                                  label='all',
                                  rounded=True,
@@ -323,71 +317,613 @@ def run_algo(request):
             predictions = model_option.predict(X_test)
             prediction2 = model_option.predict(x_d)
 
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+
+                #print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
             score_dt = accuracy_score(y_test, predictions)
-            print("Prediction of X_test: ", predictions)
-            print("Prediction of 2 spoligo: ", prediction2)
-            print("dt score :")
-            print(score_dt)
-            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1}
+            precision_dt = precision_score(y_test, predictions, average='macro')
+            # print("Prediction of X_test: ", predictions)
+            # print("Prediction of 2 spoligo: ", prediction2)
+            # print("dt score :")
+            # print(score_dt)
+            # print(type(df))
+            # render dataframe as html
+            # html = x_d_1.to_html()
+            # print(html)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('phylogene_app/templates/Decision_Tree.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Decision Tree</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+              <body>
+              <div class="container-fluid" style="background-color: #a6aaa9;" >
+                <h1 style="text-align: center;" >Decision Tree</h1>
+                </div>
+              <p> Accuracy Score : {score_dt} </p>  
+              <p> Precision Score : {precision_dt} </p>  
+              <a href="{link}" download>Link 1</a>
+              
+                {table}
+                
+              </body>
+            </html>.
+            '''
+            html = html_string.format(score_dt=score_dt, precision_dt=precision_dt, link="../phylogene_app/static/files/spol43.csv", table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
             # return render(request, 'Decision_Tree.html', locals())
+            # geeks_object = predictions.to_html()
+
+            # return HttpResponse(geeks_object)
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html, 'score': score_dt}
             return render(request, 'Decision_Tree.html', context)
 
+        if algo == "Support Vector Machines":
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            y = df['Type']
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+
+            clf = svm.SVC()
+
+            clf.fit(X, y)
+
+            predictions = clf.predict(X_test)
+            svm_prediction = clf.predict(x_d)
+            score_svm = accuracy_score(y_test, predictions)
+            precision_svm = precision_score(y_test, predictions, average='macro')
+
+            print("Predictions1 :", predictions)
+            print("Prediction of 2 spoligo with svm: ", svm_prediction)
+            print("svm score :")
+            print(score_svm)
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            file_name = os.path.join('phylogene_app/templates/Support_Vector_Machines.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Support_Vector_Machines</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                            <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >Support Vector Machines</h1>
+                            </div>
+                          <p> Accuracy Score : {score_svm} </p>  
+                          <p> Precision Score : {precision_svm} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_svm=score_svm, precision_svm = precision_svm, table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'Support_Vector_Machines.html', context)
+
+        if algo == "Random Forest":
+            array = ['ND', 'Unknown', 'unknown']
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            # print(X)
+            y = df['Type']
+            # print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            # valeur par défault de n_estimators(possibilité de choisir la valeur?)
+            clf = RandomForestClassifier(n_estimators=5)
+            clf.fit(X, y)
+            # SVC()
+            predictions = clf.predict(X_test)
+            rf_prediction = clf.predict(x_d)
+            score_rf = accuracy_score(y_test, predictions)
+            precision_rf = precision_score(y_test, predictions, average='macro')
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('phylogene_app/templates/Random_Forest.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Random Forest</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                          <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >Random Forest</h1>
+                            </div>
+                          <p> Accuracy Score : {score_rf} </p>
+                          <p> Precision Score : {precision_rf} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_rf=score_rf, precision_rf = precision_rf,table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'Random_Forest.html', context)
+
+        if algo == "Extra Trees":
+            array = ['ND', 'Unknown', 'unknown']
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            # print(X)
+            y = df['Type']
+            # print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            clf = ExtraTreesClassifier(n_estimators=5)
+            clf.fit(X, y)
+            # SVC()
+            predictions = clf.predict(X_test)
+            rf_prediction = clf.predict(x_d)
+            score_et = accuracy_score(y_test, predictions)
+            precision_et = precision_score(y_test, predictions, average='macro')
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+            file_name = os.path.join('phylogene_app/templates/Extra_Trees.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Extra Trees</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                          <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >Extra Trees</h1>
+                            </div>
+                          <p> Accuracy Score : {score_et} </p>
+                          <p> Precision Score : {precision_et} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_et=score_et, precision_et = precision_et, table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'Extra_Trees.html', context)
+
+        if algo == "Ada Boost":
+            array = ['ND', 'Unknown', 'unknown']
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            # print(X)
+            y = df['Type']
+            # print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            clf = AdaBoostClassifier(n_estimators=5)
+            clf.fit(X, y)
+            # SVC()
+            predictions = clf.predict(X_test)
+            ab_prediction = clf.predict(x_d)
+            score_ab = accuracy_score(y_test, predictions)
+            precision_ab = precision_score(y_test, predictions, average='macro')
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+            file_name = os.path.join('phylogene_app/templates/Ada_Boost.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Ada Boost</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                          <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >Ada Boost</h1>
+                            </div>
+                          <p> Accuracy Score : {score_ab} </p>
+                          <p> Precision Score : {precision_ab} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_ab=score_ab, precision_ab = precision_ab, table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'Ada_Boost.html', context)
+
+        if algo == "K Neighbors":
+            array = ['ND', 'Unknown', 'unknown']
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            # print(X)
+            y = df['Type']
+            # print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            clf = KNeighborsClassifier(n_neighbors=3)
+            clf.fit(X, y)
+            # SVC()
+            predictions = clf.predict(X_test)
+            rf_prediction = clf.predict(x_d)
+            score_knn = accuracy_score(y_test, predictions)
+            precision_knn = precision_score(y_test, predictions, average='macro')
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('phylogene_app/templates/K_Neighbors.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>K Neighbors</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                          <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >K Neighbors</h1>
+                            </div>
+                          <p> Accuracy Score : {score_knn} </p>
+                          <p> Precision Score : {precision_knn} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_knn=score_knn, precision_knn = precision_knn,table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'K_Neighbors.html', context)
+
+        if algo == "Nayve Bayes":
+            array = ['ND', 'Unknown', 'unknown']
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            X = df.drop(columns=['Type'])
+            # print(X)
+            y = df['Type']
+            # print(y)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+            array = ['ND', 'Unknown', 'unknown']
+            df.isin(array)
+            x_d_1 = []
+            x_d_1 = df.loc[df['Type'].isin(array)]
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            clf = GaussianNB()
+            clf.fit(X, y)
+            # SVC()
+            # predictions = clf.predict(X_test)
+            predictions = clf.fit(X_train, y_train).predict(X_test)
+            # rf_prediction = clf.predict(x_d)
+            score_nb = accuracy_score(y_test, predictions)
+            precision_nb = precision_score(y_test, predictions, average='macro')
+
+            # Ajout d'un header
+            dfpred = pd.DataFrame(predictions,
+                                  columns=['Prediction'])
+
+            # Récupérer la colonne Prediction
+            numbers = dfpred["Prediction"]
+
+            # resetting the DataFrame index
+            x_d_1 = x_d_1.reset_index(drop=False)
+
+            # get colonne index
+            new_index = []
+            index_bact = x_d_1['index']
+            for i in range(len(index_bact)):
+                # print("bact =", fichier[index_bact[i]][0])
+                new_index.append(fichier[index_bact[i]][0])
+
+            x_d_1['index'] = new_index
+            htmlfinal = x_d_1.join(numbers)
+
+            print(htmlfinal)
+            print("numb", numbers)
+            print(dfpred)
+
+            # write html to file
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('phylogene_app/templates/Nayves_Bayes.html')
+            text_file = open(file_name, "w")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''<html> <head><title>Nayves Bayes</title></head> <script 
+            src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" 
+            crossorigin="anonymous"></script> <script 
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" 
+            crossorigin="anonymous"></script> <link rel="stylesheet" 
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/> 
+
+                          <body>
+                          <div class="container-fluid" style="background-color: #a6aaa9;" >
+                                <h1 style="text-align: center;" >Nayves Bayes</h1>
+                            </div>
+                          <p> Accuracy Score : {score_nb} </p>
+                          <p> Precision Score : {precision_nb} </p>  
+                            {table}
+                          </body>
+                        </html>.
+                        '''
+            html = html_string.format(score_nb = score_nb, precision_nb = precision_nb, table=htmlfinal.to_html(
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
+            return render(request, 'Nayves_Bayes.html', context)
 
 # def test(request):
 #     return render(request, 'test.html', locals())
 
 # def testmap(request):
 #     return render(request, 'testmap.html', locals())
-
-""" def chart(request):
-
-  # Chart data is passed to the `dataSource` parameter, as dict, in the form of key-value pairs.
-  dataSource = OrderedDict()
-
-  # The `mapConfig` dict contains key-value pairs data for chart attribute
-  mapConfig = OrderedDict()
-  mapConfig["caption"] = "Average Annual Population Growth"
-  mapConfig["subcaption"] = "1955-2015"
-  mapConfig["numbersuffix"] = "%"
-  mapConfig["includevalueinlabels"] = "1"
-  mapConfig["labelsepchar"] = ":"
-  mapConfig["theme"] = "fusion"
-
-  # Map color range data
-  colorDataObj = { "minvalue": "0", "code" : "#FFE0B2", "gradient": "1",
-    "color" : [
-        { "minValue" : "0.5", "maxValue" : "1", "code" : "#FFD74D" },
-        { "minValue" : "1.0", "maxValue" : "2.0", "code" : "#FB8C00" },
-        { "minValue" : "2.0", "maxValue" : "3.0", "code" : "#E65100" }
-    ]
-  }
-
-  dataSource["chart"] = mapConfig
-  dataSource["colorrange"] = colorDataObj
-  dataSource["data"] = []
-
-
-  # Map data array
-  mapDataArray = [
-    ["NA", "0.82", "1"],
-    ["SA", "2.04", "1"],
-    ["AS", "1.78", "1"],
-    ["EU", "0.40", "1"],
-    ["AF", "2.58", "1"],
-    ["AU", "1.30", "1"]
-  ]
-
-
-  # Iterate through the data in `mapDataArray` and insert in to the `dataSource["data"]` list.
-  # The data for the `data` should be in an array wherein each element of the array is a JSON object
-  # having the `id`, `value` and `showlabel` as keys.
-  for i in range(len(mapDataArray)):
-      dataSource["data"].append({"id": mapDataArray[i][0], "value": mapDataArray[i][1], "showLabel": mapDataArray[i][2] })
-
-  # Create an object for the world map using the FusionCharts class constructor
-  # The chart data is passed to the `dataSource` parameter.
-  fusionMap = FusionCharts("maps/world", "ex1" , "650", "450", "chart-1", "json", dataSource)
- 
-  # returning complete JavaScript and HTML code, which is used to generate map in the browsers.
-  return  render(request, 'chart.html', {'output' : fusionMap.render(), 'chartTitle': 'Simple Map Using Array'})
-"""
