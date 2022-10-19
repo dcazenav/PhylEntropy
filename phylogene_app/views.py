@@ -1,3 +1,4 @@
+import itertools
 import os
 import json
 import csv
@@ -20,6 +21,9 @@ from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+
 # test map
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
 from phylogene_app.static.fusioncharts import FusionCharts
@@ -40,12 +44,12 @@ def import_data(request):
             return render(request, 'import_data.html', locals())
         else:
             csv_file = request.FILES["csv_file"].read().decode("utf-8").split()
+            print("csv", csv_file)
             for elmt in csv_file:
                 info.append(elmt.split(";"))
             request.session['info'] = info
             print("import_data", info)
             return redirect(import_data)
-
     if 'info' in request.session:
         fichier = request.session['info']
         info_submit = True
@@ -290,10 +294,8 @@ def run_algo(request):
                               columns=entete_colonne_selected)
             # print(df)
 
-
             # important!
-            print("bact?:",fichier[3])
-
+            print("bact?:", fichier[3])
 
             X = df.drop(columns=['Type'])
             # print(X)
@@ -331,8 +333,7 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-
-                #print("bact =", fichier[index_bact[i]][0])
+                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
@@ -385,9 +386,10 @@ def run_algo(request):
               </body>
             </html>.
             '''
-            html = html_string.format(score_dt=score_dt, precision_dt=precision_dt, link="../phylogene_app/static/files/spol43.csv", table=htmlfinal.to_html(
-                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
-                        'cell-border compact stripe'))
+            html = html_string.format(score_dt=score_dt, precision_dt=precision_dt,
+                                      link="../phylogene_app/static/files/spol43.csv", table=htmlfinal.to_html(
+                    classes='dataframe display table table-striped table-bordered table-hover responsive nowrap'
+                            'cell-border compact stripe'))
 
             with text_file as f:
                 f.write(html)
@@ -476,7 +478,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_svm=score_svm, precision_svm = precision_svm, table=htmlfinal.to_html(
+            html = html_string.format(score_svm=score_svm, precision_svm=precision_svm, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -564,7 +566,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_rf=score_rf, precision_rf = precision_rf,table=htmlfinal.to_html(
+            html = html_string.format(score_rf=score_rf, precision_rf=precision_rf, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -650,7 +652,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_et=score_et, precision_et = precision_et, table=htmlfinal.to_html(
+            html = html_string.format(score_et=score_et, precision_et=precision_et, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -735,7 +737,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_ab=score_ab, precision_ab = precision_ab, table=htmlfinal.to_html(
+            html = html_string.format(score_ab=score_ab, precision_ab=precision_ab, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -822,7 +824,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_knn=score_knn, precision_knn = precision_knn,table=htmlfinal.to_html(
+            html = html_string.format(score_knn=score_knn, precision_knn=precision_knn, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -910,7 +912,7 @@ def run_algo(request):
                           </body>
                         </html>.
                         '''
-            html = html_string.format(score_nb = score_nb, precision_nb = precision_nb, table=htmlfinal.to_html(
+            html = html_string.format(score_nb=score_nb, precision_nb=precision_nb, table=htmlfinal.to_html(
                 classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
                         'cell-border compact stripe'))
 
@@ -921,6 +923,14 @@ def run_algo(request):
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
             return render(request, 'Nayves_Bayes.html', context)
+
+        if algo == "h_clust":
+            with open('GFG.csv', 'w') as fichier_csv:
+                # using csv.writer method from CSV package
+                write = csv.writer(fichier_csv)
+                write.writerows(fichier)
+
+            return render(request, 'h_clust.html', locals())
 
 # def test(request):
 #     return render(request, 'test.html', locals())
