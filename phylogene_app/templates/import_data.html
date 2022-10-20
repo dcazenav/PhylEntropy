@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
 
 
+
 <div style="margin-top: 1em;">
     {% if error %}
      <div class="row">
@@ -103,7 +104,8 @@
                     <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                     <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
                 </h6>
-                <h6>Machine Learning :                        <div class="dropdown">
+                <h6>Machine Learning :
+                    <div class="dropdown">
                           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                             Supervized Learning
                           </button>
@@ -115,6 +117,15 @@
                               <input id="submit16" name="Ada Boost" type="submit" value="Ada Boost" onclick="this.form.submited=this.value;" >
                               <input id="submit17" name="K Neighbors" type="submit" value="K Neighbors" onclick="this.form.submited=this.value;" >
                               <input id="submit18" name="Nayve Bayes" type="submit" value="Nayve Bayes" onclick="this.form.submited=this.value;" >
+                          </div>
+                        </div>
+                    <div class="dropdown">
+                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Unsupervized Learning
+                          </button>
+                          <div class="dropdown-menu">
+                              <input id="submit19" name="h_clust" type="submit" value="h_clust" onclick="this.form.submited=this.value;" >
+                              <input id="submit20" name="h_clust_test" type="submit" value="h_clust_test" onclick="this.form.submited=this.value;" >
                           </div>
                         </div>
                     <!--<select form="myGeeks" id="myCourses" autofocus>
@@ -226,7 +237,6 @@ font-size: 16px;
 {%block javascripts %}
 {{block.super}}
 <script>
-var colIdx = $(this).closest('th').index();
 var uniq = [];
 var array=[];
 var array2=[];
@@ -253,7 +263,9 @@ $(document).ready(function (){
 
     // Handle click event on a checkbox
     $('#example_wrapper').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
+         var colIdx = $(this).closest('th').index();
         e.stopPropagation();
+
 
         if(this.checked)
         {
