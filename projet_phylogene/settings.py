@@ -26,7 +26,11 @@ SECRET_KEY = '@%(6xvusj!)t36!of4%_(jlv!z2v-a_-v+26k7_^x$l0uv1uj6'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+# ALLOWED_HOSTS = ['http://localhost:8000']
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'https://*',
+)
 
 # Application definition
 
@@ -38,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #add manually
+    'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -50,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'projet_phylogene.urls'
@@ -90,7 +99,7 @@ WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'NAME': 'phylogene_app/static/mydatabase',
     }
 }
 
@@ -134,5 +143,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static',
+    '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/files',
+]
 
 
