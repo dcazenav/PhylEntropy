@@ -1,15 +1,34 @@
-import itertools
+import base64
+import io
 import os
-import json
 import csv
-import numpy as np
-import pandas as pd
+import json
+import os
+import dash_bio
+import urllib
+import uuid
+from tkinter import Button
+from PIL import Image
+import kaleido
 
-from .algo import *
+import plotly.figure_factory as ff
+import scipy.cluster.hierarchy as sch
+import numpy as np
+
+from plotly.offline import plot
+from plotly.graph_objs import Scatter
+
+import matplotlib
+import matplotlib.pyplot as plt
+import pandas as pd
 from django.http import HttpResponse
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+from mttkinter import mtTkinter
+from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn import svm
 from sklearn import tree
 from sklearn.decomposition import PCA as sklearnPCA
@@ -17,17 +36,25 @@ from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBo
 from sklearn.metrics import accuracy_score, precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
-import matplotlib.pyplot as plt
-from scipy.cluster.hierarchy import dendrogram, linkage
+from .algo import *
+import time
+import _thread
+
+
+# matplotlib.use('TkAgg')
+
+# from Tinker import *
+
+# Create a window
+# window = Tk()
+
 
 # test map
 # Include the `fusioncharts.py` file that contains functions to embed the charts.
-from phylogene_app.static.fusioncharts import FusionCharts
-from collections import OrderedDict
 
 
 # test map
@@ -931,6 +958,80 @@ def run_algo(request):
                 write.writerows(fichier)
 
             return render(request, 'h_clust.html', locals())
+
+        if algo == "h_clust_test":
+            '''X = np.matrix([[0, 0, 0, 0], [13, 0, 0, 0], [2, 14, 0, 0], [17, 1, 18, 0]])
+
+            names = "0123"
+            plot_div = ff.create_dendrogram(X,
+                                       orientation='left',
+                                       labels=names,
+                                       linkagefun=lambda x: sch.linkage(x, "average"), )
+            plot_div.update_layout(width=800, height=800)
+            plot_div.show()'''
+
+            '''x_data = [0, 1, 2, 3]
+            y_data = [x ** 2 for x in x_data]
+            plot_div = plot([Scatter(x=x_data, y=y_data,
+                                     mode='lines', name='test',
+                                     opacity=0.8, marker_color='green')],
+                            output_type='div')'''
+
+            '''df = pd.read_csv('https://git.io/clustergram_brain_cancer.csv')
+
+            plot_div = dash_bio.Clustergram(
+                data=df,
+                column_labels=list(df.columns.values),
+                row_labels=list(df.index),
+                height=800,
+                width=700
+            )'''
+
+            X = np.random.rand(44, 54)
+            print(len(X))
+            names = entete_colonne_selected
+            print(len(entete_colonne_selected))
+            fig = ff.create_dendrogram(X, orientation='left', labels=names)
+            fig.update_layout(width=1000, height=1000)
+            # plot_div = fig.show()
+
+            # entries = os.listdir('./static')
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            # my_path = os.path.abspath("./static")
+            filename = str(uuid.uuid4()) + ".png"
+            fig.write_image(filename)
+
+            # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
+
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('../templates/h_clust_test.html')
+            text_file = open(file_name, "w+")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''
+                            <html>
+                                <head>
+                                  <meta charset="utf-8">
+                                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                                  <title>test</title>
+                                </head>
+                                <body>
+                                    <a href="../static/{file}" download>Link 1</a>                                                      
+                                
+                                </body>
+                            </html>
+                        '''
+            html = html_string.format(file=filename)
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'html': html}
+            return render(request, 'h_clust_test.html', context)
+
 
 # def test(request):
 #     return render(request, 'test.html', locals())
