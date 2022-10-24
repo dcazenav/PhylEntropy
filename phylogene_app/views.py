@@ -7,7 +7,7 @@ import os
 import dash_bio
 import urllib
 import uuid
-from tkinter import Button
+
 from PIL import Image
 import kaleido
 
@@ -24,10 +24,9 @@ import pandas as pd
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
-from matplotlib.backends._backend_tk import NavigationToolbar2Tk
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-from mttkinter import mtTkinter
+
+
+
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn import svm
 from sklearn import tree
@@ -986,17 +985,31 @@ def run_algo(request):
                 height=800,
                 width=700
             )'''
+            new_names = []
+            new_fichier = fichier[1:]
+            for i in range(len(new_fichier)):
+                #print("bact =", new_fichier[i][0])
+                new_names.append(new_fichier[i][0])
 
-            X = np.random.rand(44, 54)
-            print(len(X))
-            names = entete_colonne_selected
-            print(len(entete_colonne_selected))
-            fig = ff.create_dendrogram(X, orientation='left', labels=names)
-            fig.update_layout(width=1000, height=1000)
+
+            new_X_input = []
+            for i in range(len(rows_bact)):
+                #print("bact =", rows_bact[i][:-1])
+                new_X_input.append(rows_bact[i][:-1])
+
+            #X = np.random.rand(len(new_names), 54)
+            array_for_X = np.array(new_X_input)
+            X = array_for_X.astype("float64")
+
+            fig = ff.create_dendrogram(X, orientation='left', labels=new_names)
+            fig.update_layout(width=2000, height=2000)
             # plot_div = fig.show()
 
             # entries = os.listdir('./static')
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            #pc ipg
+            # os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            #pc damien
+            os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
             # my_path = os.path.abspath("./static")
             filename = str(uuid.uuid4()) + ".png"
             fig.write_image(filename)
