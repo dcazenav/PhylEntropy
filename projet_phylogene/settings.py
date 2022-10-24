@@ -95,11 +95,16 @@ WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 #         'PORT': '5432',
 #     }
 # }
+CURRENT_DIR= '/home/freezer/Documents/PhylEntropy'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'phylogene_app/static/mydatabase',
+        'NAME': CURRENT_DIR+ '/mydatabase.db', # <- The path
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -144,9 +149,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+'''pc ipg
 STATICFILES_DIRS = [
     '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static',
     '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/files',
+]
+'''
+STATICFILES_DIRS = [
+    '/home/freezer/Documents/PhylEntropy/phylogene_app/static',
+    '/home/freezer/Documents/PhylEntropy/phylogene_app/static/files',
 ]
 
 
