@@ -1,12 +1,12 @@
 import base64
 import io
-import os
 import csv
 import json
 import os
 import dash_bio
 import urllib
 import uuid
+import random
 
 from PIL import Image
 import kaleido
@@ -21,15 +21,16 @@ from plotly.graph_objs import Scatter
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
 
-
-
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn import svm
 from sklearn import tree
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 from sklearn.decomposition import PCA as sklearnPCA
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
 from sklearn.metrics import accuracy_score, precision_score
@@ -336,7 +337,11 @@ def run_algo(request):
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             model_option = DecisionTreeClassifier()
             model_option.fit(X_train, y_train)
-            tree.export_graphviz(model_option, out_file='graph.dot',
+
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            filename = str(uuid.uuid4()) + ".dot"
+
+            tree.export_graphviz(model_option, out_file=filename,
                                  feature_names=entete_colonne_selected[:-1],
                                  class_names=sorted(y.unique()),
                                  label='all',
@@ -383,8 +388,8 @@ def run_algo(request):
             # write html to file
             # For accessing the file in a folder contained in the current folder
 
-            file_name = os.path.join('phylogene_app/templates/Decision_Tree.html')
-            text_file = open(file_name, "w")
+            file_name = os.path.join('../templates/Decision_Tree.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Decision Tree</title></head> <script 
@@ -405,7 +410,8 @@ def run_algo(request):
                 </div>
               <p> Accuracy Score : {score_dt} </p>  
               <p> Precision Score : {precision_dt} </p>  
-              <a href="{link}" download>Link 1</a>
+              <a href="../static/{file}" download>Link 1</a>
+              
               
                 {table}
                 
@@ -413,7 +419,7 @@ def run_algo(request):
             </html>.
             '''
             html = html_string.format(score_dt=score_dt, precision_dt=precision_dt,
-                                      link="../phylogene_app/static/files/spol43.csv", table=htmlfinal.to_html(
+                                      file=filename, table=htmlfinal.to_html(
                     classes='dataframe display table table-striped table-bordered table-hover responsive nowrap'
                             'cell-border compact stripe'))
 
@@ -478,8 +484,9 @@ def run_algo(request):
             print("numb", numbers)
             print(dfpred)
 
-            file_name = os.path.join('phylogene_app/templates/Support_Vector_Machines.html')
-            text_file = open(file_name, "w")
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            file_name = os.path.join('../templates/Support_Vector_Machines.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Support_Vector_Machines</title></head> <script 
@@ -565,9 +572,10 @@ def run_algo(request):
 
             # write html to file
             # For accessing the file in a folder contained in the current folder
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
 
-            file_name = os.path.join('phylogene_app/templates/Random_Forest.html')
-            text_file = open(file_name, "w")
+            file_name = os.path.join('../templates/Random_Forest.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Random Forest</title></head> <script 
@@ -650,10 +658,11 @@ def run_algo(request):
             print("numb", numbers)
             print(dfpred)
 
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            file_name = os.path.join('phylogene_app/templates/Extra_Trees.html')
-            text_file = open(file_name, "w")
+            file_name = os.path.join('../templates/Extra_Trees.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Extra Trees</title></head> <script 
@@ -735,10 +744,11 @@ def run_algo(request):
             print("numb", numbers)
             print(dfpred)
 
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            file_name = os.path.join('phylogene_app/templates/Ada_Boost.html')
-            text_file = open(file_name, "w")
+            file_name = os.path.join('../templates/Ada_Boost.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Ada Boost</title></head> <script 
@@ -823,9 +833,9 @@ def run_algo(request):
 
             # write html to file
             # For accessing the file in a folder contained in the current folder
-
-            file_name = os.path.join('phylogene_app/templates/K_Neighbors.html')
-            text_file = open(file_name, "w")
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            file_name = os.path.join('../templates/K_Neighbors.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>K Neighbors</title></head> <script 
@@ -911,9 +921,9 @@ def run_algo(request):
 
             # write html to file
             # For accessing the file in a folder contained in the current folder
-
-            file_name = os.path.join('phylogene_app/templates/Nayves_Bayes.html')
-            text_file = open(file_name, "w")
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            file_name = os.path.join('../templates/Nayves_Bayes.html')
+            text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
             html_string = '''<html> <head><title>Nayves Bayes</title></head> <script 
@@ -951,14 +961,6 @@ def run_algo(request):
             return render(request, 'Nayves_Bayes.html', context)
 
         if algo == "h_clust":
-            with open('GFG.csv', 'w') as fichier_csv:
-                # using csv.writer method from CSV package
-                write = csv.writer(fichier_csv)
-                write.writerows(fichier)
-
-            return render(request, 'h_clust.html', locals())
-
-        if algo == "h_clust_test":
             '''X = np.matrix([[0, 0, 0, 0], [13, 0, 0, 0], [2, 14, 0, 0], [17, 1, 18, 0]])
 
             names = "0123"
@@ -988,16 +990,15 @@ def run_algo(request):
             new_names = []
             new_fichier = fichier[1:]
             for i in range(len(new_fichier)):
-                #print("bact =", new_fichier[i][0])
+                # print("bact =", new_fichier[i][0])
                 new_names.append(new_fichier[i][0])
-
 
             new_X_input = []
             for i in range(len(rows_bact)):
-                #print("bact =", rows_bact[i][:-1])
+                # print("bact =", rows_bact[i][:-1])
                 new_X_input.append(rows_bact[i][:-1])
 
-            #X = np.random.rand(len(new_names), 54)
+            # X = np.random.rand(len(new_names), 54)
             array_for_X = np.array(new_X_input)
             X = array_for_X.astype("float64")
 
@@ -1006,10 +1007,10 @@ def run_algo(request):
             # plot_div = fig.show()
 
             # entries = os.listdir('./static')
-            #pc ipg
-            # os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
-            #pc damien
-            os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
+            # pc ipg
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            # pc home
+            # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
             # my_path = os.path.abspath("./static")
             filename = str(uuid.uuid4()) + ".png"
             fig.write_image(filename)
@@ -1018,7 +1019,7 @@ def run_algo(request):
 
             # For accessing the file in a folder contained in the current folder
 
-            file_name = os.path.join('../templates/h_clust_test.html')
+            file_name = os.path.join('../templates/h_clust.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -1043,11 +1044,233 @@ def run_algo(request):
             text_file.close()
 
             context = {'html': html}
-            return render(request, 'h_clust_test.html', context)
+            plt.close()
+            return render(request, 'h_clust.html', context)
 
+        if algo == "k_means":
+            new_names = []
+            new_fichier = fichier[1:]
+            for i in range(len(new_fichier)):
+                # print("bact =", new_fichier[i][0])
+                new_names.append(new_fichier[i][-1])
 
-# def test(request):
-#     return render(request, 'test.html', locals())
+            new_X_input = []
+            for i in range(len(rows_bact)):
+                # print("bact =", rows_bact[i][:-1])
+                new_X_input.append(rows_bact[i][:-1])
 
-# def testmap(request):
-#     return render(request, 'testmap.html', locals())
+            # Load Data
+            # data = load_digits().data
+            data = np.array(new_X_input)
+            print(data)
+            pca = PCA(n_components=0.95)
+
+            # Transform the data
+            # print("data:",type(data))
+            df = pca.fit_transform(data)
+            df.shape
+            print(df.shape)
+
+            clusters = np.unique(new_names)
+
+            # Initialize the class object
+            kmeans = KMeans(n_clusters=len(clusters))
+
+            # predict the labels of clusters.
+            label = kmeans.fit_predict(df)
+            print(label)
+
+            # Getting the Centroids
+            centroids = kmeans.cluster_centers_
+            u_labels = np.unique(label)
+
+            number_of_colors = len(clusters)
+            color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+                               for i in range(number_of_colors)])
+
+            # dictionary = dict(zip(clusters, color))
+            # print(dictionary)  # {'a': 1, 'b': 2, 'c': 3}
+            # plotting the results:
+            for i in u_labels:
+                plt.scatter(df[label == i, 0], df[label == i, 1], label=clusters[i], color=color[i], s=80)
+
+            # plt.scatter(centroids[:, 0], centroids[:, 1], s=30, color='k')
+            plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+                       fancybox=True, shadow=True, ncol=5)
+            # plt.show()
+
+            # entries = os.listdir('./static')
+            # pc ipg
+            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            # pc home
+            # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
+            # my_path = os.path.abspath("./static")
+            filename = str(uuid.uuid4()) + ".png"
+            plt.savefig(filename, dpi=100, bbox_inches='tight')
+
+            # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
+
+            # For accessing the file in a folder contained in the current folder
+
+            file_name = os.path.join('../templates/k_means.html')
+            text_file = open(file_name, "w+")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''
+                                        <html>
+                                            <head>
+                                              <meta charset="utf-8">
+                                              <meta name="viewport" content="width=device-width, initial-scale=1">
+                                              <title>K_means</title>
+                                            </head>
+                                            <body>
+                                                <a href="../static/{file}" download>Link 1</a>                                                      
+
+                                            </body>
+                                        </html>
+                                    '''
+            html = html_string.format(file=filename)
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'html': html}
+            plt.close()
+            return render(request, 'k_means.html', context)
+
+        if algo == "clustermap":
+            # Data set url = 'https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw
+            # /5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv' df = pd.read_csv(url) df = df.set_index('model')
+            new_names = []
+            new_fichier = fichier[1:]
+            for i in range(len(new_fichier)):
+                # print("bact =", new_fichier[i][0])
+                new_names.append(new_fichier[i][0])
+
+            df = pd.DataFrame(rows_bact,
+                              columns=entete_colonne_selected)
+            print(df)
+
+            if 'Country' in df:
+                df["ID"] = new_names
+                df = df.set_index('ID')
+                col_type = df['Type']
+                print(col_type)
+                del df['Type']
+                del df['Country']
+                df = df.astype(float)
+
+                color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+                                   for i in range(len(df))])
+                # Prepare a vector of color mapped to the 'cyl' column
+
+                my_palette = dict(zip(col_type.unique(), color))
+                print(my_palette)
+
+                row_colors = col_type.map(my_palette)
+                print(row_colors)
+
+                # plot
+                sns.clustermap(df,
+                               row_colors=row_colors)
+                # pc ipg
+                os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+                # pc home
+                # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
+                # my_path = os.path.abspath("./static")
+                filename = str(uuid.uuid4()) + ".png"
+                plt.savefig(filename, dpi=100, bbox_inches='tight')
+
+                # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
+
+                # For accessing the file in a folder contained in the current folder
+
+                file_name = os.path.join('../templates/clustermap.html')
+                text_file = open(file_name, "w+")
+
+                # OUTPUT AN HTML FILE
+                html_string = '''
+                                            <html>
+                                                <head>
+                                                  <meta charset="utf-8">
+                                                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                                                  <title>clustermap</title>
+                                                </head>
+                                                <body>
+                                                    <a href="../static/{file}" download>Link 1</a>                                                      
+
+                                                </body>
+                                            </html>
+                                        '''
+                html = html_string.format(file=filename)
+
+                with text_file as f:
+                    f.write(html)
+
+                text_file.close()
+
+                context = {'html': html}
+                plt.close()
+                return render(request, 'clustermap.html', context)
+
+            elif 'Country' not in df:
+                df["ID"] = new_names
+                df = df.set_index('ID')
+                col_type = df['Type']
+                del df['Type']
+                df = df.astype(float)
+
+                color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+                                   for i in range(len(df))])
+                # Prepare a vector of color mapped to the 'cyl' column
+                my_palette = dict(zip(col_type.unique(), color))
+                print(my_palette)
+
+                row_colors = col_type.map(my_palette)
+                print(row_colors)
+
+                # plot
+                sns.clustermap(df,
+                               row_colors=row_colors)
+
+                # pc ipg
+                os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+                # pc home
+                # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
+                # my_path = os.path.abspath("./static")
+                filename = str(uuid.uuid4()) + ".png"
+                plt.savefig(filename, dpi=100, bbox_inches='tight')
+
+                # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
+
+                # For accessing the file in a folder contained in the current folder
+
+                file_name = os.path.join('../templates/dendro_heat.html')
+                text_file = open(file_name, "w+")
+
+                # OUTPUT AN HTML FILE
+                html_string = '''
+                                            <html>
+                                                <head>
+                                                  <meta charset="utf-8">
+                                                  <meta name="viewport" content="width=device-width, initial-scale=1">
+                                                  <title>dendro_heat</title>
+                                                </head>
+                                                <body>
+                                                    <a href="../static/{file}" download>Link 1</a>                                                      
+
+                                                </body>
+                                            </html>
+                                        '''
+                html = html_string.format(file=filename)
+
+                with text_file as f:
+                    f.write(html)
+
+                text_file.close()
+
+                context = {'html': html}
+                plt.close()
+                return render(request, 'dendro_heat.html', context)
