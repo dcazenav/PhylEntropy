@@ -13,3 +13,4 @@ plotly~=5.10.0
 mttkinter~=0.6.1
 
 kaleido
+seaborn
