@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -43,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #add manually
+    # add manually
     'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
 ]
@@ -66,7 +65,7 @@ ROOT_URLCONF = 'projet_phylogene.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -95,12 +93,15 @@ WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 #         'PORT': '5432',
 #     }
 # }
-CURRENT_DIR= '/home/freezer/Documents/PhylEntropy'
+"""pc home
+CURRENT_DIR = '/home/freezer/Documents/PhylEntropy'
+"""
+CURRENT_DIR = '/home/linuxipg/Documents/PhylEntropy'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': CURRENT_DIR+ '/mydatabase.db', # <- The path
+        'NAME': CURRENT_DIR + '/mydatabase.db',  # <- The path
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -109,7 +110,6 @@ DATABASES = {
 }
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -129,7 +129,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -143,21 +142,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
 
-'''pc ipg
 STATICFILES_DIRS = [
     '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static',
     '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/files',
 ]
-'''
+
+''' pc home
 STATICFILES_DIRS = [
     '/home/freezer/Documents/PhylEntropy/phylogene_app/static',
     '/home/freezer/Documents/PhylEntropy/phylogene_app/static/files',
 ]
-
-
+'''
