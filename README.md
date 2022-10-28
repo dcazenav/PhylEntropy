@@ -36,7 +36,7 @@ python3 manage.py migrate
 python manage.py createsuperuser
 ```
 
-* Run the django server
+* Run the django server on local network
 
 ```
 python manage.py runserver 0.0.0.0:<port>
