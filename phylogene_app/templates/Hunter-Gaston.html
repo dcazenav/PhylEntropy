@@ -53,7 +53,7 @@
   var reachID = window.opener.parent.array[window.opener.parent.array.length - firstcolumn];
   var lastItem = window.opener.parent.array[window.opener.parent.array.length - 2];
 
-  // Début HGDI
+  // Debut HGDI
   var retrievedObject = sessionStorage.getItem('TableauduCSV');
 
   damienitem = JSON.parse(retrievedObject).length
@@ -94,7 +94,7 @@
     //compte le nombre total de souche dans la colonne
     var SumNumbDiffStrain = sumStrain(numberstrainpertype);
 
-    //calcul découpé en deux partie car je n'ai pas réussi à l'écrire en une seule fois
+    //calcul decoupe en deux partie car je n'ai pas reussi a l'ecrire en une seule fois
     hdgi1.push(1 / (numberstraintested * (numberstraintested - 1)));
     hdgi2.push(1 - (hdgi1[i] * SumNumbDiffStrain));
   }
