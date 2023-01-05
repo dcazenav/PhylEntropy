@@ -11,37 +11,45 @@ def UPGMA(table, labels):
         x, y = lowest_cell(table)
 
         # Join the table on the cell co-ordinates
-        val=join_table(table, x, y)
+        val = join_table(table, x, y)
 
         # Update the labels accordingly
-        join_labels(labels, x, y,val)
+        join_labels(labels, x, y, val)
 
     # Return the final label
     return labels[0]
 
 
-def kruskal(table,labels):
-
+def kruskal(table, labels):
     liste_sommet = labels
     triplet = []
     sommet = []
     minimal_tree = []
     index_sommet = {}
     reverse_index = {}
+    # print(table)
+    # print("labels:", liste_sommet)
+    # print("minimal_tree:", minimal_tree)
+    # print("index_sommet:", index_sommet)
     for i in range(len(table)):
         for j in range(len(table[i])):
             triplet.append((int(table[i][j]), liste_sommet[j], liste_sommet[i]))
     triplet = tri_fusion(triplet)
+    # print("triplet:", triplet)
     for i in range(len(liste_sommet)):
         index_sommet[liste_sommet[i]] = i
         reverse_index[i] = [liste_sommet[i]]
     cpt = 0
     while len(sommet) < len(liste_sommet):
         elmt = triplet[cpt]
+        # print("elmt:", elmt)
+        # print("index_sommet[elmt[1]] + 2:", index_sommet[elmt[1]], index_sommet[elmt[2]])
         if index_sommet[elmt[1]] != index_sommet[elmt[2]]:
             minimal_tree.append(elmt)
             tab = reverse_index[index_sommet[elmt[1]]]
+            # print("tab", tab)
             tab2 = reverse_index[index_sommet[elmt[2]]]
+            # print("tab2", tab2)
             for index in tab2:
                 tab.append(index)
             reverse_index[index_sommet[elmt[1]]] = tab
@@ -52,7 +60,7 @@ def kruskal(table,labels):
             if elmt[2] not in sommet:
                 sommet.append(elmt[2])
         cpt += 1
-
+    # print("mimin",minimal_tree)
     return minimal_tree
 
 
@@ -88,7 +96,8 @@ def neighbor_joining(table, labels):
             val2 = table[i][j] - val1
             labels[i] = "(" + labels[j] + ":" + str(val1) + "," + labels[i] + ":" + str(val2) + ")"
         else:
-            labels[i] = "(" + labels[j] +":" + str(table[i][j]/2) +"," + labels[i] + ":" + str(table[i][j]/2) + ")"
+            labels[i] = "(" + labels[j] + ":" + str(table[i][j] / 2) + "," + labels[i] + ":" + str(
+                table[i][j] / 2) + ")"
         del labels[j]
         if N != 2:
             for cpt1 in range(len(table)):
@@ -119,28 +128,26 @@ def neighbor_joining(table, labels):
 
 
 def score_entropy(data):
-    l=len(data)
-    tab=[]
+    l = len(data)
+    tab = []
     for elmt in data:
         value, counts = np.unique(elmt, return_counts=True)
         norm_counts = counts / counts.sum()
-        val=-sum([x1*np.log2(x1) for x1 in norm_counts])
-        tab.append(1-val)
-    score=(sum(tab)/l)*100
-    tab=[x2*100 for x2 in tab]
-    return tab,score
+        val = -sum([x1 * np.log2(x1) for x1 in norm_counts])
+        tab.append(1 - val)
+    score = (sum(tab) / l) * 100
+    tab = [x2 * 100 for x2 in tab]
+    return tab, score
+
 
 def simpson_di(data):
     def p(n, N):
         """ Relative abundance """
-        if n ==  0:
+        if n == 0:
             return 0
         else:
-            return float(n)/N
+            return float(n) / N
 
     N = sum(data.values())
 
-    return sum(p(n, N)**2 for n in data.values() if n != 0)
-
-
-
+    return sum(p(n, N) ** 2 for n in data.values() if n != 0)
