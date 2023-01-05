@@ -177,6 +177,8 @@ labelSeq.forEach(function(element,i,color,groupname,testbact)
   dico.set(element,i,color,groupname,testbact);
     // nodes.push({id:i ,label:element,font:{size:15,align:"middle"},shape: 'circle'});
     testbact = element.split("+");
+    console.log("testlab"+testbact)
+    console.log("elementlabel"+element);
     
     nodes.push({
         id:i ,
@@ -192,14 +194,15 @@ labelSeq.forEach(function(element,i,color,groupname,testbact)
 });
 var edges = [];
 
-
 table.forEach(function(element)
 {
-
+    console.log("element:" + element);
     var str=element.replace(/ /g,"");
+    console.log("str" + str);
     str= str.replace(/'/g,"");
     str=str.replace(/[()]/g,"");
     array=str.split(",");
+    console.log("array:" + array);
     edges.push({from: dico.get(array[1]),to: dico.get(array[2]),label:array[0]});
 
 });
