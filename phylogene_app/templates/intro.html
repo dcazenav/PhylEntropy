@@ -1,195 +1,187 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-{% load static %}
-<head>
-	{% block head %}
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
-<title>PhylEntropy</title>
-<link rel="stylesheet" href="../static/css/bootstrap.min.css">
-<link rel="stylesheet" href="../static/css/phylotree.css"> 
-<!-- <link rel="icon" type="image/jpg" href="../static/img/logo_size.jpg" /> -->
-	{% endblock %}
+    {% load static %}
+    <head>
+        {% block head %}
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <link rel="shortcut icon" href="../static/img/karubionet2favicon.png" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+{% comment %}
+        <link rel="stylesheet" href="../static/css/phylotree.css">
+{% endcomment %}
+        {% endblock %}
+        <title>phylEntropy</title>
 
-<!-- TRACKER
-	<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        <style>
+            h1 {
+              text-align: center;
+            }
 
-  ga('create', 'UA-56948894-1', 'auto');
-  ga('send', 'pageview');
+        </style>
+    {%block javascripts %}
+    <script type="application/javascript">
 
-</script> -->
-<style>
-	h1 {
-	  text-align: center;
-	}
-</style>	
+            function show(shown, hidden) {
+              document.getElementById(shown).style.display='block';
+              document.getElementById(hidden).style.display='none';
+              return false;
+            }
 
-</head>
-<body>
-	
-	<nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
-		<a class="navbar-brand" href="#">PhylEntropy</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarCollapse">
-		  <ul class="navbar-nav mr-auto">
-			<li class="nav-item active">
-			  <a class="nav-link" href="{% url 'intro' %}">Home <span class="sr-only">(current)</span></a>
-			  
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="{% url 'phylogene_import' %}">Analysis</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="http://www.pasteur-guadeloupe.fr/karubionet.html">KaruBioNet</a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link disabled" href="#">Disabled</a>
-			</li>
-		  </ul>
-		  <!-- <form class="form-inline mt-2 mt-md-0">
-			<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		  </form> -->
-		</div>
-	  </nav>
+    </script>
+    {% endblock %}
+    </head>
 
-<div class="container-fluid" style="background-color: #a6aaa9;" >
+    <body>
+        <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
+            <a class="navbar-brand" href="#">phylEntropy</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav mr-auto">
 
-	<!--BANDEAU -->
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'intro' %}"><i class="fa fa-home"></i> Home<span class="sr-only">(current)</span></a>
+                </li>
 
-	<div class="container" style="background-color: #ffffff;">
-		<a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col>
-			<div class="col-lg-4"  style="float:none;margin:auto;">
-				<div class="d-flex flex-column text-center height100">
-					<div>
-					</br>
-				</br>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" onclick="return show('Page2','Page1');">About Phylentropy</a>
+                </li>
 
-						<img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
-					</div>
-				</div>
-			</a>	
-			</div>
-		<!--DEBUT TABULATIONS -->
-		<div class="col-lg-12">
-			<h1 >Bienvenue sur PhylEntropy</h1>
-			<br/>
-			<br/>
-			<!-- <p>Le but est de proposer un ensemble d'algorithmes ou métodes pour analyser les données (à partir de fichiers au format CSV).
-				Tu pourras implémenter les algorithmes pour les graphs et autres visualisations (Kruskal, UPGMA, ...)
-				<br><br>
-				Pour plus d'informations sur la façon d'utiliser cette application Web, prière de lire le <a href="../static/files/manuel.pdf" target="_blank">Manuel de l'Utilisateur</a>
-			</p> -->
-		<p>
-		<p><u>Le « Pourquoi » de l’application <b>PhylEntropy</b></u><br></p>
-				L’application PhylEntropy permet de réaliser de l’analyse et de la visualisation de données. Bien qu’il existe déjà de nombreux outils permettant l’analyse et de la visualisation de données, notre approche se différencie d’autres applications en permettant aux utilisateurs d’effectuer aussi bien des analyses bio-statistiques classiques que des analyses plus spécifiques qui nécessitent habituellement l’utilisation de logiciels payants ou une expérience particulière. Lorsque nous prenons l’exemple de la représentation d’un arbre de recouvrement minimal contenant des annotations en fonction des données ou caractères étudiés, nous devons souvent utiliser des logiciels payants comme BioNumerics (<a href="http://www.applied-maths.com/bionumerics" target="_blank">http://www.applied-maths.com/bionumerics</a>) pour représenter clairement les données en fonction de divers paramètres (ou variables). L’utilisation d’algorithmes et de librairies JavaScript existants permet de proposer à l’utilisateur non-expert une solution rapide d’analyse pour ses données. De plus, avec le développement de l’application phylEntropy, nous essayons de mettre en place de nouvelles stratégies d’analyse en suivant un paradigme qui diffère des outils existants. Par exemple, dans cette application, nous considérons des objets de type « séquence biologique » qui diffèrent des séquences d’ADN ou de protéines classiques. Cette séquence biologique est représentée sous une forme de chaine de caractères pouvant contenir des chiffres, des lettres, mais aussi des caractères spéciaux (s’il s’agit d’une analyse assez complexe ou spécifique). 
-				<br><br>
-		<p><u>Qu'est-ce que l’application <b>PhylEntropy</b></u><br></p>
-				PhylEntropy est une application Web d’analyse et de visualisation de données. L’outil regroupe plusieurs modules d’analyse représentant différentes thématiques de recherche : phylogénie/clustering, bio-statistique, mesures de diversité biologique, analyses multivariées, apprentissage automatique.
-				L’utilisateur peut importer ses données sous forme de fichier CSV avant de choisir un type d’analyse à effectuer. La première colonne de notre fichier contient l’identifiant de chaque « objet ». Les colonnes suivantes contiennent la séquence biologique (un caractère par colonne). Les dernières colonnes (représentant des variables de description) contiennent généralement des chaines de caractères (texte).
-				</p>
-			</p>
-		
-			<!-- <article class="row single-post mt-5 no-gutters">
-				<div class="col-md-6">
-					<div class="image-wrapper float-left pr-3">
-						<img src="../static/img/LogoSample_ByTailorBrands.jpg" alt="LogoPhylEntropy">
-					</div>
-					<div class="single-post-content-wrapper p-3">
-						Le but est de proposer un ensemble d'algorithmes ou métodes pour analyser les données (à partir de fichiers au format CSV).
-						Tu pourras implémenter les algorithmes pour les graphs et autres visualisations (Kruskal, UPGMA, ...)
-						<br><br>
-						Pour plus d'informations sur la façon d'utiliser cette application Web, prière de lire le <a href="../static/files/manuel.pdf" target="_blank">Manuel de l'Utilisateur</a></div>
-				</div>
-			</article> -->
-				<!-- <div id="paragraphe" align="justify"> 	
-					<span class=marge2> <img src="../static/img/LogoSample_ByTailorBrands.jpg" align="left" alt="picture" height="243" width="278" hspace="20" vspace="20"/></span>
-					<p style="padding-right : 2em;">Le but est de proposer un ensemble d'algorithmes ou métodes pour analyser les données (à partir de fichiers au format CSV).
-						Tu pourras implémenter les algorithmes pour les graphs et autres visualisations (Kruskal, UPGMA, ...)</p>
-					<br/>
-					<p>Pour plus d'informations sur la façon d'utiliser cette application Web, prière de lire le <a href="../static/files/manuel.pdf" target="_blank">Manuel de l'Utilisateur</a></p>
-					<br/>
-			
-				</div> -->
-	
-		<!-- FIN TABULATION -->
-		
-	  	
-  	
-  	<!--PIED DE PAGE -->
-			</br>
-		</br>
-	</br>
-  	<div id="info"><p><b>Supervisor &amp; Web Content Manager:</b> <a href="mailto:nrastogi@pasteur-guadeloupe.fr">Dr. David COUVIN</a></p>
-	<p><b>Validation &amp; Development:</b> <a>Davy REGALADE</a>, <a href="mailto:dcazenave@pasteur-guadeloupe.fr">Damien CAZENAVE</a> &amp <a>Vincent MOCCO</a> </p></div><br/>
-    
-	<center>
-            <table class="footer" width="100%" border="0">
-              
-              <tr> 
-              	
-                <td align="left" width="37%"><div id="info"><i>Copyright &copy; 2022, <a href="http://web.pasteur-guadeloupe.fr/" target="_blank">Institut Pasteur de la Guadeloupe</a>.   All rights reserved.  </i> </div></td>                
-              	<td height="21" colspan="2"><div id="info" align="right">You can also follow us on <a href="https://www.facebook.com/Institut.Pasteur.Guadeloupe/" target="_blank">Facebook</a></div></td>
-              </tr>
-			  <!-- <tr>
-                <td height="21" colspan="2">&nbsp;</td>
-                <td width="37%"><div id="info" align="right"><a href="mailto:tburguiere@pasteur-guadeloupe.fr">Thomas Burguiere</a> &nbsp; <a href="mailto:dcouvin@pasteur-guadeloupe.fr">David Couvin</a> </div></td>
-              </tr>-->
-              
-			  <tr>
-			    <td height="21" colspan="3"><hr></td>
-		      </tr>
-		      
-			<tr>
-                <td align="left" width="50%" height="46">Portions of this page are reproduced from work created and <a href="https://google-developers.appspot.com/site-policies" target="_blank">shared by Google</a> and used according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative Commons 3.0 Attribution License</a>.</td>
-				<!--<a href="http://validator.w3.org/check?uri=referer" target="_blank">
-					<img src="http://www.w3.org/Icons/valid-html401" alt="w3c" width="88" height="31" border="0" longdesc="http://validator.w3.org/check?uri=referer" >	</a></td>-->
-                <td >
-					<div align="center">version &#946; 2.0 </div></td>
-                <td width="50%">
-					<div align="right"><em>This site uses </em>&nbsp;
-				<a href="https://www.djangoproject.com/" target="_blank">
-					<img src="../static/img/djangologo.png" alt="django" width="68" height="35" border="0">				</a>&nbsp;
-				<a href="https://getbootstrap.com/" target="_blank">
-					<img src="../static/img/bootstraplogo.png" alt="bootstrap" width="68" height="35" border="0">				</a>&nbsp;				
-				<a href="https://www.python.org/" target="_blank">
-					<img src="../static/img/pythonlogo.jpg" alt="bootstrap" width="68" height="35" border="0">				</a>&nbsp;				
-					</div>
-				</td>
-        	</tr>
-           
-            </table>
-		</center>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'phylogene_import' %}"><i class='fa fa-cog'></i> Analysis</a>
+                </li>
 
+                {% comment %}<li class="nav-item">
+                  <a class="nav-link" href="#"><i class='fa fa-paperclip'></i> Links</a>
+                </li>{% endcomment %}
 
-		<!-- tracker
- <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-869850-5");
-pageTracker._trackPageview();
-</script> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="return show('Page3','Page1');"><i class="fa fa-book"></i> Credits</a>
+                </li>
+              </ul>
+              <!-- <form class="form-inline mt-2 mt-md-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form> -->
+            </div>
+        </nav>
 
+        <div class="container-fluid" style="background-color: #a6aaa9;" >
+        <!--BANDEAU -->
+            <div class="container" id="Page1" style="background-color: #ffffff;">
 
-  	</div>
-  	<!--FIN PIED DE PAGE --> 
+                <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col></a>
+                    <div class="col-lg-4"  style="float:none;margin:auto;">
+                        <div class="d-flex flex-column text-center height100">
+                            <div>
+                            </br>
+                            </br>
+                            <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
+                            </div>
+                        </div>
+                    </div>
+                <!--DEBUT TABULATIONS -->
+                    <div class="col-lg-12">
+                        <h1 >Bienvenue sur phylEntropy</h1>
+                        <br/>
+                        <br/>
 
-	  <!-- JS bootstrap-->
-	  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+                        <!-- FIN TABULATION -->
 
 
 
-</div>
-</div>
-</body>
+                    <!--PIED DE PAGE -->
+                            </br>
+                        </br>
+                    </br>
+                <div id="info">
+                    <p><b>Supervisor &amp; Web Content Manager:</b> <a href="mailto:nrastogi@pasteur-guadeloupe.fr">Dr. David COUVIN</a></p>
+                    <p><b>Validation &amp; Development:</b> <a>Davy REGALADE</a>, <a href="mailto:dcazenave@pasteur-guadeloupe.fr">Damien CAZENAVE</a> &amp <a>Vincent MOCCO</a> </p>
+                </div><br/>
+
+                <div style="text-align: center;">
+                        <table class="footer" width="100%" border="0">
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" id="Page2" style="display:none; background-color: #ffffff;">
+                <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col></a>
+                <div class="col-lg-4"  style="float:none;margin:auto;">
+                    <div class="d-flex flex-column text-center height100">
+                        <div>
+                        </br>
+                        </br>
+                        <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
+                        </div>
+                    </div>
+                </div>
+            <!--DEBUT TABULATIONS -->
+                <div class="col-lg-12">
+                    <h1 >Bienvenue sur phylEntropy</h1>
+                    <br/>
+                    <br/>
+                    <!-- <p>Le but est de proposer un ensemble d'algorithmes ou métodes pour analyser les données (à partir de fichiers au format CSV).
+                        Tu pourras implémenter les algorithmes pour les graphs et autres visualisations (Kruskal, UPGMA, ...)
+                        <br><br>
+                        Pour plus d'informations sur la façon d'utiliser cette application Web, prière de lire le <a href="../static/files/manuel.pdf" target="_blank">Manuel de l'Utilisateur</a>
+                    </p> -->
+                    <p>
+                    <p><span
+                            style="text-decoration: underline;">Le « Pourquoi » de l’application <b>phylEntropy</b></span><br></p>
+                            L’application phylEntropy permet de réaliser de l’analyse et de la visualisation de données. Bien qu’il existe déjà de nombreux outils permettant l’analyse et de la visualisation de données, notre approche se différencie d’autres applications en permettant aux utilisateurs d’effectuer aussi bien des analyses bio-statistiques classiques que des analyses plus spécifiques qui nécessitent habituellement l’utilisation de logiciels payants ou une expérience particulière. Lorsque nous prenons l’exemple de la représentation d’un arbre de recouvrement minimal contenant des annotations en fonction des données ou caractères étudiés, nous devons souvent utiliser des logiciels payants comme BioNumerics (<a href="http://www.applied-maths.com/bionumerics" target="_blank">http://www.applied-maths.com/bionumerics</a>) pour représenter clairement les données en fonction de divers paramètres (ou variables). L’utilisation d’algorithmes et de librairies JavaScript existants permet de proposer à l’utilisateur non-expert une solution rapide d’analyse pour ses données. De plus, avec le développement de l’application phylEntropy, nous essayons de mettre en place de nouvelles stratégies d’analyse en suivant un paradigme qui diffère des outils existants. Par exemple, dans cette application, nous considérons des objets de type « séquence biologique » qui diffèrent des séquences d’ADN ou de protéines classiques. Cette séquence biologique est représentée sous une forme de chaine de caractères pouvant contenir des chiffres, des lettres, mais aussi des caractères spéciaux (s’il s’agit d’une analyse assez complexe ou spécifique).
+                            <br><br>
+                    <p><span style="text-decoration: underline;">Qu'est-ce que l’application <b>phylEntropy</b></span><br></p>
+                            phylEntropy est une application Web d’analyse et de visualisation de données. L’outil regroupe plusieurs modules d’analyse représentant différentes thématiques de recherche : phylogénie/clustering, bio-statistique, mesures de diversité biologique, analyses multivariées, apprentissage automatique.
+                            L’utilisateur peut importer ses données sous forme de fichier CSV avant de choisir un type d’analyse à effectuer. La première colonne de notre fichier contient l’identifiant de chaque « objet ». Les colonnes suivantes contiennent la séquence biologique (un caractère par colonne). Les dernières colonnes (représentant des variables de description) contiennent généralement des chaines de caractères (texte).
+                            </p>
+                        </p>
+                        </br>
+                    </br>
+                </br>
+
+                    <div id="info">
+                        <p><b>Supervisor &amp; Web Content Manager:</b> <a href="mailto:nrastogi@pasteur-guadeloupe.fr">Dr. David COUVIN</a></p>
+                        <p><b>Validation &amp; Development:</b> <a>Davy REGALADE</a>, <a href="mailto:dcazenave@pasteur-guadeloupe.fr">Damien CAZENAVE</a> &amp <a>Vincent MOCCO</a> </p>
+                    </div><br/>
+
+                    <div style="text-align: center;">
+                            <table class="footer" width="100%" border="0">
+
+                            </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container" id="Page3" style="display:none; background-color: #ffffff;">
+                <div class="col-lg-12">
+                    <br/>
+                    <p>
+                        <h1 >Sites utilisés pour le développement de phylentropy</h1>
+                        - NGphylogeny : https://ngphylogeny.fr/
+                        <br>
+                        - cripscasfinder : https://crisprcas.i2bc.paris-saclay.fr/
+                        <br>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <!--FIN PIED DE PAGE -->
+
+          <!-- JS bootstrap-->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/v/dt/dt-1.10.13/se-1.2.0/datatables.min.js"></script>
+
+
+    </body>
 </html>
