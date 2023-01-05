@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    {% comment %}<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    {% endcomment %}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
 
 
@@ -19,10 +24,10 @@
             <form method="post" action="#" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group files">
-                <label class="text-primary">Upload Your File </label>
-                <input name="csv_file" id="csv_file" type="file" class="form-control" multiple="">
+                <label class="text-primary">Upload Your File</label>
+                <input name="csv_file" id="csv_file" type="file" class="form-control" >
                 </div>
-                <button name="import" type="submit"  class="offset-md-6 btn btn-primary" > Valider </button>
+                <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Valider </button>
 
             </form>
         </div>
@@ -93,7 +98,7 @@
                 <h6>Statistics :
                     <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
                     <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
-                </h6>                       
+                </h6>
                 <h6>Maps :
                     <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
                     <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
@@ -129,6 +134,7 @@
                               <input id="submit21" name="clustermap" type="submit" value="clustermap" onclick="this.form.submited=this.value;" >
                           </div>
                         </div>
+                    </h6>
                     <!--<select form="myGeeks" id="myCourses" autofocus>
                         <option id="submit12" name="Regression" value="Regression">Regression</option>
                         <option id="submit13" name="Prediction" value="Prediction">Prediction</option>
@@ -153,7 +159,7 @@
                             })
 
                     </script>
-                </h6>-->
+                -->
 
             </div>
         </form>
@@ -246,12 +252,23 @@ var column_name_selected=[];
 var index_column_name_selected=[];
 var label=[];
 var table = $('#example').DataTable({
-       'ordering':false,
-       'paging':true,
-       'searching':true,
-       'select': 'multi',
-        scrollX: true,
-        scrollCollapse: false,
+    'ordering':false,
+   'paging':true,
+   'searching':true,
+   'select': 'multi',
+    //fieldSeparator: '\t',
+    scrollX: true,
+    scrollCollapse: false,
+        dom: 'Bfrtip',
+        buttons: [
+            'copyFlash',
+            {
+                text: 'TSV',
+                extend: 'csvFlash',
+                fieldSeparator: '\t',
+                extension: '.tsv'
+            }
+        ]
     });
 var checkboxes = document.querySelectorAll("input[type = 'checkbox']");
 
