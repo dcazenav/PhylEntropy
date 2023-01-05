@@ -158,6 +158,8 @@ def run_algo(request):
 
         if algo == "kruskal":
             minimal_tree = kruskal(tab_reduce, label_reduce)
+            print("tab-reduce", tab_reduce)
+            print("label-reduce", label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'kruskal.html', locals())
 
@@ -207,7 +209,7 @@ def run_algo(request):
             l = len(entete_colonne_selected) - 1
             # print(entete_colonne_selected)
             df = pd.DataFrame(rows_bact)
-            print(df)
+            #print(df)
             df.columns = [entete_colonne_selected]
             df.dropna(how="all", inplace=True)  # drops the empty line at file-end
             X = df.iloc[:, 0:l].values
@@ -221,7 +223,7 @@ def run_algo(request):
             #### variable  graphique Axe components ####
             mean_vec = np.mean(X_std, axis=0, dtype=np.float64)
             # mean_vec = np.mean(X_std, axis=0, dtype=np.dtype('<U928'))
-            print(type(mean_vec))
+            #print(type(mean_vec))
             # pd.options.display.float_format = '{:.20f}'.format
             # pd.set_option('display.float_format', lambda x: '%.5f' % x)
             # print(mean_vec.apply(lambda x: '%.10f' % x, axis=1))
@@ -315,7 +317,7 @@ def run_algo(request):
             # dataframe ou read_csv ?
             # df remplace tb_data présent dans les script python machine_learning et test
             fichier = request.session['info']
-            print("fichier", type(fichier))
+            #print("fichier", type(fichier))
 
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
