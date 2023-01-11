@@ -1,4 +1,4 @@
-import base64
+# import base64
 import io
 import csv
 import json
@@ -61,6 +61,7 @@ import _thread
 
 # Create your views here.
 
+
 def import_data(request):
     error = False
     info = []
@@ -85,14 +86,20 @@ def import_data(request):
 
     return render(request, 'import_data.html', locals())
 
+def intro(request):
+    return render(request, 'intro.html')
 
 def base(request):
     return render(request, 'base.html')
 
+def aboutphylentropy(request):
+    return render(request, "about.html")
 
-def intro(request):
-    return render(request, 'intro.html')
+def links(request):
+    return render(request, "links.html")
 
+def credits(request):
+    return render(request, "credits.html")
 
 def ajax_1(request):
     if request.method == 'POST':
@@ -156,7 +163,7 @@ def run_algo(request):
         if algo == "Wordcloud":
             return render(request, 'Wordcloud.html', locals())
 
-        if algo == "kruskal":
+        if algo == "Minimun Spanning Tree":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             print("tab-reduce", tab_reduce)
             print("label-reduce", label_reduce)
