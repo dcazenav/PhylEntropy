@@ -1,19 +1,62 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
-    {% comment %}<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    {% endcomment %}
+
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
 
-<div style="margin-top: 1em;">
+{% if info_submit %}
+
+<div class="container" style="margin-bottom: 1em;">
+    <div style="margin-top: 1em;">
+        <div class="row form-group" id="inputDataSample">
+            <div class="col-md-9">
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="csv_file">Test csv files : </label>
+                            <select id="inputDataSampleSelect" name="csv_file">
+                                <option value="exemple_2.csv">exemple2.csv</option>
+                                <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
+                                <option value="spol43.csv">spol43.csv</option>
+                            </select>
+                            <input name="import" type="submit" class="btn btn-primary" id="testfile" value="Test file"/>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <a href="#" id="inputDataSampleDownload" style="padding-left:1em;">Download file</a>
+                    <span class="text-danger field-validation-valid" data-valmsg-for="csv_file" data-valmsg-replace="true"></span>
+
+                </div>
+        </div>
+
+    <script>
+        // on click on example download, call Home controller DownloadFile action
+		$("#inputDataSampleDownload").on('click', function() {
+			if ($("#inputDataSampleSelect option:selected" ).text().length > 0) {
+				window.location.href = "../static/files/FILENAME".replace("FILENAME", $("#inputDataSampleSelect option:selected" ).text());
+			}else{
+					alert("Sample file not found");
+			}
+		});
+
+        $("#testfile").on('click', function() {
+            if ($("#inputDataSampleSelect option:selected").text().length > 0) {
+
+            }
+        });
+
+
+    </script>
+
     {% if error %}
      <div class="row">
         <p class="text-danger"><strong>Le format du fichier est invalide.</strong></p>
@@ -27,17 +70,15 @@
                 <label class="text-primary">Upload Your File</label>
                 <input name="csv_file" id="csv_file" type="file" class="form-control" >
                 </div>
-                <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Valider </button>
-
+                <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
             </form>
         </div>
     </div>
 </div>
-{% if info_submit %}
 
-<div class="container" style="margin-bottom: 1em;">
+<br>
     <div id="tab_data" class="row" style="position: relative; table-layout: auto;">
-        <form  id="form1" autocomplete="off" method="POST" action="" >
+        <form id="form1" autocomplete="off" method="POST" action="" >
             {% csrf_token %}
             <table id="example" style="width:100%;" class="display table table-striped table-bordered table-hover responsive nowrap cell-border compact stripe" cellspacing="0" cellpadding="0">
             {% for row in fichier %}
@@ -50,13 +91,15 @@
                         <label for="option-all">Select All</label>
                         <br>
 
-                        <div class="row">
-                            <button name="store" type="button" id="store" class="col-md-3 offset-md-3 btn btn-primary" > Store </button>
-                            <button name="reset" type="button" id="reset" class="col-md-3 offset-md-2 btn btn-primary" > Reset </button>
+
+                         <div class="text-center">
+                            <button name="store" type="button" id="store" class="col-md-3 btn btn-primary" > Store value</button>
+                            <button name="reset" type="button" id="reset" class="col-md-3 btn btn-primary" > Reset value</button>
                         </div>
+                     </tr>
                         <br>
                         <!-- Fin ajout-->
-                        <tr id="test_head">
+                     <tr id="test_head">
                         {% for column in row %}
                             <th>{{column}}</th>
                         {% endfor %}
@@ -88,80 +131,89 @@
         </script>
 
             <!--le onclick permet de savoir le nom du button submited-->
-            <div>
-                <h6>Graph :
-                    <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
-                    <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
-                    <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
-                    <input id="submit12" name="Wordcloud"   class="btn btn-primary" type="submit" value="Wordcloud" onclick="this.form.submited=this.value;" >
-                </h6>
-                <h6>Statistics :
-                    <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
-                    <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
-                </h6>
-                <h6>Maps :
-                    <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
-                    <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
-                </h6>
-                <h6>Metrics :
-                    <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
-                    <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
-                    <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
-                    <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
-                </h6>
-                <h6>Machine Learning :
-                    <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                            Supervized Learning
-                          </button>
-                          <div class="dropdown-menu">
-                              <input id="submit12" name="Decision Tree" type="submit" value="Decision Tree" onclick="this.form.submited=this.value;" >
-                              <input id="submit13" name="Support Vector Machines" type="submit" value="Support Vector Machines" onclick="this.form.submited=this.value;" >
-                              <input id="submit14" name="Random Forest" type="submit" value="Random Forest" onclick="this.form.submited=this.value;" >
-                              <input id="submit15" name="Extra Trees" type="submit" value="Extra Trees" onclick="this.form.submited=this.value;" >
-                              <input id="submit16" name="Ada Boost" type="submit" value="Ada Boost" onclick="this.form.submited=this.value;" >
-                              <input id="submit17" name="K Neighbors" type="submit" value="K Neighbors" onclick="this.form.submited=this.value;" >
-                              <input id="submit18" name="Nayve Bayes" type="submit" value="Nayve Bayes" onclick="this.form.submited=this.value;" >
-                          </div>
+        <div class="m-4">
+            <div class="card text-center">
+                <div class="card-header">
+                    Choose an analysis option
+                    <ul class="nav nav-tabs card-header-tabs" id="myTab">
+                        <li class="nav-item">
+                            <a href="#graph" class="nav-link active" data-bs-toggle="tab">Graph</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#statistics" class="nav-link" data-bs-toggle="tab">Statistics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#maps" class="nav-link" data-bs-toggle="tab">Maps</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#metrics" class="nav-link" data-bs-toggle="tab">Metrics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#machinelearning" class="nav-link" data-bs-toggle="tab">Machine Learning</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="graph">
+                            <h5 class="card-title">Home tab content</h5>
+                            <p class="card-text">Allow you to visualize your data.</p>
+                            <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
+                            <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
+                            <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
+                            <input id="submit12" name="Wordcloud"   class="btn btn-primary" type="submit" value="Wordcloud" onclick="this.form.submited=this.value;" >
                         </div>
-                    <div class="dropdown">
-                          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                            Unsupervized Learning
-                          </button>
-                          <div class="dropdown-menu">
-                              <input id="submit19" name="h_clust" type="submit" value="h_clust" onclick="this.form.submited=this.value;" >
-                              <input id="submit20" name="k_means" type="submit" value="k_means" onclick="this.form.submited=this.value;" >
-                              <input id="submit21" name="clustermap" type="submit" value="clustermap" onclick="this.form.submited=this.value;" >
-                          </div>
+                        <div class="tab-pane fade" id="statistics">
+                            <h5 class="card-title">Profile tab content</h5>
+                            <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
+                            <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
+                            <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
                         </div>
-                    </h6>
-                    <!--<select form="myGeeks" id="myCourses" autofocus>
-                        <option id="submit12" name="Regression" value="Regression">Regression</option>
-                        <option id="submit13" name="Prediction" value="Prediction">Prediction</option>
-                        <option id="submit14" name="Decison Tree" value="Decison Tree">Decison Tree</option>
-                        <option id="submit1" name="kruskal" value="kruskal">Kruskal</option>
-                        <input id="submit1" name="kruskal" type="submit" value="kruskal" onclick="this.form.submited=this.value;" >
-                    </select>
-                    <br>
-                    <form id="myGeeks">
-                        <input id="var_div" type="submit" onclick="this.form.submited=this.value;">
-                    </form>
-                    <script>
+                        <div class="tab-pane fade" id="maps">
+                            <h5 class="card-title">Messages tab content</h5>
+                            <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
+                            <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
+                            <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
+                        </div>
+                        <div class="tab-pane fade" id="metrics">
+                            <h5 class="card-title">Messages tab content</h5>
+                            <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
+                            <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
+                            <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
+                            <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
+                            <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
+                       </div>
+                        <div class="tab-pane fade" id="machinelearning">
+                            <h5 class="card-title">Messages tab content</h5>
+                            <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
+                            <div class="dropdown text-center">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Supervized Learning
+                                </button>
+                                <div class="dropdown-menu">
+                                    <input id="submit12" name="Decision Tree" type="submit" value="Decision Tree" onclick="this.form.submited=this.value;" >
+                                    <input id="submit13" name="Support Vector Machines" type="submit" value="Support Vector Machines" onclick="this.form.submited=this.value;" >
+                                    <input id="submit14" name="Random Forest" type="submit" value="Random Forest" onclick="this.form.submited=this.value;" >
+                                    <input id="submit15" name="Extra Trees" type="submit" value="Extra Trees" onclick="this.form.submited=this.value;" >
+                                    <input id="submit16" name="Ada Boost" type="submit" value="Ada Boost" onclick="this.form.submited=this.value;" >
+                                    <input id="submit17" name="K Neighbors" type="submit" value="K Neighbors" onclick="this.form.submited=this.value;" >
+                                    <input id="submit18" name="Nayve Bayes" type="submit" value="Nayve Bayes" onclick="this.form.submited=this.value;" >
+                                </div>
 
-
-                         $("#var_div").click(function(){
-                             var option_name = document.getElementById("myCourses").value
-                             var submit_value = document.getElementById("myCourses").selectedOptions[0].id
-                             //document.getElementById('output').innerHTML = lengthOfName;
-                             document.getElementById("var_div").setAttribute("id", submit_value);
-                             console.log(submit_value)
-                             console.log(option_name)
-                            })
-
-                    </script>
-                -->
-
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Unsupervized Learning
+                                </button>
+                                <div class="dropdown-menu">
+                                    <input id="submit19" name="h_clust" type="submit" value="h_clust" onclick="this.form.submited=this.value;" >
+                                    <input id="submit20" name="k_means" type="submit" value="k_means" onclick="this.form.submited=this.value;" >
+                                    <input id="submit21" name="clustermap" type="submit" value="clustermap" onclick="this.form.submited=this.value;" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
         </form>
     </div>
     <br/>
