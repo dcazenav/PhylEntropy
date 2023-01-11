@@ -48,44 +48,31 @@
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="return show('Page2','Page1');">About Phylentropy</a>
+                  <a class="nav-link" href="{% url 'aboutphylentropy' %}">About Phylentropy</a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'phylogene_import' %}"><i class='fa fa-cog'></i> Analysis</a>
                 </li>
 
-                {% comment %}<li class="nav-item">
-                  <a class="nav-link" href="#"><i class='fa fa-paperclip'></i> Links</a>
-                </li>{% endcomment %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'links' %}"><i class='fa fa-paperclip'></i> Links</a>
+                </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="return show('Page3','Page1');"><i class="fa fa-book"></i> Credits</a>
+                    <a class="nav-link" href="{% url 'credits' %}"><i class="fa fa-book"></i> Credits</a>
                 </li>
               </ul>
-              <!-- <form class="form-inline mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form> -->
             </div>
         </nav>
 
-        <div class="container-fluid" style="background-color: #a6aaa9;" >
+        <div class="container-fluid" style="background-color: #ffffff;" >
         <!--BANDEAU -->
             <div class="container" id="Page1" style="background-color: #ffffff;">
-
                 <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col></a>
-                    <div class="col-lg-4"  style="float:none;margin:auto;">
-                        <div class="d-flex flex-column text-center height100">
-                            <div>
-                            </br>
-                            </br>
-                            <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
-                            </div>
-                        </div>
-                    </div>
+
                 <!--DEBUT TABULATIONS -->
-                    <div class="col-lg-12">
+                    <div class="col-lg-12" style="padding-top: 70px;">
                         <h1 >Bienvenue sur phylEntropy</h1>
                         <br/>
                         <br/>
@@ -98,78 +85,12 @@
                             </br>
                         </br>
                     </br>
-                <div id="info">
-                    <p><b>Supervisor &amp; Web Content Manager:</b> <a href="mailto:nrastogi@pasteur-guadeloupe.fr">Dr. David COUVIN</a></p>
-                    <p><b>Validation &amp; Development:</b> <a>Davy REGALADE</a>, <a href="mailto:dcazenave@pasteur-guadeloupe.fr">Damien CAZENAVE</a> &amp <a>Vincent MOCCO</a> </p>
-                </div><br/>
 
                 <div style="text-align: center;">
                         <table class="footer" width="100%" border="0">
 
                         </table>
                     </div>
-                </div>
-            </div>
-
-            <div class="container" id="Page2" style="display:none; background-color: #ffffff;">
-                <a href="http://www.pasteur-guadeloupe.fr/karubionet.html" target="_blank" col></a>
-                <div class="col-lg-4"  style="float:none;margin:auto;">
-                    <div class="d-flex flex-column text-center height100">
-                        <div>
-                        </br>
-                        </br>
-                        <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded"/>
-                        </div>
-                    </div>
-                </div>
-            <!--DEBUT TABULATIONS -->
-                <div class="col-lg-12">
-                    <h1 >Bienvenue sur phylEntropy</h1>
-                    <br/>
-                    <br/>
-                    <!-- <p>Le but est de proposer un ensemble d'algorithmes ou métodes pour analyser les données (à partir de fichiers au format CSV).
-                        Tu pourras implémenter les algorithmes pour les graphs et autres visualisations (Kruskal, UPGMA, ...)
-                        <br><br>
-                        Pour plus d'informations sur la façon d'utiliser cette application Web, prière de lire le <a href="../static/files/manuel.pdf" target="_blank">Manuel de l'Utilisateur</a>
-                    </p> -->
-                    <p>
-                    <p><span
-                            style="text-decoration: underline;">Le « Pourquoi » de l’application <b>phylEntropy</b></span><br></p>
-                            L’application phylEntropy permet de réaliser de l’analyse et de la visualisation de données. Bien qu’il existe déjà de nombreux outils permettant l’analyse et de la visualisation de données, notre approche se différencie d’autres applications en permettant aux utilisateurs d’effectuer aussi bien des analyses bio-statistiques classiques que des analyses plus spécifiques qui nécessitent habituellement l’utilisation de logiciels payants ou une expérience particulière. Lorsque nous prenons l’exemple de la représentation d’un arbre de recouvrement minimal contenant des annotations en fonction des données ou caractères étudiés, nous devons souvent utiliser des logiciels payants comme BioNumerics (<a href="http://www.applied-maths.com/bionumerics" target="_blank">http://www.applied-maths.com/bionumerics</a>) pour représenter clairement les données en fonction de divers paramètres (ou variables). L’utilisation d’algorithmes et de librairies JavaScript existants permet de proposer à l’utilisateur non-expert une solution rapide d’analyse pour ses données. De plus, avec le développement de l’application phylEntropy, nous essayons de mettre en place de nouvelles stratégies d’analyse en suivant un paradigme qui diffère des outils existants. Par exemple, dans cette application, nous considérons des objets de type « séquence biologique » qui diffèrent des séquences d’ADN ou de protéines classiques. Cette séquence biologique est représentée sous une forme de chaine de caractères pouvant contenir des chiffres, des lettres, mais aussi des caractères spéciaux (s’il s’agit d’une analyse assez complexe ou spécifique).
-                            <br><br>
-                    <p><span style="text-decoration: underline;">Qu'est-ce que l’application <b>phylEntropy</b></span><br></p>
-                            phylEntropy est une application Web d’analyse et de visualisation de données. L’outil regroupe plusieurs modules d’analyse représentant différentes thématiques de recherche : phylogénie/clustering, bio-statistique, mesures de diversité biologique, analyses multivariées, apprentissage automatique.
-                            L’utilisateur peut importer ses données sous forme de fichier CSV avant de choisir un type d’analyse à effectuer. La première colonne de notre fichier contient l’identifiant de chaque « objet ». Les colonnes suivantes contiennent la séquence biologique (un caractère par colonne). Les dernières colonnes (représentant des variables de description) contiennent généralement des chaines de caractères (texte).
-                            </p>
-                        </p>
-                        </br>
-                    </br>
-                </br>
-
-                    <div id="info">
-                        <p><b>Supervisor &amp; Web Content Manager:</b> <a href="mailto:nrastogi@pasteur-guadeloupe.fr">Dr. David COUVIN</a></p>
-                        <p><b>Validation &amp; Development:</b> <a>Davy REGALADE</a>, <a href="mailto:dcazenave@pasteur-guadeloupe.fr">Damien CAZENAVE</a> &amp <a>Vincent MOCCO</a> </p>
-                    </div><br/>
-
-                    <div style="text-align: center;">
-                            <table class="footer" width="100%" border="0">
-
-                            </table>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="container" id="Page3" style="display:none; background-color: #ffffff;">
-                <div class="col-lg-12">
-                    <br/>
-                    <p>
-                        <h1 >Sites utilisés pour le développement de phylentropy</h1>
-                        - NGphylogeny : https://ngphylogeny.fr/
-                        <br>
-                        - cripscasfinder : https://crisprcas.i2bc.paris-saclay.fr/
-                        <br>
-                    </p>
                 </div>
             </div>
 

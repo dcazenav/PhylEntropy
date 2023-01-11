@@ -1,5 +1,5 @@
-<html>
-
+<!DOCTYPE html>
+{% load static %}
 
 <head>
   {% block head %}
@@ -38,30 +38,27 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
               <ul class="navbar-nav mr-auto">
 
-                <li class="nav-item active">
+                <li class="nav-item">
                   <a class="nav-link" href="{% url 'intro' %}"><i class="fa fa-home"></i> Home<span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="#" onclick="return show('Page2','Page1');">About Phylentropy</a>
+                  <a class="nav-link" href="{% url 'aboutphylentropy' %}">About Phylentropy</a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="{% url 'phylogene_import' %}"><i class='fa fa-cog'></i> Analysis</a>
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><i class='fa fa-paperclip'></i> Links</a>
+                  <a class="nav-link" href="{% url 'links' %}"><i class='fa fa-paperclip'></i> Links</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="return show('Page3','Page1');"><i class="fa fa-book"></i> Credits</a>
+                    <a class="nav-link" href="{% url 'credits' %}"><i class="fa fa-book"></i> Credits</a>
                 </li>
               </ul>
-              <!-- <form class="form-inline mt-2 mt-md-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form> -->
+
             </div>
         </nav>
 
@@ -75,15 +72,10 @@
             <div>
               </br>
               </br>
-              <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded" />
+              <img src="../static/img/LogoSample_ByTailorBrands.jpg" class="rounded" height="150" width="150"/>
             </div>
           </div>
         </div>
-    <p>Download test csv file: <button type="submit" class="btn btn-primary" onclick="window.open('../static/files/exemple_2.csv')"><i class="fa fa-download"></i> Download</button>
-      <a href="../static/files/exemple_csv.csv" download>
-        <img src="../static/img/index.jpg" alt="csvfiletest" width="70" height="70">
-      </a>
-    </p>
     {% block content %}
     {% endblock %}
 
@@ -101,6 +93,7 @@
     </script>
 
 
+{% comment %}
       <footer>
         <table class="footer" width="100%" style="margin-top: 1em;">
       
@@ -151,7 +144,8 @@
 
       </table>
     </footer>
-    
+{% endcomment %}
+
 
   </div>
   </div>
