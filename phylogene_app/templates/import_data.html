@@ -24,17 +24,17 @@
                                 <option value="exemple_2.csv">exemple2.csv</option>
                                 <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
                                 <option value="spol43.csv">spol43.csv</option>
-                                <option value="Spoligo_list.csv">Spoligo_list.csv</option>
+                                <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
                                 <option value="ville.csv">ville.csv</option>
                             </select>
-                            <input name="import" type="submit" class="btn btn-primary" id="testfile" value="Test file"/>
+                            <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
                     </form>
-                </div>
+                </div>{% comment %}
                 <div class="col-md-3">
                     <a href="#" id="inputDataSampleDownload" style="padding-left:1em;">Download file</a>
                     <span class="text-danger field-validation-valid" data-valmsg-for="csv_file" data-valmsg-replace="true"></span>
 
-                </div>
+                </div>{% endcomment %}
         </div>
 
     <script>
@@ -69,7 +69,12 @@
                 <label class="text-primary">Upload Your File</label>
                 <input name="csv_file" id="csv_file" type="file" class="form-control" >
                 </div>
-                <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
+                    <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
+
+                <div class="row">
+                    <div class="text-center">
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -157,35 +162,35 @@
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="graph">
-                            <h5 class="card-title">Home tab content</h5>
+                            <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">Allow you to visualize your data.</p>
                             <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
-                            <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="upgma" onclick="this.form.submited=this.value;" >
-                            <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="neighbor-joining" onclick="this.form.submited=this.value;" >
+                            <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="UPGMA" onclick="this.form.submited=this.value;" >
+                            <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="Neighbor-Joining" onclick="this.form.submited=this.value;" >
                             <input id="submit12" name="Wordcloud"   class="btn btn-primary" type="submit" value="Wordcloud" onclick="this.form.submited=this.value;" >
                         </div>
                         <div class="tab-pane fade" id="statistics">
-                            <h5 class="card-title">Profile tab content</h5>
+                            <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
-                            <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="boxplot" onclick="this.form.submited=this.value;" >
-                            <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="heatmap" onclick="this.form.submited=this.value;" >
+                            <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="Boxplot" onclick="this.form.submited=this.value;" >
+                            <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="Heatmap" onclick="this.form.submited=this.value;" >
                         </div>
                         <div class="tab-pane fade" id="maps">
-                            <h5 class="card-title">Messages tab content</h5>
+                            <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
                             <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
                             <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
                         </div>
                         <div class="tab-pane fade" id="metrics">
-                            <h5 class="card-title">Messages tab content</h5>
+                            <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
-                            <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="pca" onclick="this.form.submited=this.value;" >
+                            <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="PCA" onclick="this.form.submited=this.value;" >
                             <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                             <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                             <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
                        </div>
                         <div class="tab-pane fade" id="machinelearning">
-                            <h5 class="card-title">Messages tab content</h5>
+                            <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
                             <div class="dropdown text-center">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
@@ -205,9 +210,9 @@
                                 Unsupervized Learning
                                 </button>
                                 <div class="dropdown-menu">
-                                    <input id="submit19" name="h_clust" type="submit" value="h_clust" onclick="this.form.submited=this.value;" >
-                                    <input id="submit20" name="k_means" type="submit" value="k_means" onclick="this.form.submited=this.value;" >
-                                    <input id="submit21" name="clustermap" type="submit" value="clustermap" onclick="this.form.submited=this.value;" >
+                                    <input id="submit19" name="h_clust" type="submit" value="H_Clust" onclick="this.form.submited=this.value;" >
+                                    <input id="submit20" name="k_means" type="submit" value="K_Means" onclick="this.form.submited=this.value;" >
+                                    <input id="submit21" name="clustermap" type="submit" value="Clustermap" onclick="this.form.submited=this.value;" >
                                 </div>
                             </div>
                         </div>
@@ -264,12 +269,13 @@
 
 .files:before {
     position: absolute;
-    bottom: 5px;
-    left: 15;  pointer-events: none;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
     width: 100%;
     right: 0;
     height: 57px;
-    content: " Ou glisser le ici. ";
+    content: " Or drop it here. ";
     display: block;
     margin: 0 auto;
     color: #2ea591;
