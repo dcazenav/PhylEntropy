@@ -155,7 +155,7 @@ def run_algo(request):
             tab_distance.append(new)
         tab_reduce, label_reduce, ensemble_seq = reduce_table(tab_distance, labelSeq)
 
-        if algo == "upgma":
+        if algo == "UPGMA":
             # faire attention a la fontion UPGMA car elle vide les variables tab_reduce et label_reduce
             algo_upgma = UPGMA(tab_distance, labelSeq)
             return render(request, 'upgma.html', locals())
@@ -180,15 +180,15 @@ def run_algo(request):
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'Shannon-Entropy.html', locals())
 
-        if algo == "neighbor-joining":
+        if algo == "Neighbor-Joining":
             labels = neighbor_joining(tab_distance, labelSeq)
             return render(request, 'neighbor_joining.html', locals())
 
-        if algo == "boxplot":
+        if algo == "Boxplot":
             data = [list(map(int, elmt)) for elmt in data]
             return render(request, 'boxplot.html', locals())
 
-        if algo == "heatmap":
+        if algo == "Heatmap":
             rows_bact = [list(map(int, elmt)) for elmt in rows_bact]
             return render(request, 'heatmap.html', locals())
 
@@ -201,7 +201,7 @@ def run_algo(request):
             info1 = [trace]
             return render(request, 'Entropy.html', locals())
 
-        if algo == "pca":
+        if algo == "PCA":
             panel_color = ['#ff0066', ' #9966ff', ' #ff0000', '#ff9900', '#669900', '#006600', '#cc00ff', '#00ffff',
                            '#ff9900', '#993300']
             colors = {}
