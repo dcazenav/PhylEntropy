@@ -13,51 +13,20 @@
 	h1 {
 	  text-align: center;
 	}
+
+    #myDiv
+{
+        background-color: #ffffff;
+}
 </style>	
 
 </head>
 
 <body>
-	
-	<nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
-		<a class="navbar-brand" href="#">PhylEntropy</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-		  <span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarCollapse">
-		  <ul class="navbar-nav mr-auto">
-			<li class="nav-item active">
-			  <a class="nav-link" href="{% url 'intro' %}">Home </a>
-			  
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link" href="{% url 'phylogene_import' %}">Analysis </a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="http://www.pasteur-guadeloupe.fr/karubionet.html">KaruBioNet </a>
-			</li>
-			<li class="nav-item">
-			  <a class="nav-link disabled" href="#">Disabled</a>
-			</li>
-		  </ul>
-		  <!-- <form class="form-inline mt-2 mt-md-0">
-			<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		  </form> -->
-		</div>
-	  </nav>
-
-    </body>
-
     <div id="myDiv">
-    </div>
-<style>
-  #myDiv
-{
-        background-color: #ffffff;
-}
-</style>
 
+    </div>
+</body>
 
 
 {%block javascripts %}
@@ -102,7 +71,7 @@ series= series.reverse();
 
 var options = {
       chart: {
-        height: 350,
+        height: 900,
         type: 'heatmap',
       },
       stroke: {
@@ -115,8 +84,14 @@ var options = {
             ranges: [{
                 from: 0,
                 to: 1,
-                name: '1',
+                name: '0',
                 color: '#ccffff'
+              },
+                {
+                from: 1,
+                to: 1,
+                name: '1',
+                color: '#33cccc'
               },
               {
                 from: 2,
@@ -128,7 +103,7 @@ var options = {
                 from: 3,
                 to: 3,
                 name: '3',
-                color: '#33cccc'
+                color: '#0f0fff'
               },
               {
                 from: 4,
