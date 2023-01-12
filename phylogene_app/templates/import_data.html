@@ -13,9 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-
-{% if info_submit %}
-
 <div class="container" style="margin-bottom: 1em;">
     <div style="margin-top: 1em;">
         <div class="row form-group" id="inputDataSample">
@@ -27,6 +24,8 @@
                                 <option value="exemple_2.csv">exemple2.csv</option>
                                 <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
                                 <option value="spol43.csv">spol43.csv</option>
+                                <option value="Spoligo_list.csv">Spoligo_list.csv</option>
+                                <option value="ville.csv">ville.csv</option>
                             </select>
                             <input name="import" type="submit" class="btn btn-primary" id="testfile" value="Test file"/>
                     </form>
@@ -75,6 +74,8 @@
         </div>
     </div>
 </div>
+
+{% if info_submit %}
 
 <br>
     <div id="tab_data" class="row" style="position: relative; table-layout: auto;">
