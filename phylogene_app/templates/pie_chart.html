@@ -14,8 +14,11 @@
 
 <script>
     var retrievedObject = sessionStorage.getItem('TableauduCSV');
+    var test = JSON.parse(retrievedObject);
 
     damienitem = JSON.parse(retrievedObject)
+    var countrycol = test.slice(test.length-1, test.length);
+
 
     damienitem.splice(damienitem.length - 2, 2)
 
@@ -26,6 +29,18 @@
     }
 
     var allValues = damienitem ;
+
+    var transpose = allValues => {
+       for (let i = 0; i < allValues.length; i++) {
+          for (let j = 0; j < i; j++) {
+             const tmp = allValues[i][j];
+             allValues[i][j] = allValues[j][i];
+             allValues[j][i] = tmp;
+          };
+       }
+    }
+    transpose(allValues);
+    console.log(allValues);
 
     var ultimateColors = [ "#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#648177", "#0d5ac1",
     "#f205e6", "#14a9ad", "#4ca2f9", "#a4e43f", "#d298e2", "#6119d0",
@@ -67,69 +82,35 @@
     "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
     "#20f6ba", "#07d7f6", "#dce77a", "#77ecca" ];
 
-    var data = [{
-      values: allValues[0],
-      labels: allLabels,
-      type: 'pie',
-      name: 'Starry Night',
-      marker: {
-        colors: ultimateColors[0]
-      },
-      domain: {
-        row: 0,
-        column: 0
-      },
-      hoverinfo: 'label+percent+name',
-      textinfo: 'none'
-    },{
-      values: allValues[1],
-      labels: allLabels,
-      type: 'pie',
-      name: 'Sunflowers',
-      marker: {
-        colors: ultimateColors[1]
-      },
-      domain: {
-        row: 1,
-        column: 0
-      },
-      hoverinfo: 'label+percent+name',
-      textinfo: 'none'
-    },{
-      values: allValues[2],
-      labels: allLabels,
-      type: 'pie',
-      name: 'Irises',
-      marker: {
-        colors: ultimateColors[2]
-      },
-      domain: {
-        row: 0,
-        column: 1
-      },
-      hoverinfo: 'label+percent+name',
-      textinfo: 'none'
-    },{
-      values: allValues[3],
-      labels: allLabels,
-      type: 'pie',
-      name: 'The Night Cafe',
-      marker: {
-        colors: ultimateColors[3]
-      },
-      domain: {
-        x: [0.52,1],
-        y: [0, 0.48]
-      },
-      hoverinfo: 'label+percent+name',
-      textinfo: 'none'
-    }];
+    var data = [];
 
-    var layout = {
-      height: 1000,
-      width: 1000,
-      grid: {rows: 2, columns: 2}
-    };
+    for(var i in allValues){
+        var uniqueChars = [...new Set(allValues[i])];
+        data.push({
+            values: uniqueChars,
+            labels: allLabels[i],
+            type: 'pie',
+            name: 'var' + i,
+            marker: {
+                colors: ultimateColors[i]
+            },
+            domain: {
+                row: 0,
+                column: i
+            },
+            hoverinfo: 'value+percent+name',
+            textinfo: 'none'
+        });
+
+        layout = {
+            title: "Multi piecharts in function of rows based on numericals variables " ,
+            height: 3000,
+            width: 3000,
+            grid: {rows: 2, columns: allValues.length}
+        };
+    }
+
+
 
     Plotly.newPlot('myDiv', data, layout);
 
