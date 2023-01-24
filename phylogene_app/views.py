@@ -163,6 +163,9 @@ def run_algo(request):
         if algo == "Wordcloud":
             return render(request, 'Wordcloud.html', locals())
 
+        if algo == "Pie Chart":
+            return render(request, 'pie_chart.html', locals())
+
         if algo == "Minimun Spanning Tree":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             print("tab-reduce", tab_reduce)
