@@ -41,3 +41,47 @@ python manage.py createsuperuser
 ```
 python manage.py runserver 0.0.0.0:<port>
 ```
+
+# How to use phylEntropy
+
+You will first need to download the git repository on your computer (https://github.com/dcazenav/PhylEntropy).
+I’m using Ubuntu, but you can use this tutorial on another operating system (OS).
+
+Then you will find all the installing instructions in the READ.ME, follow them to launch the WEB application.
+Load .csv file
+
+We have several option, but you can’t use them without an input file. It must be a .csv file with semicolon as field separator (no tabulation or commas).
+
+
+
+(En fonction de l’option choisie, il faudra se référer au formalisme du fichier exemple.)
+
+
+Une fois votre fichier d’entrée bien en forme, vous pouvez le charger/glisser dans la zone prévue à cet effet.
+
+
+
+
+Après avoir validé en cliquant sur “Load File”, vérifier que votre fichier a bien été pris en compte. 
+Si votre fichier a bien été pris en compte, vous devriez vous retrouve face à votre fichier sous forme de tableau
+
+
+
+
+
+
+
+Utiliser les options
+
+Maintenant que votre fichier est bien chargé, vous pouvez utiliser l’une des options. 
+
+La procédure de lancement est la même pour toutes les options excepté pour celles de la rubrique “Statistics”.
+
+Vous retrouverez les instructions de lancement directement sur l’application web.
+
+
+
+
+
+
+
