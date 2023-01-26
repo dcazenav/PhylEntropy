@@ -21,11 +21,13 @@
                         {% csrf_token %}
                         <label for="csv_file">Test csv files : </label>
                             <select id="inputDataSampleSelect" name="csv_file">
+                                <option value="graph_example.csv">graph_example.csv</option>
                                 <option value="exemple_2.csv">exemple2.csv</option>
+                                <option value="maps_example.csv">maps_example.csv</option>
+                                <option value="metrics_example.csv">metrics_example.csv</option>
+                                <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
                                 <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
                                 <option value="spol43.csv">spol43.csv</option>
-                                <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
-                                <option value="ville.csv">ville.csv</option>
                             </select>
                             <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
                     </form>
@@ -92,8 +94,9 @@
 
                 <thead>
                      <tr>
-                        <!-- Ajout checkboxes "select all" -->
-                        <input type="checkbox" id="option-all" onchange="checkAll(this)">
+                        <!-- Ajout checkboxes "select all"
+                        <input type="checkbox" id="option-all" onchange="checkAll(this)">-->
+                        <input type="checkbox" id="option-all" >
                         <label for="option-all">Select All</label>
                         <br>
 
@@ -163,7 +166,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="graph">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">Use "exemple2.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, use "graph_example.csv" then click on Select All > Store Value > the option you want to use.</p>
                             <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
                             <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="UPGMA" onclick="this.form.submited=this.value;" >
                             <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="Neighbor-Joining" onclick="this.form.submited=this.value;" >
@@ -173,19 +176,19 @@
                         </div>
                         <div class="tab-pane fade" id="statistics">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">Here is some example text to make up the tab's content. Replace it with your own text anytime.</p>
+                            <p class="card-text">To test, any file of the list will work... click on Select All then uncheck "ID", "Type" and "Location" > Store Value > the option you want to use.</p>
                             <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="Boxplot" onclick="this.form.submited=this.value;" >
                             <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="Heatmap" onclick="this.form.submited=this.value;" >
                         </div>
                         <div class="tab-pane fade" id="maps">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">Use "exemple2.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, use "maps_example.csv" then click on Select All > Store Value > the option you want to use.</p>
                             <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
                             <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" >
                         </div>
                         <div class="tab-pane fade" id="metrics">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">Use "exemple2.csv" or "Spoligo_list"  then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, "metrics_example.csv" or "machinelearning_example_file.csv"  then click on Select All > Store Value > the option you want to use.</p>
                             <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="PCA" onclick="this.form.submited=this.value;" >
                             <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                             <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
@@ -193,7 +196,7 @@
                        </div>
                         <div class="tab-pane fade" id="machinelearning">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">Use "Spoligo_list" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, "machinelearning_example_file.csv" then click on Select All > Store Value > the option you want to use.</p>
                             <div class="dropdown text-center">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Supervized Learning
@@ -390,6 +393,61 @@ $(document).ready(function (){
         $('input[type="checkbox"]', this).trigger('click');
     });
 
+    $("#option-all").change(function checkAll(myCheckbox){
+        //les données des colonnes sélectionner par l'utilisateurs + on ignore la première colonne du tableau
+        var tmp= table.columns().data().each( function ( value, index )
+            {
+                array.push(value);
+            } );
+
+            if(array.length >= 5){
+                data_column_selected=array.slice(1);
+            }else{
+                data_column_selected=array;
+            }
+
+        //les indexes des colonnes selectionné par l'utilisateur  on ignore la première colonne du tableau
+         var tmp2=table.columns().indexes().each(function ( value)
+            {
+                array2.push(value);
+            });
+
+            if(array2.length >= 5){
+                index_column_name_selected=array2.slice(1);
+            }else{
+                index_column_name_selected=array2;
+            }
+
+    //var IDbutton = document.getElementById("form1")[4];
+
+        if($(this).is(":checked")) {
+            checkboxes.forEach(function(checkbox){
+                checkbox.checked = true;
+                table.columns().select();
+            });
+            console.log("true:" + data_column_selected);
+            sessionStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
+
+        }
+        else{
+            while(array.length > 0) {
+                array.length = 0;
+                array2.length = 0;
+                data_column_selected.length = 0;
+                index_column_name_selected.length = 0;
+            }
+            checkboxes.forEach(function(checkbox){
+            checkbox.checked = false;
+            table.columns().deselect();
+            console.log("else:" + data_column_selected);
+            sessionStorage.clear('TableauduCSV');
+
+            });
+        }
+
+    });
+
+
 //      $(function(){
 //    $('#elements input[type="checkbox"]').prop("checked", true).trigger("change");
 //      });
@@ -401,54 +459,6 @@ $(document).ready(function (){
 //var array2=[];
 //var colIdx = $(this).closest('th').index();
 
-function checkAll(myCheckbox){
-    //var IDbutton = document.getElementById("form1")[4];
-
-    if(myCheckbox.checked == true){
-        checkboxes.forEach(function(checkbox){
-        checkbox.checked = true;
-        table.columns().select();
-        });
-        uniq = [...new Set(array)];
-    }
-    else{
-        while(array.length > 0) {
-            array.length = 0;
-            array2.length = 0;
-            data_column_selected.length = 0;
-            index_column_name_selected.length = 0;
-        }
-        checkboxes.forEach(function(checkbox){
-        checkbox.checked = false;
-        table.columns().deselect();
-        });
-    }
-
-     //les données des colonnes sélectionner par l'utilisateurs + on ignore la première colonne du tableau
-    var tmp= table.columns().data().each( function ( value, index )
-        {
-            array.push(value);
-        } );
-
-        if(array.length >= 5){
-            data_column_selected=array.slice(1);
-        }else{
-            data_column_selected=array;
-        }
-
-    //les indexes des colonnes selectionné par l'utilisateur  on ignore la première colonne du tableau
-     var tmp2=table.columns().indexes().each(function ( value)
-        {
-            array2.push(value);
-        });
-
-        if(array2.length >= 5){
-            index_column_name_selected=array2.slice(1);
-        }else{
-            index_column_name_selected=array2;
-        }
-
-    }
 
     $("#store").click(function(){
         sessionStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
