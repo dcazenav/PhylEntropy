@@ -25,11 +25,10 @@
     
       <div id="graph"></div>
       <div id="config"></div>
-    <p id="selection">If a node hide another node, use "Avoid overlap"</p>
+    <p id="selection"></p>
     <p style="width: 700px; font-size: 14px; text-align: justify">
-  If a node hide another node, use "Avoid overlap"
 </p>
-     
+
 <style>
   #graph {
     float: left;
@@ -117,7 +116,7 @@ var colorArray = [ "#63b598", "#ce7d78", "#ea9e70", "#a48a9e", "#c6e1e8", "#6481
 //var rand = Math.floor(Math.random()*colorArray.length);
 //var rValue = colorArray[rand];
 
-//idée pour selectionner dernier index d'un array
+//idee pour selectionner dernier index d'un array
 //var lastItem = anArray.pop();
 var firstcolumn = window.opener.parent.array.length ;
 var reachID = window.opener.parent.array[window.opener.parent.array.length-firstcolumn];
@@ -161,10 +160,10 @@ for (var i = 0; i < Object.keys(mapcolor).length; i++) {
         shape: "square",
         x: x,
         y: y + i * step,
-// ​​    groupname: maptype[testbact[0]],
-// ​​    id: 1000 ,
-// ​​    label: "Internet",
-// ​​    physics: false,
+//     groupname: maptype[testbact[0]],
+//     id: 1000 ,
+//     label: "Internet",
+//     physics: false,
        
   });
 }
@@ -243,7 +242,8 @@ var options = {
       },
       container: document.getElementById("config"),
     },
-  //ajout de flèche
+    
+  //ajout de fleche
   // edges:{
   //   arrows: 'to',
   //   //color: 'red',
