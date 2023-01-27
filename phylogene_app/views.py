@@ -341,7 +341,7 @@ def run_algo(request):
             y = df['Type']
             # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -452,7 +452,7 @@ def run_algo(request):
             X = df.drop(columns=['Type'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -536,7 +536,7 @@ def run_algo(request):
             return render(request, 'Support_Vector_Machines.html', context)
 
         if algo == "Random Forest":
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
@@ -544,7 +544,7 @@ def run_algo(request):
             y = df['Type']
             # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -624,7 +624,7 @@ def run_algo(request):
             return render(request, 'Random_Forest.html', context)
 
         if algo == "Extra Trees":
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
@@ -632,7 +632,7 @@ def run_algo(request):
             y = df['Type']
             # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -711,7 +711,7 @@ def run_algo(request):
             return render(request, 'Extra_Trees.html', context)
 
         if algo == "Ada Boost":
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
@@ -719,7 +719,7 @@ def run_algo(request):
             y = df['Type']
             # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -797,7 +797,7 @@ def run_algo(request):
             return render(request, 'Ada_Boost.html', context)
 
         if algo == "K Neighbors":
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
@@ -805,7 +805,7 @@ def run_algo(request):
             y = df['Type']
             # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
@@ -885,7 +885,7 @@ def run_algo(request):
             return render(request, 'K_Neighbors.html', context)
 
         if algo == "Nayve Bayes":
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
