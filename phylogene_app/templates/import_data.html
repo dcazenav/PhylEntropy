@@ -100,11 +100,11 @@
                         <label for="option-all">Select All</label>
                         <br>
 
-
+{% comment %}
                          <div class="text-center">
                             <button name="store" type="button" id="store" class="col-md-3 btn btn-primary" > Store value</button>
                             <button name="reset" type="button" id="reset" class="col-md-3 btn btn-primary" > Reset value</button>
-                        </div>
+                        </div>{% endcomment %}
                      </tr>
                         <br>
                         <!-- Fin ajout-->
@@ -166,7 +166,7 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="graph">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, use "graph_example.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, use "graph_example.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
                             <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="UPGMA" onclick="this.form.submited=this.value;" >
                             <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="Neighbor-Joining" onclick="this.form.submited=this.value;" >
@@ -176,7 +176,7 @@
                         </div>
                         <div class="tab-pane fade" id="statistics">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, any file of the list will work... click on Select All then uncheck "ID", "Type" and "Location" > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, any file of the list will work... click on Select All then uncheck "ID", "Type" and "Location" > the option you want to use.</p>
                             <input id="submit4" name="boxplot"   class="btn btn-primary" type="submit" value="Boxplot" onclick="this.form.submited=this.value;" >
                             <input id="submit5" name="heatmap"   class="btn btn-primary" type="submit" value="Heatmap" onclick="this.form.submited=this.value;" >
                         </div>
@@ -188,7 +188,7 @@
                         </div>
                         <div class="tab-pane fade" id="metrics">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, "metrics_example.csv" or "machinelearning_example_file.csv"  then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, "metrics_example.csv" or "machinelearning_example_file.csv"  then click on Select All > the option you want to use.</p>
                             <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="PCA" onclick="this.form.submited=this.value;" >
                             <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                             <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
@@ -196,7 +196,7 @@
                        </div>
                         <div class="tab-pane fade" id="machinelearning">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, "machinelearning_example_file.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, "machinelearning_example_file.csv" then click on Select All > the option you want to use.</p>
                             <div class="dropdown text-center">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Supervized Learning
@@ -460,7 +460,7 @@ $(document).ready(function (){
 //var colIdx = $(this).closest('th').index();
 
 
-    $("#store").click(function(){
+{% comment %}    $("#store").click(function(){
         sessionStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
         var retrievedObject = sessionStorage.getItem('TableauduCSV');
         console.log('retrievedObject: ', JSON.parse(retrievedObject));
@@ -469,7 +469,7 @@ $(document).ready(function (){
 
     $("#reset").click(function(){
         sessionStorage.clear('TableauduCSV');
-    })
+    }){% endcomment %}
 
     var test_head = document.getElementById("test_head");
 
