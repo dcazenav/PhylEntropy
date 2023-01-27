@@ -18,7 +18,7 @@
     <script>
         <!-- chart code will be here -->
         var retrievedObject = sessionStorage.getItem('TableauduCSV');
-        var test = JSON.parse(retrievedObject)
+        var test = JSON.parse(retrievedObject);
         var typecol = test.slice(test.length-2, test.length-1);
         var countrycol = test.slice(test.length-1, test.length);
         var damienitem = JSON.parse(retrievedObject).length
@@ -34,10 +34,11 @@
          console.log(newArray[1].substring(newArray[1].indexOf('+')+ 1));
 */
          for (var j = 0; j < typecol[0].length; j++) {
-          var temp = typecol[0][j] + "+" + countrycol[0][j]
-          console.log(typecol[0][j] + "+" + countrycol[0][j]);
-          newArray2.set(temp, newArray2.get(temp) + 1 || 1);
+              var temp = typecol[0][j] + "+" + countrycol[0][j]
+              console.log(typecol[0][j] + "+" + countrycol[0][j]);
+              newArray2.set(temp, newArray2.get(temp) + 1 || 1);
          }
+
          var newArray2keys = Array.from( newArray2.keys() );
          var newArray2values = Array.from( newArray2.values() );
          for(var i = 0; i < newArray2keys.length; i ++) {
