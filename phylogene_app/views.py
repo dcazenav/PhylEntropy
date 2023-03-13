@@ -1121,7 +1121,7 @@ def run_algo(request):
                 os.chdir(BASE_DIR1 + "/static")
 
                 filename = str(uuid.uuid4()) + ".png"
-                plt.savefig(filename, dpi=100, bbox_inches='tight')
+                plt.savefig(BASE_DIR1 + "/static/machine_learning/" + filename, dpi=100, bbox_inches='tight')
 
                 # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
 
