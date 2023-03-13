@@ -42,6 +42,26 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
+## Gérer les fichiers téléchargés
+
+cron et crontab 
+
+```
+https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804-fr
+```
+
+Pour ajouter la commande que vous souhaitez automatiser
+
+```
+crontab -e
+``` 
+La commande permettant de supprimer les fichiers génénérés
+
+```
+*/10 * * * * find /path/to/files -name "*.png" -type f -delete
+
+``` 
+
 # How to use phylEntropy
 
 You will first need to download the git repository on your computer (https://github.com/dcazenav/PhylEntropy).
