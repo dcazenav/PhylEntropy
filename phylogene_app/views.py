@@ -307,14 +307,14 @@ def run_algo(request):
 
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
-            filename = str(uuid.uuid4()) + ".dot"
-
-            tree.export_graphviz(model_option, out_file=filename,
-                                 feature_names=entete_colonne_selected[:-1],
-                                 class_names=sorted(y.unique()),
-                                 label='all',
-                                 rounded=True,
-                                 filled=True)
+            # filename = str(uuid.uuid4()) + ".dot"
+            #
+            # tree.export_graphviz(model_option, out_file=filename,
+            #                      feature_names=entete_colonne_selected[:-1],
+            #                      class_names=sorted(y.unique()),
+            #                      label='all',
+            #                      rounded=True,
+            #                      filled=True)
             predictions = model_option.predict(X_test)
             prediction2 = model_option.predict(x_d)
 
@@ -367,8 +367,7 @@ def run_algo(request):
                 </div>
               <p> Accuracy Score : {score_dt} </p>  
               <p> Precision Score : {precision_dt} </p>  
-              <a href="../static/{file}" download>Link 1</a>
-              
+             
               
                 {table}
                 
@@ -376,7 +375,7 @@ def run_algo(request):
             </html>.
             '''
             html = html_string.format(score_dt=score_dt, precision_dt=precision_dt,
-                                      file=filename, table=htmlfinal.to_html(
+                                      table=htmlfinal.to_html(
                     classes='dataframe display table table-striped table-bordered table-hover responsive nowrap'
                             'cell-border compact stripe'))
 
@@ -904,6 +903,7 @@ def run_algo(request):
             )'''
             new_names = []
             new_fichier = fichier[1:]
+            command = ["bash", "your_script_path.sh"]
             for i in range(len(new_fichier)):
                 new_names.append(new_fichier[i][0])
 
@@ -922,7 +922,7 @@ def run_algo(request):
             os.chdir(BASE_DIR1 + "/static")
 
             filename = str(uuid.uuid4()) + ".png"
-            fig.write_image(filename)
+            fig.write_image(BASE_DIR1 + "/static/machine_learning/" + filename)
 
             # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
 
@@ -937,10 +937,11 @@ def run_algo(request):
                                 <head>
                                   <meta charset="utf-8">
                                   <meta name="viewport" content="width=device-width, initial-scale=1">
-                                  <title>test</title>
+                                  <title>H_CLust</title>
                                 </head>
                                 <body>
-                                    <a href="../static/{file}" download>Link 1</a>                                                      
+                                <div>
+                                    <a href="../static/machine_learning/{file}" download>Link 1</a>                                                      
                                 
                                 </body>
                             </html>
@@ -1003,7 +1004,8 @@ def run_algo(request):
             os.chdir(BASE_DIR1 + "/static")
 
             filename = str(uuid.uuid4()) + ".png"
-            plt.savefig(filename, dpi=100, bbox_inches='tight')
+            plt.savefig(BASE_DIR1 + "/static/machine_learning/" + filename, dpi=100, bbox_inches='tight')
+
 
 
             # For accessing the file in a folder contained in the current folder
@@ -1019,7 +1021,7 @@ def run_algo(request):
                                               <title>K_means</title>
                                             </head>
                                             <body>
-                                                <a href="../static/{file}" download>Link 1</a>                                                      
+                                                <a href="../static/machine_learning/{file}" download>Link 1</a>                                                      
 
                                             </body>
                                         </html>
@@ -1065,7 +1067,7 @@ def run_algo(request):
                 os.chdir(BASE_DIR1 + "/static")
 
                 filename = str(uuid.uuid4()) + ".png"
-                plt.savefig(filename, dpi=100, bbox_inches='tight')
+                plt.savefig(BASE_DIR1 + "/static/machine_learning/" + filename, dpi=100, bbox_inches='tight')
 
                 # For accessing the file in a folder contained in the current folder
 
@@ -1081,7 +1083,7 @@ def run_algo(request):
                                                   <title>clustermap</title>
                                                 </head>
                                                 <body>
-                                                    <a href="../static/{file}" download>Link 1</a>                                                      
+                                                    <a href="../static/machine_learning/{file}" download>Link 1</a>                                                      
 
                                                 </body>
                                             </html>
@@ -1137,7 +1139,7 @@ def run_algo(request):
                                                   <title>dendro_heat</title>
                                                 </head>
                                                 <body>
-                                                    <a href="../static/{file}" download>Link 1</a>                                                      
+                                                    <a href="../static/machine_learning/{file}" download>Link 1</a>                                                      
 
                                                 </body>
                                             </html>
