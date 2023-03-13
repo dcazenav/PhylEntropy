@@ -42,7 +42,7 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
-## Gérer les fichiers téléchargé
+## Gérer les fichiers téléchargés
 
 cron et crontab 
 
