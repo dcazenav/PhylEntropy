@@ -95,13 +95,16 @@ WSGI_APPLICATION = 'projet_phylogene.wsgi.application'
 # }
 """pc home
 CURRENT_DIR = '/home/freezer/Documents/PhylEntropy'
-"""
+
+pc ipg
 CURRENT_DIR = '/home/linuxipg/Documents/PhylEntropy'
+"""
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': CURRENT_DIR + '/mydatabase.db',  # <- The path
+        'NAME': BASE_DIR + '/mydatabase.db',  # <- The path
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -145,11 +148,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
+STATIC_URL = os.path.join(BASE_DIR, '/static/')
 STATICFILES_DIRS = [
-    '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static',
-    '/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/files',
+    os.path.join(BASE_DIR, '/phylogene_app/static/'),
+    os.path.join(BASE_DIR, '/phylogene_app/static/files/'),
 ]
 
 ''' pc home

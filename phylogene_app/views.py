@@ -1,32 +1,16 @@
-# import base64
-import io
-import csv
+import json
 import json
 import os
-import dash_bio
-import urllib
-import uuid
 import random
+import uuid
 
-from PIL import Image
-import kaleido
-
-import plotly.figure_factory as ff
-import scipy.cluster.hierarchy as sch
-import numpy as np
-
-from plotly.offline import plot
-from plotly.graph_objs import Scatter
-
-import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+import plotly.figure_factory as ff
 import seaborn as sns
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
-
-from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn import svm
 from sklearn import tree
 from sklearn.cluster import KMeans
@@ -41,8 +25,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
 from .algo import *
-import time
-import _thread
 
 
 # matplotlib.use('TkAgg')
@@ -72,11 +54,9 @@ def import_data(request):
             return render(request, 'import_data.html', locals())
         else:
             csv_file = request.FILES["csv_file"].read().decode("utf-8").split()
-            print("csv", csv_file)
             for elmt in csv_file:
                 info.append(elmt.split(";"))
             request.session['info'] = info
-            print("import_data", info)
             return redirect(import_data)
     if 'info' in request.session:
         fichier = request.session['info']
@@ -168,8 +148,6 @@ def run_algo(request):
 
         if algo == "Minimun Spanning Tree":
             minimal_tree = kruskal(tab_reduce, label_reduce)
-            print("tab-reduce", tab_reduce)
-            print("label-reduce", label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'kruskal.html', locals())
 
@@ -217,39 +195,24 @@ def run_algo(request):
                     colors[col_qualitative[i]] = panel_color[i]
                     cpt += 1
             l = len(entete_colonne_selected) - 1
-            # print(entete_colonne_selected)
             df = pd.DataFrame(rows_bact)
-            #print(df)
             df.columns = [entete_colonne_selected]
             df.dropna(how="all", inplace=True)  # drops the empty line at file-end
             X = df.iloc[:, 0:l].values
-            # print(X)
             y = df.iloc[:, l].values
-            # print(y)
 
             X_std = StandardScaler().fit_transform(X)
-            # print(X_std.shape[0])
-            # print(X_std)
+
             #### variable  graphique Axe components ####
             mean_vec = np.mean(X_std, axis=0, dtype=np.float64)
-            # mean_vec = np.mean(X_std, axis=0, dtype=np.dtype('<U928'))
-            #print(type(mean_vec))
-            # pd.options.display.float_format = '{:.20f}'.format
-            # pd.set_option('display.float_format', lambda x: '%.5f' % x)
-            # print(mean_vec.apply(lambda x: '%.10f' % x, axis=1))
-            # format(float('-2.00897500e-16'), 'f')
+
             test = list(map('{:.80f}'.format, mean_vec))
             testnp = "[{0}]".format('  '.join(map(str, test)))
             testnp2 = np.array(testnp)
 
-            # cov_mat = (X_std - mean_vec).T.dot((X_std - mean_vec)) / (X_std.shape[0] - 1)
             cov_mat = (X_std - testnp2).T.dot((X_std - testnp2)) / (X_std.shape[0] - 1)
-            # print(cov_mat)
             cov_mat = np.cov(X_std.T)
-            ##problème exponentiel: print(cov_mat)
-            # print(cov_mat)
             eig_vals, eig_vecs = np.linalg.eig(cov_mat)
-            # print(eig_vals)
             tot = sum(eig_vals)
 
             var_exp = [(i / tot) * 100 for i in sorted(eig_vals, reverse=True)]
@@ -327,30 +290,23 @@ def run_algo(request):
             # dataframe ou read_csv ?
             # df remplace tb_data présent dans les script python machine_learning et test
             fichier = request.session['info']
-            #print("fichier", type(fichier))
 
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            # print(df)
-
-            # important!
-            print("bact?:", fichier[3])
 
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            print("The variable, name is of type:", type(x_d_1))
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             model_option = DecisionTreeClassifier()
             model_option.fit(X_train, y_train)
 
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
             filename = str(uuid.uuid4()) + ".dot"
 
             tree.export_graphviz(model_option, out_file=filename,
@@ -376,26 +332,15 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
 
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
             score_dt = accuracy_score(y_test, predictions)
             precision_dt = precision_score(y_test, predictions, average='macro')
-            # print("Prediction of X_test: ", predictions)
-            # print("Prediction of 2 spoligo: ", prediction2)
-            # print("dt score :")
-            # print(score_dt)
-            # print(type(df))
-            # render dataframe as html
-            # html = x_d_1.to_html()
-            # print(html)
+
 
             # write html to file
             # For accessing the file in a folder contained in the current folder
@@ -467,11 +412,6 @@ def run_algo(request):
             score_svm = accuracy_score(y_test, predictions)
             precision_svm = precision_score(y_test, predictions, average='macro')
 
-            print("Predictions1 :", predictions)
-            print("Prediction of 2 spoligo with svm: ", svm_prediction)
-            print("svm score :")
-            print(score_svm)
-
             # Ajout d'un header
             dfpred = pd.DataFrame(predictions,
                                   columns=['Prediction'])
@@ -486,17 +426,13 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
-
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
             file_name = os.path.join('../templates/Support_Vector_Machines.html')
             text_file = open(file_name, "w+")
 
@@ -540,9 +476,7 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
@@ -572,19 +506,15 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
-
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
 
             file_name = os.path.join('../templates/Random_Forest.html')
             text_file = open(file_name, "w+")
@@ -628,9 +558,7 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
@@ -639,7 +567,6 @@ def run_algo(request):
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             clf = ExtraTreesClassifier(n_estimators=5)
             clf.fit(X, y)
-            # SVC()
             predictions = clf.predict(X_test)
             rf_prediction = clf.predict(x_d)
             score_et = accuracy_score(y_test, predictions)
@@ -659,18 +586,14 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
 
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
-
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
             # write html to file
             # For accessing the file in a folder contained in the current folder
             file_name = os.path.join('../templates/Extra_Trees.html')
@@ -715,9 +638,7 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
@@ -726,7 +647,6 @@ def run_algo(request):
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             clf = AdaBoostClassifier(n_estimators=5)
             clf.fit(X, y)
-            # SVC()
             predictions = clf.predict(X_test)
             ab_prediction = clf.predict(x_d)
             score_ab = accuracy_score(y_test, predictions)
@@ -746,17 +666,14 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
 
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
             # write html to file
             # For accessing the file in a folder contained in the current folder
             file_name = os.path.join('../templates/Ada_Boost.html')
@@ -801,9 +718,7 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
@@ -812,7 +727,6 @@ def run_algo(request):
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             clf = KNeighborsClassifier(n_neighbors=3)
             clf.fit(X, y)
-            # SVC()
             predictions = clf.predict(X_test)
             rf_prediction = clf.predict(x_d)
             score_knn = accuracy_score(y_test, predictions)
@@ -832,20 +746,17 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
 
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
-
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+
             file_name = os.path.join('../templates/K_Neighbors.html')
             text_file = open(file_name, "w+")
 
@@ -889,9 +800,7 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type'])
-            # print(X)
             y = df['Type']
-            # print(y)
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
             array = ['ND', 'Unknown', 'unknown']
             df.isin(array)
@@ -900,10 +809,8 @@ def run_algo(request):
             x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             clf = GaussianNB()
             clf.fit(X, y)
-            # SVC()
-            # predictions = clf.predict(X_test)
+
             predictions = clf.fit(X_train, y_train).predict(X_test)
-            # rf_prediction = clf.predict(x_d)
             score_nb = accuracy_score(y_test, predictions)
             precision_nb = precision_score(y_test, predictions, average='macro')
 
@@ -921,19 +828,15 @@ def run_algo(request):
             new_index = []
             index_bact = x_d_1['index']
             for i in range(len(index_bact)):
-                # print("bact =", fichier[index_bact[i]][0])
                 new_index.append(fichier[index_bact[i]][0])
 
             x_d_1['index'] = new_index
             htmlfinal = x_d_1.join(numbers)
 
-            print(htmlfinal)
-            print("numb", numbers)
-            print(dfpred)
-
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
             file_name = os.path.join('../templates/Nayves_Bayes.html')
             text_file = open(file_name, "w+")
 
@@ -1002,28 +905,22 @@ def run_algo(request):
             new_names = []
             new_fichier = fichier[1:]
             for i in range(len(new_fichier)):
-                # print("bact =", new_fichier[i][0])
                 new_names.append(new_fichier[i][0])
 
             new_X_input = []
             for i in range(len(rows_bact)):
-                # print("bact =", rows_bact[i][:-1])
                 new_X_input.append(rows_bact[i][:-1])
 
-            # X = np.random.rand(len(new_names), 54)
             array_for_X = np.array(new_X_input)
             X = array_for_X.astype("float64")
 
             fig = ff.create_dendrogram(X, orientation='left', labels=new_names)
             fig.update_layout(width=2000, height=2000)
-            # plot_div = fig.show()
 
-            # entries = os.listdir('./static')
             # pc ipg
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
-            # pc home
-            # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
-            # my_path = os.path.abspath("./static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+
             filename = str(uuid.uuid4()) + ".png"
             fig.write_image(filename)
 
@@ -1063,25 +960,19 @@ def run_algo(request):
             new_names = []
             new_fichier = fichier[1:]
             for i in range(len(new_fichier)):
-                # print("bact =", new_fichier[i][0])
                 new_names.append(new_fichier[i][-1])
 
             new_X_input = []
             for i in range(len(rows_bact)):
-                # print("bact =", rows_bact[i][:-1])
                 new_X_input.append(rows_bact[i][:-1])
 
             # Load Data
-            # data = load_digits().data
             data = np.array(new_X_input)
-            print(data)
             pca = PCA(n_components=0.95)
 
             # Transform the data
-            # print("data:",type(data))
             df = pca.fit_transform(data)
             df.shape
-            print(df.shape)
 
             clusters = np.unique(new_names)
 
@@ -1090,7 +981,6 @@ def run_algo(request):
 
             # predict the labels of clusters.
             label = kmeans.fit_predict(df)
-            print(label)
 
             # Getting the Centroids
             centroids = kmeans.cluster_centers_
@@ -1100,30 +990,23 @@ def run_algo(request):
             color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
                                for i in range(number_of_colors)])
 
-            # dictionary = dict(zip(clusters, color))
-            # print(dictionary)  # {'a': 1, 'b': 2, 'c': 3}
+
             # plotting the results:
             for i in u_labels:
                 plt.scatter(df[label == i, 0], df[label == i, 1], label=clusters[i], color=color[i], s=80)
 
-            # plt.scatter(centroids[:, 0], centroids[:, 1], s=30, color='k')
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                        fancybox=True, shadow=True, ncol=5)
-            # plt.show()
 
-            # entries = os.listdir('./static')
             # pc ipg
-            os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
-            # pc home
-            # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
-            # my_path = os.path.abspath("./static")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+
             filename = str(uuid.uuid4()) + ".png"
             plt.savefig(filename, dpi=100, bbox_inches='tight')
 
-            # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
 
             # For accessing the file in a folder contained in the current folder
-
             file_name = os.path.join('../templates/k_means.html')
             text_file = open(file_name, "w+")
 
@@ -1153,23 +1036,18 @@ def run_algo(request):
             return render(request, 'k_means.html', context)
 
         if algo == "clustermap":
-            # Data set url = 'https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw
-            # /5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv' df = pd.read_csv(url) df = df.set_index('model')
             new_names = []
             new_fichier = fichier[1:]
             for i in range(len(new_fichier)):
-                # print("bact =", new_fichier[i][0])
                 new_names.append(new_fichier[i][0])
 
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            print(df)
 
             if 'Country' in df:
                 df["ID"] = new_names
                 df = df.set_index('ID')
                 col_type = df['Type']
-                print(col_type)
                 del df['Type']
                 del df['Country']
                 df = df.astype(float)
@@ -1177,25 +1055,17 @@ def run_algo(request):
                 color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
                                    for i in range(len(df))])
                 # Prepare a vector of color mapped to the 'cyl' column
-
                 my_palette = dict(zip(col_type.unique(), color))
-                print(my_palette)
-
                 row_colors = col_type.map(my_palette)
-                print(row_colors)
 
                 # plot
                 sns.clustermap(df,
                                row_colors=row_colors)
-                # pc ipg
-                os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
-                # pc home
-                # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
-                # my_path = os.path.abspath("./static")
+                BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+                os.chdir(BASE_DIR1 + "/static")
+
                 filename = str(uuid.uuid4()) + ".png"
                 plt.savefig(filename, dpi=100, bbox_inches='tight')
-
-                # images = Image.open('/home/linuxipg/Documents/PhylEntropy/phylogene_app/static/' + filename)
 
                 # For accessing the file in a folder contained in the current folder
 
@@ -1238,20 +1108,16 @@ def run_algo(request):
                                    for i in range(len(df))])
                 # Prepare a vector of color mapped to the 'cyl' column
                 my_palette = dict(zip(col_type.unique(), color))
-                print(my_palette)
 
                 row_colors = col_type.map(my_palette)
-                print(row_colors)
 
                 # plot
                 sns.clustermap(df,
                                row_colors=row_colors)
 
-                # pc ipg
-                os.chdir("/home/linuxipg/Documents/PhylEntropy/phylogene_app/static")
-                # pc home
-                # os.chdir("/home/freezer/Documents/PhylEntropy/phylogene_app/static")
-                # my_path = os.path.abspath("./static")
+                BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+                os.chdir(BASE_DIR1 + "/static")
+
                 filename = str(uuid.uuid4()) + ".png"
                 plt.savefig(filename, dpi=100, bbox_inches='tight')
 
