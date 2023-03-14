@@ -20,7 +20,6 @@ source activate phylentropyenv
 
 ```
 pip3 install -r requirements.txt
-
 ```
 
 * Create Django databases
@@ -42,20 +41,25 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
-## Gérer les fichiers téléchargés
+## Manage downloaded files (optional)
 
-cron et crontab 
+cron and crontab installation tutorial :
 
 ```
 https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804-fr
 ```
 
-Pour ajouter la commande que vous souhaitez automatiser
+To add the command you want to automate :
 
 ```
 crontab -e
 ``` 
-La commande permettant de supprimer les fichiers génénérés
+To list the commands you have automated :
+
+```
+crontab -l
+``` 
+The command to delete the generated files :
 
 ```
 */10 * * * * find /path/to/files -name "*.png" -type f -delete
@@ -68,36 +72,27 @@ You will first need to download the git repository on your computer (https://git
 I’m using Ubuntu, but you can use this tutorial on another operating system (OS).
 
 Then you will find all the installing instructions in the READ.ME, follow them to launch the WEB application.
-Load .csv file
 
-We have several option, but you can’t use them without an input file. It must be a .csv file with semicolon as field separator (no tabulation or commas).
+Then load ".csv" file
 
+We have several option, but you can’t use them without an input file. It must be a ".csv" file with semicolon as field separator (no tabulation or commas).
 
+(Depending on the option chosen, you will have to refer to the formalism of the example file.)
 
-(En fonction de l’option choisie, il faudra se référer au formalisme du fichier exemple.)
-
-
-Une fois votre fichier d’entrée bien en forme, vous pouvez le charger/glisser dans la zone prévue à cet effet.
+Once your input file is in good shape, you can load/drag it into the area provided for this purpose.
 
 
+After validating by clicking on “Load File”, check that your file has been taken into account.
+If your file has been taken into account, you should be faced with your file in the form of a table
 
 
-Après avoir validé en cliquant sur “Load File”, vérifier que votre fichier a bien été pris en compte. 
-Si votre fichier a bien été pris en compte, vous devriez vous retrouve face à votre fichier sous forme de tableau
+### Use options:
 
+Now that your file is uploaded, you can use one of the options.
 
+The launch procedure is the same for all options except for those in the “Statistics” section.
 
-
-
-
-
-Utiliser les options
-
-Maintenant que votre fichier est bien chargé, vous pouvez utiliser l’une des options. 
-
-La procédure de lancement est la même pour toutes les options excepté pour celles de la rubrique “Statistics”.
-
-Vous retrouverez les instructions de lancement directement sur l’application web.
+You will find the launch instructions directly on the web application.
 
 
 
