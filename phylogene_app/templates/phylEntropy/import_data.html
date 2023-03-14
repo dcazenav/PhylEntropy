@@ -19,17 +19,24 @@
             <div class="col-md-9">
                     <form action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <label for="csv_file">Test csv files : </label>
-                            <select id="inputDataSampleSelect" name="csv_file">
-                                <option value="graph_example.csv">graph_example.csv</option>
-                                <option value="exemple_2.csv">exemple2.csv</option>
-                                <option value="maps_example.csv">maps_example.csv</option>
-                                <option value="metrics_example.csv">metrics_example.csv</option>
-                                <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
-                                <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
-                                <option value="spol43.csv">spol43.csv</option>
-                            </select>
-                            <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
+                        {% if user.is_authenticated %}
+                            <label for="csv_file">Fichiers de {{ user.username }} : </label>
+                                <select id="inputDataSampleSelect" name="csv_file">
+                                    <option value="graph_example.csv">{{ user.username }}</option>
+                                </select>
+                        {% else %}
+                            <label for="csv_file">Test csv files : </label>
+                                <select id="inputDataSampleSelect" name="csv_file">
+                                    <option value="graph_example.csv">graph_example.csv</option>
+                                    <option value="exemple_2.csv">exemple2.csv</option>
+                                    <option value="maps_example.csv">maps_example.csv</option>
+                                    <option value="metrics_example.csv">metrics_example.csv</option>
+                                    <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
+                                    <option value="phylentropy_exemple2.csv">phylentropy_exemple2.csv</option>
+                                    <option value="spol43.csv">spol43.csv</option>
+                                </select>
+                                <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
+                        {% endif %}
                     </form>
                 </div>{% comment %}
                 <div class="col-md-3">
