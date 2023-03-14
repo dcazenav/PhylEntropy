@@ -42,20 +42,25 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
-## Gérer les fichiers téléchargés
+## Manage downloaded files (optional)
 
-cron et crontab 
+cron and crontab installation tutorial :
 
 ```
 https://www.digitalocean.com/community/tutorials/how-to-use-cron-to-automate-tasks-ubuntu-1804-fr
 ```
 
-Pour ajouter la commande que vous souhaitez automatiser
+To add the command you want to automate :
 
 ```
 crontab -e
 ``` 
-La commande permettant de supprimer les fichiers génénérés
+To list the commands you have automated :
+
+```
+crontab -l
+``` 
+The command to delete the generated files :
 
 ```
 */10 * * * * find /path/to/files -name "*.png" -type f -delete
