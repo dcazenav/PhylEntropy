@@ -68,7 +68,7 @@
                   <div class='col-md-5 w-auto ms-auto'>
                       {% if user.is_authenticated %}
                           <div class="navbar-nav">
-                            Welcome <strong>{{ user.username }}</strong>
+                            Welcome <strong>&nbsp;{{ user.username }}</strong>
                                 <a class="nav-item nav-link" href="{% url 'logout' %}">
                                     <i class="fa fa-log-in"></i> Log out
                                 </a>
