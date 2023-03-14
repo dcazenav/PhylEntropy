@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+#AUTH_USER_MODEL = 'users.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -104,7 +106,7 @@ CURRENT_DIR = '/home/linuxipg/Documents/PhylEntropy'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR + '/mydatabase.db',  # <- The path
+        'NAME': BASE_DIR + '/mydatabase.sqlite3',  # <- The path
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
@@ -151,6 +153,10 @@ USE_TZ = True
 # STATIC_URL = '/static/'
 
 STATIC_URL = os.path.join(BASE_DIR, '/static/')
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'login'
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '/phylogene_app/static/'),
     os.path.join(BASE_DIR, '/phylogene_app/static/files/'),

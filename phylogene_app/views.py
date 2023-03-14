@@ -3,11 +3,13 @@ import json
 import os
 import random
 import uuid
-
+import mttkinter
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.figure_factory as ff
 import seaborn as sns
+from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.safestring import SafeString
@@ -23,27 +25,67 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
-
 from .algo import *
+from .form import UserRegistrationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
 
 
-# matplotlib.use('TkAgg')
-
-# from Tinker import *
-
-# Create a window
-# window = Tk()
-
-
-# test map
-# Include the `fusioncharts.py` file that contains functions to embed the charts.
-
-
-# test map
 
 # Create your views here.
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('/')
 
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/')
 
+        else:
+            for error in list(form.errors.values()):
+                print(request, error)
+
+    else:
+        form = UserRegistrationForm()
+
+    return render(request=request, template_name = "users/register.html", context={"form": form})
+
+@login_required
+def custom_logout(request):
+    logout(request)
+    messages.info(request, "Logged out successfully!")
+    return redirect("homepage")
+
+def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect("homepage")
+
+    if request.method == "POST":
+        form = AuthenticationForm(request=request, data=request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"],
+            )
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
+                return redirect("homepage")
+
+        else:
+            for error in list(form.errors.values()):
+                messages.error(request, error)
+
+    form = AuthenticationForm()
+
+    return render(
+        request=request,
+        template_name="users/login.html",
+        context={"form": form}
+        )
 def import_data(request):
     error = False
     info = []
@@ -51,7 +93,7 @@ def import_data(request):
         csv_file = request.FILES["csv_file"]
         if not csv_file.name.endswith('.csv'):
             error = True
-            return render(request, 'import_data.html', locals())
+            return render(request, 'phylEntropy/import_data.html', locals())
         else:
             csv_file = request.FILES["csv_file"].read().decode("utf-8").split()
             for elmt in csv_file:
@@ -64,22 +106,22 @@ def import_data(request):
     else:
         info_submit = False
 
-    return render(request, 'import_data.html', locals())
+    return render(request, 'phylEntropy/import_data.html', locals())
 
 def intro(request):
-    return render(request, 'intro.html')
+    return render(request, 'phylEntropy/intro.html')
 
 def base(request):
-    return render(request, 'base.html')
+    return render(request, 'phylEntropy/base.html')
 
 def aboutphylentropy(request):
-    return render(request, "about.html")
+    return render(request, "phylEntropy/about.html")
 
 def links(request):
-    return render(request, "links.html")
+    return render(request, "phylEntropy/links.html")
 
 def credits(request):
-    return render(request, "credits.html")
+    return render(request, "phylEntropy/credits.html")
 
 def ajax_1(request):
     if request.method == 'POST':
@@ -138,40 +180,40 @@ def run_algo(request):
         if algo == "UPGMA":
             # faire attention a la fontion UPGMA car elle vide les variables tab_reduce et label_reduce
             algo_upgma = UPGMA(tab_distance, labelSeq)
-            return render(request, 'upgma.html', locals())
+            return render(request, 'graph/upgma.html', locals())
 
         if algo == "Wordcloud":
-            return render(request, 'Wordcloud.html', locals())
+            return render(request, 'graph/Wordcloud.html', locals())
 
         if algo == "Pie Chart":
-            return render(request, 'pie_chart.html',locals())
+            return render(request, 'graph/pie_chart.html', locals())
 
         if algo == "Minimun Spanning Tree":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-            return render(request, 'kruskal.html', locals())
+            return render(request, 'graph/kruskal.html', locals())
 
         if algo == "Hunter-Gaston":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-            return render(request, 'Hunter-Gaston.html', locals())
+            return render(request, 'metrics/Hunter-Gaston.html', locals())
 
         if algo == "Shannon-Entropy":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-            return render(request, 'Shannon-Entropy.html', locals())
+            return render(request, 'metrics/Shannon-Entropy.html', locals())
 
         if algo == "Neighbor-Joining":
             labels = neighbor_joining(tab_distance, labelSeq)
-            return render(request, 'neighbor_joining.html', locals())
+            return render(request, 'graph/neighbor_joining.html', locals())
 
         if algo == "Boxplot":
             data = [list(map(int, elmt)) for elmt in data]
-            return render(request, 'boxplot.html', locals())
+            return render(request, 'statistics/boxplot.html', locals())
 
         if algo == "Heatmap":
             rows_bact = [list(map(int, elmt)) for elmt in rows_bact]
-            return render(request, 'heatmap.html', locals())
+            return render(request, 'statistics/heatmap.html', locals())
 
         if algo == "Entropy":
             tab, score = score_entropy(data)
@@ -180,7 +222,7 @@ def run_algo(request):
                          name="conservation",
                          type='bar')
             info1 = [trace]
-            return render(request, 'Entropy.html', locals())
+            return render(request, 'metrics/Entropy.html', locals())
 
         if algo == "PCA":
             panel_color = ['#ff0066', ' #9966ff', ' #ff0000', '#ff9900', '#669900', '#006600', '#cc00ff', '#00ffff',
@@ -274,17 +316,17 @@ def run_algo(request):
                 xaxis=dict(title='PC1', showline='False'),
                 yaxis=dict(title='PC2', showline='False')
             )
-            return render(request, 'test2.html', locals())
+            return render(request, 'graph/test2.html', locals())
 
         if algo == "Global Map":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-            return render(request, 'chart.html', locals())
+            return render(request, 'maps/chart.html', locals())
 
         if algo == "Global City Map":
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
-            return render(request, 'chartcity.html', locals())
+            return render(request, 'maps/chartcity.html', locals())
 
         if algo == "Decision Tree":
             # dataframe ou read_csv ?
@@ -345,7 +387,7 @@ def run_algo(request):
             # write html to file
             # For accessing the file in a folder contained in the current folder
 
-            file_name = os.path.join('../templates/Decision_Tree.html')
+            file_name = os.path.join('../templates/machine_learning/Decision_Tree.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -388,7 +430,7 @@ def run_algo(request):
 
             # return HttpResponse(geeks_object)
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html, 'score': score_dt}
-            return render(request, 'Decision_Tree.html', context)
+            return render(request, 'machine_learning/Decision_Tree.html', context)
 
         if algo == "Support Vector Machines":
             df = pd.DataFrame(rows_bact,
@@ -432,7 +474,7 @@ def run_algo(request):
 
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
-            file_name = os.path.join('../templates/Support_Vector_Machines.html')
+            file_name = os.path.join('../templates/machine_learning/Support_Vector_Machines.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -468,7 +510,7 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'Support_Vector_Machines.html', context)
+            return render(request, 'machine_learning/Support_Vector_Machines.html', context)
 
         if algo == "Random Forest":
             array = ['ND', 'Unknown', 'unknown', 'NA']
@@ -515,7 +557,7 @@ def run_algo(request):
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
 
-            file_name = os.path.join('../templates/Random_Forest.html')
+            file_name = os.path.join('../templates/machine_learning/Random_Forest.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -550,7 +592,7 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'Random_Forest.html', context)
+            return render(request, 'machine_learning/Random_Forest.html', context)
 
         if algo == "Extra Trees":
             array = ['ND', 'Unknown', 'unknown', 'NA']
@@ -595,7 +637,7 @@ def run_algo(request):
             os.chdir(BASE_DIR1 + "/static")
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            file_name = os.path.join('../templates/Extra_Trees.html')
+            file_name = os.path.join('../templates/machine_learning/Extra_Trees.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -630,7 +672,7 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'Extra_Trees.html', context)
+            return render(request, 'machine_learning/Extra_Trees.html', context)
 
         if algo == "Ada Boost":
             array = ['ND', 'Unknown', 'unknown', 'NA']
@@ -675,7 +717,7 @@ def run_algo(request):
 
             # write html to file
             # For accessing the file in a folder contained in the current folder
-            file_name = os.path.join('../templates/Ada_Boost.html')
+            file_name = os.path.join('../templates/machine_learning/Ada_Boost.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -710,7 +752,7 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'Ada_Boost.html', context)
+            return render(request, 'machine_learning/Ada_Boost.html', context)
 
         if algo == "K Neighbors":
             array = ['ND', 'Unknown', 'unknown', 'NA']
@@ -756,7 +798,7 @@ def run_algo(request):
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
 
-            file_name = os.path.join('../templates/K_Neighbors.html')
+            file_name = os.path.join('../templates/machine_learning/K_Neighbors.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -836,7 +878,7 @@ def run_algo(request):
             # For accessing the file in a folder contained in the current folder
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
-            file_name = os.path.join('../templates/Nayves_Bayes.html')
+            file_name = os.path.join('../templates/machine_learning/Nayves_Bayes.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -872,7 +914,7 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'Nayves_Bayes.html', context)
+            return render(request, 'machine_learning/Nayves_Bayes.html', context)
 
         if algo == "h_clust":
             '''X = np.matrix([[0, 0, 0, 0], [13, 0, 0, 0], [2, 14, 0, 0], [17, 1, 18, 0]])
@@ -928,7 +970,7 @@ def run_algo(request):
 
             # For accessing the file in a folder contained in the current folder
 
-            file_name = os.path.join('../templates/h_clust.html')
+            file_name = os.path.join('../templates/machine_learning/h_clust.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -955,7 +997,7 @@ def run_algo(request):
 
             context = {'html': html}
             plt.close()
-            return render(request, 'h_clust.html', context)
+            return render(request, 'machine_learning/h_clust.html', context)
 
         if algo == "k_means":
             new_names = []
@@ -1009,7 +1051,7 @@ def run_algo(request):
 
 
             # For accessing the file in a folder contained in the current folder
-            file_name = os.path.join('../templates/k_means.html')
+            file_name = os.path.join('../templates/machine_learning/k_means.html')
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
@@ -1035,7 +1077,7 @@ def run_algo(request):
 
             context = {'html': html}
             plt.close()
-            return render(request, 'k_means.html', context)
+            return render(request, 'machine_learning/k_means.html', context)
 
         if algo == "clustermap":
             new_names = []
@@ -1071,7 +1113,7 @@ def run_algo(request):
 
                 # For accessing the file in a folder contained in the current folder
 
-                file_name = os.path.join('../templates/clustermap.html')
+                file_name = os.path.join('../templates/machine_learning/clustermap.html')
                 text_file = open(file_name, "w+")
 
                 # OUTPUT AN HTML FILE
@@ -1097,7 +1139,7 @@ def run_algo(request):
 
                 context = {'html': html}
                 plt.close()
-                return render(request, 'clustermap.html', context)
+                return render(request, 'machine_learning/clustermap.html', context)
 
             elif 'Country' not in df:
                 df["ID"] = new_names
@@ -1127,7 +1169,7 @@ def run_algo(request):
 
                 # For accessing the file in a folder contained in the current folder
 
-                file_name = os.path.join('../templates/dendro_heat.html')
+                file_name = os.path.join('../templates/machine_learning/dendro_heat.html')
                 text_file = open(file_name, "w+")
 
                 # OUTPUT AN HTML FILE
@@ -1153,4 +1195,4 @@ def run_algo(request):
 
                 context = {'html': html}
                 plt.close()
-                return render(request, 'dendro_heat.html', context)
+                return render(request, 'machine_learning/dendro_heat.html', context)
