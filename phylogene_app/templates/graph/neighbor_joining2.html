@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'phylEntropy/base.html' %}
 {% load static %}
 
 {% block head %}
@@ -25,12 +25,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" charset="utf-8"></script>
     <script type='text/javascript' src="{% static 'js/phylotree.js' %}"></script>
     <script>
-        str_newick="{{algo_upgma}}";
         var height = 400;
         var width = 400;
+        str_newick="{{labels}}";
         var tree = d3.layout.phylotree().svg(d3.select("#tree_display"))
         .options({})
-        .size([height, width]);
+        .size([height, width])
+        .node_circle_size(0);
         tree(str_newick).layout();
         hljs.initHighlightingOnLoad();
 
