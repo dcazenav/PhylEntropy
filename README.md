@@ -20,7 +20,6 @@ source activate phylentropyenv
 
 ```
 pip3 install -r requirements.txt
-
 ```
 
 * Create Django databases
