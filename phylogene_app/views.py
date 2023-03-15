@@ -1,3 +1,5 @@
+import json
+
 from detect_delimiter import detect
 import os
 import random
@@ -30,7 +32,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
 
-
 # Create your views here.
 def register(request):
     if request.user.is_authenticated:
@@ -50,13 +51,15 @@ def register(request):
     else:
         form = UserRegistrationForm()
 
-    return render(request=request, template_name = "users/register.html", context={"form": form})
+    return render(request=request, template_name="users/register.html", context={"form": form})
+
 
 @login_required
 def custom_logout(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect("homepage")
+
 
 def custom_login(request):
     if request.user.is_authenticated:
@@ -84,7 +87,9 @@ def custom_login(request):
         request=request,
         template_name="users/login.html",
         context={"form": form}
-        )
+    )
+
+
 def import_data(request):
     error = False
     info = []
@@ -96,7 +101,6 @@ def import_data(request):
         else:
             csv_file = request.FILES["csv_file"].read().decode("utf-8").split()
             for elmt in csv_file:
-                print(detect(elmt))
                 info.append(elmt.split(detect(elmt)))
             request.session['info'] = info
             return redirect(import_data)
@@ -108,20 +112,26 @@ def import_data(request):
 
     return render(request, 'phylEntropy/import_data.html', locals())
 
+
 def intro(request):
     return render(request, 'phylEntropy/intro.html')
+
 
 def base(request):
     return render(request, 'phylEntropy/base.html')
 
+
 def aboutphylentropy(request):
     return render(request, "phylEntropy/about.html")
+
 
 def links(request):
     return render(request, "phylEntropy/links.html")
 
+
 def credits(request):
     return render(request, "phylEntropy/credits.html")
+
 
 def ajax_1(request):
     if request.method == 'POST':
@@ -383,7 +393,6 @@ def run_algo(request):
             score_dt = accuracy_score(y_test, predictions)
             precision_dt = precision_score(y_test, predictions, average='macro')
 
-
             # write html to file
             # For accessing the file in a folder contained in the current folder
 
@@ -418,8 +427,8 @@ def run_algo(request):
             '''
             html = html_string.format(score_dt=score_dt, precision_dt=precision_dt,
                                       table=htmlfinal.to_html(
-                    classes='dataframe display table table-striped table-bordered table-hover responsive nowrap'
-                            'cell-border compact stripe'))
+                                          classes='dataframe display table table-striped table-bordered table-hover responsive nowrap'
+                                                  'cell-border compact stripe'))
 
             with text_file as f:
                 f.write(html)
@@ -1033,7 +1042,6 @@ def run_algo(request):
             color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
                                for i in range(number_of_colors)])
 
-
             # plotting the results:
             for i in u_labels:
                 plt.scatter(df[label == i, 0], df[label == i, 1], label=clusters[i], color=color[i], s=80)
@@ -1047,8 +1055,6 @@ def run_algo(request):
 
             filename = str(uuid.uuid4()) + ".png"
             plt.savefig(BASE_DIR1 + "/static/machine_learning/" + filename, dpi=100, bbox_inches='tight')
-
-
 
             # For accessing the file in a folder contained in the current folder
             file_name = os.path.join('../templates/machine_learning/k_means.html')
