@@ -1,5 +1,4 @@
-import json
-import json
+from detect_delimiter import detect
 import os
 import random
 import uuid
@@ -97,7 +96,8 @@ def import_data(request):
         else:
             csv_file = request.FILES["csv_file"].read().decode("utf-8").split()
             for elmt in csv_file:
-                info.append(elmt.split(";"))
+                print(detect(elmt))
+                info.append(elmt.split(detect(elmt)))
             request.session['info'] = info
             return redirect(import_data)
     if 'info' in request.session:
