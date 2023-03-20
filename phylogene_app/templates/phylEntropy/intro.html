@@ -35,6 +35,8 @@
     </head>
 
     <body>
+    {% include 'phylEntropy/navbar.html' %}
+{% comment %}
         <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
             <a class="navbar-brand" href="#">phylEntropy</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,8 +76,8 @@
                                 </a>
                             </div>
                       {% else %}
-                          {% comment %}<button class="btn btn-link my-2 my-sm-0" type="submit">Sign in</button>
-                          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Sign up</button>{% endcomment %}
+                          <button class="btn btn-link my-2 my-sm-0" type="submit">Sign in</button>
+                          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Sign up</button>
                             <div class="navbar-nav">
                                 <a class="nav-item nav-link" href="{% url 'login' %}">
                                     <i class="fa fa-sign-in"></i> Log in
@@ -89,6 +91,7 @@
                 </div>
             </div>
         </nav>
+{% endcomment %}
 
         <div class="container-fluid" style="background-color: #ffffff;" >
         <!--BANDEAU -->
