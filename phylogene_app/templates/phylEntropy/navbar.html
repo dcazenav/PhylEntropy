@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="#">phylEntropy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'intro' %}"><i class="fa fa-home"></i> Home<span class="sr-only">(current)</span></a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'aboutphylentropy' %}">About Phylentropy</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'phylogene_import' %}"><i class='fa fa-cog'></i> Analysis</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'links' %}"><i class='fa fa-paperclip'></i> Links</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'credits' %}"><i class="fa fa-book"></i> Credits</a>
+            </li>
+        </ul>
+
+        <div class='row g-0'>
+          <div class='col-md-5 w-auto ms-auto'>
+              {% if user.is_authenticated %}
+                  <div class="navbar-nav">
+                    Welcome <strong>&nbsp;{{ user.username }}</strong>
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">
+                            <i class="fa fa-log-in"></i> Log out
+                        </a>
+                    </div>
+              {% else %}
+                  {% comment %}<button class="btn btn-link my-2 my-sm-0" type="submit">Sign in</button>
+                  <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Sign up</button>{% endcomment %}
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{% url 'login' %}">
+                            <i class="fa fa-sign-in"></i> Log in
+                        </a>
+                        <a class="nav-item nav-link" href="{% url 'register' %}">
+                            <i class="fa fa-user-plus"></i> Sign up
+                        </a>
+                    </div>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+</nav>
