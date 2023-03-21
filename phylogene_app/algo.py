@@ -1,6 +1,10 @@
 from .utils import *
 import numpy as np
 
+def handle_uploaded_file(f):
+    with open('phylogene_app/static/upload/'+f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 # UPGMA:
 #   Runs the UPGMA algorithm on a labelled table

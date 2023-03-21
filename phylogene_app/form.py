@@ -1,6 +1,10 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV2Checkbox
+
+from phylogene_app.models import UserFilesForm
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -17,3 +21,53 @@ class UserRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+class UserLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+
+    username = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Username or Email'}),
+        label="Username or Email*")
+
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Password'}))
+
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+        #fields = ['first_name', 'last_name', 'email', 'image', 'description']
+
+
+class UserFilesForm(forms.ModelForm):
+    class Meta:
+        model = UserFilesForm
+        fields = ['username', 'file']
+        widgets = {'username': forms.HiddenInput()}
+
+    def __init__(self, user, *args, **kwargs):
+        super(UserFilesForm, self).__init__(*args, **kwargs)
+        self.user = user
+        self.fields['username'].initial = self.user
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     self.fields['my_field'].initial = 'my_initial'
+
+# class StudentForm(forms.ModelForm):
+#     class Meta:
+#         model = StudentForm
+#         fields = "__all__"
+#
+#     def __init__(self, *args, **kwargs):
+#         super(StudentForm, self).__init__(*args, **kwargs)
+#         for field_name, field in self.fields.items():
+#             field.widget.attrs['class'] = 'form-control'

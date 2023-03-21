@@ -16,7 +16,9 @@ urlpatterns = [
                 path("register", views.register, name="register"),
                 path('login', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
                 path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
-                # path('test/', views.test, name='phylogene_test'),
+                path('profile/<username>', views.profile, name="profile"),
+                path('adduserfile', views.adduserfile, name='adduserfile'),
+                  # path('test/', views.test, name='phylogene_test'),
                 # path('Rtest/', views.run_algo, name='Rtest'),
                 # path('chart/', views.chart, name='chart'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -27,9 +27,11 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from .algo import *
-from .form import UserRegistrationForm
+from .form import UserRegistrationForm, UserLoginForm, UserUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+
+from .form import UserFilesForm
 
 
 # Create your views here.
@@ -89,6 +91,55 @@ def custom_login(request):
         context={"form": form}
     )
 
+
+def profile(request, username):
+    if request.method == "POST":
+        user = request.user
+        form = UserUpdateForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            user_form = form.save()
+            messages.success(request, f'{user_form.username}, Your profile has been updated!')
+            return redirect("profile", user_form.username)
+
+        for error in list(form.errors.values()):
+            messages.error(request, error)
+
+    user = get_user_model().objects.filter(username=username).first()
+    if user:
+        form = UserUpdateForm(instance=user)
+        #form.fields['description'].widget.attrs = {'rows': 1}
+        return render(
+            request=request,
+            template_name="users/profile.html",
+            context={"form": form}
+        )
+
+    return redirect("homepage")
+
+# def index(request):
+#     if request.method == 'POST':
+#         student = StudentForm(request.POST, request.FILES)
+#         if student.is_valid():
+#             handle_uploaded_file(request.FILES['file'])
+#             model_instance = student.save(commit=False)
+#             model_instance.save()
+#             return HttpResponse("File uploaded successfuly")
+#     else:
+#         student = StudentForm()
+#         print("stud",student)
+#         return render(request,"users/ajoutfichier.html",{'form':StudentForm()})
+
+def adduserfile(request):
+    if request.method == 'POST':
+        student = UserFilesForm(request.user, request.POST, request.FILES)
+        if student.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            model_instance = student.save(commit=False)
+            model_instance.save()
+            return HttpResponse("File uploaded successfuly")
+    else:
+        userfile = UserFilesForm(request.user)
+        return render(request,"users/ajoutfichier.html",{'form':userfile})
 
 def import_data(request):
     error = False

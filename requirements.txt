@@ -31,7 +31,7 @@ jsonschema==4.16.0
 kaleido==0.2.1
 kiwisolver==1.4.4
 MarkupSafe==2.1.1
-matplotlib==3.6.1
+matplotlib~=3.6.0
 mttkinter==0.6.1
 numpy==1.23.3
 packaging==21.3
@@ -61,3 +61,5 @@ virtualenv==20.16.5
 Werkzeug==2.2.2
 zipp==3.9.0
 detect_delimiter
+captcha~=0.4
+django-recaptcha

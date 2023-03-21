@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # add manually
     'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
+
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

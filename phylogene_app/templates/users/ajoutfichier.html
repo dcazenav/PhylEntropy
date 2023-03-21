@@ -1,0 +1,28 @@
+{% load static %}
+<html>
+<head>
+<title>Django File Upload - cairocoders</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="{% static 'users/css/users.css' %}">
+<link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    {% include 'phylEntropy/navbar.html' %}
+
+<div class="container" style="padding:20px;">
+    <div class="row">
+        <div class="col-12">
+            <p><h1>Django File Upload Save to Mysql Database</h1></p>
+            <form method="POST" class="post-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
