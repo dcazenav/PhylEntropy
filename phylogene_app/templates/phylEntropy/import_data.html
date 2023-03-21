@@ -11,6 +11,8 @@
     <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+
 
 
 <div class="container" style="margin-bottom: 1em;">
@@ -20,10 +22,15 @@
                     <form action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% if user.is_authenticated %}
-                            <label for="csv_file">Fichiers de {{ user.username }} : </label>
-                                <select id="inputDataSampleSelect" name="csv_file">
-                                    <option value="graph_example.csv">{{ user.username }}</option>
-                                </select>
+                            <label for="csv_file">Files upload by {{ user.username }} : </label>
+                                    <select id="inputDataSampleSelect" name="csv_file">
+                            {% for file in files %}
+                            {% if file.username == user.username %}
+                                        <option value="{{ file.file }}">{{ file.file }}</option>
+                            {% endif %}
+                            {% endfor %}
+                            </select>
+                            <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
                         {% else %}
 
                             <label for="csv_file">Test csv files : </label>
@@ -51,7 +58,7 @@
         // on click on example download, call Home controller DownloadFile action
 		$("#inputDataSampleDownload").on('click', function() {
 			if ($("#inputDataSampleSelect option:selected" ).text().length > 0) {
-				window.location.href = "../static/files/FILENAME".replace("FILENAME", $("#inputDataSampleSelect option:selected" ).text());
+				window.location.href = "../static/upload/FILENAME".replace("FILENAME", $("#inputDataSampleSelect option:selected" ).text());
 			}else{
 					alert("Sample file not found");
 			}

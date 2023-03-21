@@ -31,7 +31,8 @@ from .form import UserRegistrationForm, UserLoginForm, UserUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 
-from .form import UserFilesForm
+from .form import UserFilesFormulaire
+from .models import UserFilesForm
 
 
 # Create your views here.
@@ -131,19 +132,29 @@ def profile(request, username):
 
 def adduserfile(request):
     if request.method == 'POST':
-        student = UserFilesForm(request.user, request.POST, request.FILES)
+        student = UserFilesFormulaire(request.user, request.POST, request.FILES)
         if student.is_valid():
             handle_uploaded_file(request.FILES['file'])
             model_instance = student.save(commit=False)
             model_instance.save()
             return HttpResponse("File uploaded successfuly")
     else:
-        userfile = UserFilesForm(request.user)
-        return render(request,"users/ajoutfichier.html",{'form':userfile})
+        userfile = UserFilesFormulaire(request.user)
+        print(userfile)
+        context = {'formulaire' : userfile}
+        return render(request,"users/ajoutfichier.html", context)
+
+# def listfiles(request):
+#     files = UserFilesForm.objects.all()
+#     context = {'files': files}
+#
+#     return render(request, 'phylEntropy/testaffichfiles.html', context)
+
 
 def import_data(request):
     error = False
     info = []
+    files = UserFilesForm.objects.all()
     if 'import' in request.POST:
         csv_file = request.FILES["csv_file"]
         if not csv_file.name.endswith('.csv'):
@@ -160,8 +171,8 @@ def import_data(request):
         info_submit = True
     else:
         info_submit = False
-
-    return render(request, 'phylEntropy/import_data.html', locals())
+    context = {'files': files}
+    return render(request, 'phylEntropy/import_data.html', context)
 
 
 def intro(request):

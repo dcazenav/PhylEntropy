@@ -44,14 +44,14 @@ class UserUpdateForm(forms.ModelForm):
         #fields = ['first_name', 'last_name', 'email', 'image', 'description']
 
 
-class UserFilesForm(forms.ModelForm):
+class UserFilesFormulaire(forms.ModelForm):
     class Meta:
         model = UserFilesForm
         fields = ['username', 'file']
         widgets = {'username': forms.HiddenInput()}
 
     def __init__(self, user, *args, **kwargs):
-        super(UserFilesForm, self).__init__(*args, **kwargs)
+        super(UserFilesFormulaire, self).__init__(*args, **kwargs)
         self.user = user
         self.fields['username'].initial = self.user
         for field_name, field in self.fields.items():
