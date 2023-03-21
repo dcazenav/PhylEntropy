@@ -3,6 +3,8 @@
 {% endcomment %}
 {% load crispy_forms_tags %}
 {% block content %}
+        {% include 'phylEntropy/navbar.html' %}
+
     <div class="content-section">
         <form method="POST">
             {% csrf_token %}
