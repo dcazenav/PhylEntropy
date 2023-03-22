@@ -1,4 +1,7 @@
+{% comment %}
 {% extends 'phylEntropy/base.html' %}
+{% endcomment %}
+{% load static %}
 {% block content %}
  <div id="myDiv1">
  </div>
@@ -14,14 +17,19 @@
 </style>
 {% endblock %}
 {%block javascripts %}
+{% comment %}
 {{block.super}}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endcomment %}
+<script src="https://cdn.plot.ly/plotly-2.18.2.min.js"></script>
+
 <script>
+
 var info1={{info1|safe}};
 var layout1={{layout1|safe}};
 Plotly.newPlot('myDiv1', info1, layout1);
 var info2={{info2|safe}};
-alert(info2);
+{% comment %}alert(info2);{% endcomment %}
 var layout2={{layout2|safe}};
 Plotly.newPlot('myDiv2', info2, layout2);
 </script>
