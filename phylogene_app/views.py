@@ -17,6 +17,7 @@ from django.utils.safestring import SafeString
 from sklearn import svm
 from sklearn import tree
 from sklearn.cluster import KMeans
+import plotly.express as px
 from sklearn.decomposition import PCA
 from sklearn.decomposition import PCA as sklearnPCA
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier
@@ -140,7 +141,6 @@ def adduserfile(request):
             return HttpResponse("File uploaded successfuly")
     else:
         userfile = UserFilesFormulaire(request.user)
-        print(userfile)
         context = {'formulaire' : userfile}
         return render(request,"users/ajoutfichier.html", context)
 
@@ -157,6 +157,7 @@ def import_data(request):
     files = UserFilesForm.objects.all()
     if 'import' in request.POST:
         csv_file = request.FILES["csv_file"]
+        print(request.FILES["csv_file"])
         if not csv_file.name.endswith('.csv'):
             error = True
             return render(request, 'phylEntropy/import_data.html', locals())
@@ -166,13 +167,29 @@ def import_data(request):
                 info.append(elmt.split(detect(elmt)))
             request.session['info'] = info
             return redirect(import_data)
+
+    # elif 'import_load' in request.POST:
+    #     #print(request.get_all('csv_file'))
+    #     #csv_file = request.FILES["csv_file"]
+    #     csv_file2 = request.FILES['csv_file2']
+    #     print(request.FILES['csv_file2'])
+    #     if not csv_file2.name.endswith('.csv'):
+    #         error = True
+    #         return render(request, 'phylEntropy/import_data.html', locals())
+    #     else:
+    #         csv_file2 = request.FILES["csv_file2"].read().decode("utf-8").split()
+    #         for elmt in csv_file2:
+    #             info.append(elmt.split(detect(elmt)))
+    #         request.session['info'] = info
+    #         return redirect(import_data)
+
     if 'info' in request.session:
         fichier = request.session['info']
         info_submit = True
     else:
         info_submit = False
-    context = {'files': files}
-    return render(request, 'phylEntropy/import_data.html', context)
+    #context = {'files': files}
+    return render(request, 'phylEntropy/import_data.html', locals())
 
 
 def intro(request):
@@ -298,9 +315,35 @@ def run_algo(request):
 
         if algo == "PCA":
             panel_color = ['#ff0066', ' #9966ff', ' #ff0000', '#ff9900', '#669900', '#006600', '#cc00ff', '#00ffff',
-                           '#ff9900', '#993300']
+                           '#ff9900', '#993300', "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a", "#4cf09d",
+                            "#3b8c2a", "#986b53", "#f50422", "#983f7a", "#ea24a3", "#79352c", "#521250",
+                            "#c79ed2", "#d6dd92", "#e33e52", "#b2be57", "#fa06ec", "#1bb699", "#6b2e5f",
+                            "#64820f", "#21538e", "#89d534", "#d36647", "#7fb411", "#0023b8", "#3b8c2a",
+                            "#986b53", "#f50422", "#983f7a", "#ea24a3", "#79352c", "#521250", "#c79ed2",
+                            "#d6dd92", "#e33e52", "#b2be57", "#fa06ec", "#1bb699", "#6b2e5f", "#64820f",
+                            "#9cb64a", "#996c48", "#9ab9b7", "#06e052", "#e3a481", "#0eb621", "#fc458e",
+                            "#b2db15", "#aa226d", "#792ed8", "#73872a", "#520d3a", "#cefcb8", "#a5b3d9",
+                            "#7d1d85", "#c4fd57", "#f1ae16", "#8fe22a", "#ef6e3c", "#243eeb", "#dd93fd",
+                            "#3f8473", "#e7dbce", "#421f79", "#7a3d93", "#635f6d", "#93f2d7", "#9b5c2a",
+                            "#15b9ee", "#0f5997", "#409188", "#911e20", "#1350ce", "#10e5b1", "#fff4d7",
+                            "#cb2582", "#ce00be", "#32d5d6", "#608572", "#c79bc2", "#00f87c", "#77772a",
+                            "#6995ba", "#fc6b57", "#f07815", "#8fd883", "#060e27", "#96e591", "#21d52e",
+                            "#d00043", "#b47162", "#1ec227", "#4f0f6f", "#1d1d58", "#947002", "#bde052",
+                            "#e08c56", "#28fcfd", "#36486a", "#d02e29", "#1ae6db", "#3e464c", "#a84a8f",
+                            "#911e7e", "#3f16d9", "#0f525f", "#ac7c0a", "#b4c086", "#c9d730", "#30cc49",
+                            "#3d6751", "#fb4c03", "#640fc1", "#62c03e", "#d3493a", "#88aa0b", "#406df9",
+                            "#615af0", "#2a3434", "#4a543f", "#79bca0", "#a8b8d4", "#00efd4", "#7ad236",
+                            "#7260d8", "#1deaa7", "#06f43a", "#823c59", "#e3d94c", "#dc1c06", "#f53b2a",
+                            "#b46238", "#2dfff6", "#a82b89", "#1a8011", "#436a9f", "#1a806a", "#4cf09d",
+                            "#c188a2", "#67eb4b", "#b308d3", "#fc7e41", "#af3101", "#71b1f4", "#a2f8a5",
+                            "#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35", "#1c65cb", "#5d1d0c",
+                            "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44", "#1bede6", "#8798a4",
+                            "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#88e9b8", "#c2b0e2", "#86e98f",
+                            "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff", "#f812b3", "#b17fc9", "#8d6c2f",
+                            "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
+                            "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
             colors = {}
-            col_qualitative = data[-1]
+            col_qualitative = data[-2]
             classe = []
             cpt = 0
             for i in range(len(col_qualitative)):
@@ -308,7 +351,7 @@ def run_algo(request):
                     classe.append(col_qualitative[i])
                     colors[col_qualitative[i]] = panel_color[i]
                     cpt += 1
-            l = len(entete_colonne_selected) - 1
+            l = len(entete_colonne_selected) - 2
             df = pd.DataFrame(rows_bact)
             df.columns = [entete_colonne_selected]
             df.dropna(how="all", inplace=True)  # drops the empty line at file-end
@@ -322,7 +365,10 @@ def run_algo(request):
 
             test = list(map('{:.80f}'.format, mean_vec))
             testnp = "[{0}]".format('  '.join(map(str, test)))
-            testnp2 = np.array(testnp)
+            # print(testnp)
+            #testnp2 = np.array(testnp)
+            testnp2 = np.asarray(test, dtype=np.float64)
+
 
             cov_mat = (X_std - testnp2).T.dot((X_std - testnp2)) / (X_std.shape[0] - 1)
             cov_mat = np.cov(X_std.T)
@@ -345,7 +391,9 @@ def run_algo(request):
                 name='Cumulative'
             )
 
+            #info1 = [trace1, trace2]
             info1 = [trace1, trace2]
+
             layout1 = dict(
                 title='Explained variance by different principal components',
                 yaxis=dict(
@@ -1079,6 +1127,7 @@ def run_algo(request):
             new_X_input = []
             for i in range(len(rows_bact)):
                 new_X_input.append(rows_bact[i][:-1])
+
 
             # Load Data
             data = np.array(new_X_input)
