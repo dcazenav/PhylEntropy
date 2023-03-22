@@ -22,8 +22,8 @@
                     <form action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% if user.is_authenticated %}
-                            <label for="csv_file">Files upload by {{ user.username }} : </label>
-                                    <select id="inputDataSampleSelect" name="csv_file">
+                            <label for="csv_file2">Files upload by {{ user.username }} : </label>
+                                    <select id="inputDataSampleSelect" name="csv_file2">
                             {% for file in files %}
                             {% if file.username == user.username %}
                                         <option value="{{ file.file }}">{{ file.file }}</option>
@@ -31,10 +31,12 @@
                             {% endfor %}
                             </select>
                             <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
+                            <button name="import_load" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
+
                         {% else %}
 
-                            <label for="csv_file">Test csv files : </label>
-                                <select id="inputDataSampleSelect" name="csv_file">
+                            <label for="csv_file2">Test csv files : </label>
+                                <select id="inputDataSampleSelect" name="csv_file2">
                                     <option value="graph_example.csv">graph_example.csv</option>
                                     <option value="exemple_2.csv">exemple2.csv</option>
                                     <option value="maps_example.csv">maps_example.csv</option>
@@ -44,6 +46,7 @@
                                     <option value="spol43.csv">spol43.csv</option>
                                 </select>
                                 <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
+                                <button name="import_load" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
                         {% endif %}
                     </form>
                 </div>{% comment %}
@@ -204,7 +207,7 @@
                         <div class="tab-pane fade" id="metrics">
                             <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">To test, "metrics_example.csv" or "machinelearning_example_file.csv"  then click on Select All > the option you want to use.</p>
-                            <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="PCA" onclick="this.form.submited=this.value;" hidden="hidden">
+                            <input id="submit6" name="pca"   class="btn btn-primary" type="submit" value="PCA" onclick="this.form.submited=this.value;" >
                             <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                             <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                             <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
