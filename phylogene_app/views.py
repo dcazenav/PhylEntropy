@@ -373,9 +373,11 @@ def run_algo(request):
             cov_mat = (X_std - testnp2).T.dot((X_std - testnp2)) / (X_std.shape[0] - 1)
             cov_mat = np.cov(X_std.T)
             eig_vals, eig_vecs = np.linalg.eig(cov_mat)
+            print(eig_vals.dtype)
             tot = sum(eig_vals)
+            print(tot.dtype)
 
-            var_exp = [(i / tot) * 100 for i in sorted(eig_vals, reverse=True)]
+            var_exp = [(i / tot.real) * 100 for i in sorted(eig_vals.real, reverse=True)]
             cum_var_exp = np.cumsum(var_exp)
             trace1 = dict(
                 type='bar',
@@ -455,15 +457,16 @@ def run_algo(request):
 
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-
-            X = df.drop(columns=['Type'])
+            print(df)
+            X = df.drop(columns=['Type', 'Location'])
+            print(X)
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             model_option = DecisionTreeClassifier()
             model_option.fit(X_train, y_train)
 
@@ -554,14 +557,14 @@ def run_algo(request):
         if algo == "Support Vector Machines":
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
 
             clf = svm.SVC()
 
@@ -635,14 +638,14 @@ def run_algo(request):
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             # valeur par défault de n_estimators(possibilité de choisir la valeur?)
             clf = RandomForestClassifier(n_estimators=5)
             clf.fit(X, y)
@@ -717,14 +720,14 @@ def run_algo(request):
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             clf = ExtraTreesClassifier(n_estimators=5)
             clf.fit(X, y)
             predictions = clf.predict(X_test)
@@ -797,14 +800,14 @@ def run_algo(request):
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             clf = AdaBoostClassifier(n_estimators=5)
             clf.fit(X, y)
             predictions = clf.predict(X_test)
@@ -877,14 +880,14 @@ def run_algo(request):
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             clf = KNeighborsClassifier(n_neighbors=3)
             clf.fit(X, y)
             predictions = clf.predict(X_test)
@@ -959,14 +962,14 @@ def run_algo(request):
             array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            X = df.drop(columns=['Type'])
+            X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
             array = ['ND', 'Unknown', 'unknown']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
             clf = GaussianNB()
             clf.fit(X, y)
 
@@ -1070,7 +1073,7 @@ def run_algo(request):
 
             new_X_input = []
             for i in range(len(rows_bact)):
-                new_X_input.append(rows_bact[i][:-1])
+                new_X_input.append(rows_bact[i][:-2])
 
             array_for_X = np.array(new_X_input)
             X = array_for_X.astype("float64")
@@ -1122,11 +1125,11 @@ def run_algo(request):
             new_names = []
             new_fichier = fichier[1:]
             for i in range(len(new_fichier)):
-                new_names.append(new_fichier[i][-1])
+                new_names.append(new_fichier[i][-2])
 
             new_X_input = []
             for i in range(len(rows_bact)):
-                new_X_input.append(rows_bact[i][:-1])
+                new_X_input.append(rows_bact[i][:-2])
 
 
             # Load Data
@@ -1205,12 +1208,12 @@ def run_algo(request):
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
 
-            if 'Country' in df:
+            if 'Location' in df:
                 df["ID"] = new_names
                 df = df.set_index('ID')
                 col_type = df['Type']
                 del df['Type']
-                del df['Country']
+                del df['Location']
                 df = df.astype(float)
 
                 color = np.unique(["#" + ''.join([random.choice('0123456789ABCDEF') for j in range(6)])
@@ -1258,7 +1261,7 @@ def run_algo(request):
                 plt.close()
                 return render(request, 'machine_learning/clustermap.html', context)
 
-            elif 'Country' not in df:
+            elif 'Location' not in df:
                 df["ID"] = new_names
                 df = df.set_index('ID')
                 col_type = df['Type']
