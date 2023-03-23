@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="#">phylEntropy</a>
+    <a class="navbar-brand" href="{% url 'intro' %}">phylEntropy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -50,7 +50,7 @@
                   <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Sign up</button>{% endcomment %}
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="{% url 'login' %}">
-                            <i class="fa fa-sign-in"></i> Log in
+                            <i class="fa fa-sign-in"></i> Sign in
                         </a>
                         <a class="nav-item nav-link" href="{% url 'register' %}">
                             <i class="fa fa-user-plus"></i> Sign up
