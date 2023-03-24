@@ -155,7 +155,7 @@ def adduserfile(request):
 #     files = UserFilesForm.objects.all()
 #     context = {'files': files}
 #
-#     return render(request, 'phylEntropy/testaffichfiles.html', context)
+#     return render(request, 'phylEntropy/affichfiles.html', context)
 
 
 def import_data(request):
