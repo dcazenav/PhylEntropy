@@ -1,4 +1,5 @@
 import json
+from pygenomeviz import GenomeViz
 
 from detect_delimiter import detect
 import os
@@ -11,8 +12,9 @@ import plotly.figure_factory as ff
 import seaborn as sns
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.utils.safestring import SafeString
 from sklearn import svm
 from sklearn import tree
@@ -31,7 +33,7 @@ from .algo import *
 from .form import UserRegistrationForm, UserLoginForm, UserUpdateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.contrib import messages
 from .form import UserFilesFormulaire
 from .models import UserFilesForm
 
@@ -138,7 +140,12 @@ def adduserfile(request):
             handle_uploaded_file(request.FILES['file'])
             model_instance = student.save(commit=False)
             model_instance.save()
-            return HttpResponse("File uploaded successfuly")
+            messages.success(request, 'Youre file has been updated succesfully !')
+            # return HttpResponse('''File uploaded successfuly
+            #                     <small class="text-muted">
+            #     retour<a class="ml-2" href="{% url 'adduserfile' %}">Retour</a>
+            # </small><br>''')
+            return HttpResponseRedirect(reverse_lazy('adduserfile'))
     else:
         userfile = UserFilesFormulaire(request.user)
         context = {'formulaire' : userfile}
@@ -457,38 +464,29 @@ def run_algo(request):
 
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
-            print(df)
+
             X = df.drop(columns=['Type', 'Location'])
-            print(X)
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
             model_option = DecisionTreeClassifier()
             model_option.fit(X_train, y_train)
 
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
-            # filename = str(uuid.uuid4()) + ".dot"
-            #
-            # tree.export_graphviz(model_option, out_file=filename,
-            #                      feature_names=entete_colonne_selected[:-1],
-            #                      class_names=sorted(y.unique()),
-            #                      label='all',
-            #                      rounded=True,
-            #                      filled=True)
             predictions = model_option.predict(X_test)
             prediction2 = model_option.predict(x_d)
 
             # Ajout d'un header
             dfpred = pd.DataFrame(predictions,
-                                  columns=['Prediction'])
+                                  columns=['Prediction_type'])
 
             # Récupérer la colonne Prediction
-            numbers = dfpred["Prediction"]
+            numbers = dfpred["Prediction_type"]
 
             # resetting the DataFrame index
             x_d_1 = x_d_1.reset_index(drop=False)
@@ -560,11 +558,11 @@ def run_algo(request):
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
 
             clf = svm.SVC()
 
@@ -635,21 +633,20 @@ def run_algo(request):
             return render(request, 'machine_learning/Support_Vector_Machines.html', context)
 
         if algo == "Random Forest":
-            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
             # valeur par défault de n_estimators(possibilité de choisir la valeur?)
             clf = RandomForestClassifier(n_estimators=5)
             clf.fit(X, y)
-            # SVC()
+            #SVC()
             predictions = clf.predict(X_test)
             rf_prediction = clf.predict(x_d)
             score_rf = accuracy_score(y_test, predictions)
@@ -717,17 +714,16 @@ def run_algo(request):
             return render(request, 'machine_learning/Random_Forest.html', context)
 
         if algo == "Extra Trees":
-            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
             clf = ExtraTreesClassifier(n_estimators=5)
             clf.fit(X, y)
             predictions = clf.predict(X_test)
@@ -797,17 +793,16 @@ def run_algo(request):
             return render(request, 'machine_learning/Extra_Trees.html', context)
 
         if algo == "Ada Boost":
-            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
             clf = AdaBoostClassifier(n_estimators=5)
             clf.fit(X, y)
             predictions = clf.predict(X_test)
@@ -817,10 +812,10 @@ def run_algo(request):
 
             # Ajout d'un header
             dfpred = pd.DataFrame(predictions,
-                                  columns=['Prediction'])
+                                  columns=['Prediction_type'])
 
             # Récupérer la colonne Prediction
-            numbers = dfpred["Prediction"]
+            numbers = dfpred["Prediction_type"]
 
             # resetting the DataFrame index
             x_d_1 = x_d_1.reset_index(drop=False)
@@ -877,30 +872,30 @@ def run_algo(request):
             return render(request, 'machine_learning/Ada_Boost.html', context)
 
         if algo == "K Neighbors":
-            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-            array = ['ND', 'Unknown', 'unknown', 'NA']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type'])
             clf = KNeighborsClassifier(n_neighbors=3)
             clf.fit(X, y)
+
             predictions = clf.predict(X_test)
-            rf_prediction = clf.predict(x_d)
+            #rf_prediction = clf.predict(x_d)
             score_knn = accuracy_score(y_test, predictions)
             precision_knn = precision_score(y_test, predictions, average='macro')
 
             # Ajout d'un header
             dfpred = pd.DataFrame(predictions,
-                                  columns=['Prediction'])
+                                  columns=['Prediction_type'])
 
             # Récupérer la colonne Prediction
-            numbers = dfpred["Prediction"]
+            numbers = dfpred["Prediction_type"]
 
             # resetting the DataFrame index
             x_d_1 = x_d_1.reset_index(drop=False)
@@ -924,7 +919,7 @@ def run_algo(request):
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
-            html_string = '''<html> <head><title>K Neighbors</title></head> <script 
+            html_string = '''<html> <head><title>K_Neighbors</title></head> <script 
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
             crossorigin="anonymous"></script> <script 
@@ -956,20 +951,19 @@ def run_algo(request):
             text_file.close()
 
             context = {'pred_Type': predictions, 'df': df, 'Unknown_Type': x_d_1, 'html': html}
-            return render(request, 'K_Neighbors.html', context)
+            return render(request, 'machine_learning/K_Neighbors.html', context)
 
         if algo == "Nayve Bayes":
-            array = ['ND', 'Unknown', 'unknown', 'NA']
             df = pd.DataFrame(rows_bact,
                               columns=entete_colonne_selected)
             X = df.drop(columns=['Type', 'Location'])
             y = df['Type']
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-            array = ['ND', 'Unknown', 'unknown']
+            array = ['ND', '']
             df.isin(array)
             x_d_1 = []
             x_d_1 = df.loc[df['Type'].isin(array)]
-            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type', 'Location'])
+            x_d = df.loc[df['Type'].isin(array)].drop(columns=['Type','Location'])
             clf = GaussianNB()
             clf.fit(X, y)
 
@@ -979,10 +973,10 @@ def run_algo(request):
 
             # Ajout d'un header
             dfpred = pd.DataFrame(predictions,
-                                  columns=['Prediction'])
+                                  columns=['Prediction_type'])
 
             # Récupérer la colonne Prediction
-            numbers = dfpred["Prediction"]
+            numbers = dfpred["Prediction_type"]
 
             # resetting the DataFrame index
             x_d_1 = x_d_1.reset_index(drop=False)
@@ -1316,3 +1310,59 @@ def run_algo(request):
                 context = {'html': html}
                 plt.close()
                 return render(request, 'machine_learning/dendro_heat.html', context)
+
+        if algo == "pyGenomeViz":
+            new_fichier = fichier[1:]
+
+            maListe = list()
+            cds_list = ()
+            finalList = list()
+            listeTampon = {}
+            name = ''
+
+            for row in new_fichier:
+
+                for i in range(len(row)):
+
+                    if i == 6:
+                        liste = {"name": row[i], "size": int(row[4]),
+                                 "cds_list": (int(row[1]), int(row[2]), int(row[3]))}
+
+                maListe.append(liste)
+
+            for row in maListe:
+
+                if name != row['name']:
+                    finalList.append(listeTampon)
+                    listeTampon = {}
+                    cds_list = list()
+                    cds_list.append(row['cds_list'])
+                    name = row['name']
+                else:
+                    cds_list.append(row['cds_list'])
+                    listeTampon = {"name": row['name'], "size": row['size'], "cds_list": cds_list}
+            finalList.append(listeTampon)
+            finalList.remove({})
+
+            gv = GenomeViz(tick_style="axis")
+            for genome in finalList:
+                name, size, cds_list = genome["name"], genome["size"], genome["cds_list"]
+                track = gv.add_feature_track(name, size)
+                for idx, cds in enumerate(cds_list, 1):
+                    start, end, strand = cds
+                    track.add_feature(start, end, strand, label=f"gene{idx:02d}", linewidth=1, labelrotation=0,
+                                      labelvpos="top",
+                                      labelhpos="center", labelha="center")
+
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+            gv.savefig_html("../templates/machine_learning/outGV_gene.html")
+
+            # file_name = os.path.join('../templates/machine_learning/pyge.html')
+            # text_file = open(file_name, "w+")
+
+            # OUTPUT AN HTML
+
+
+            return render(request, 'machine_learning/outGV_gene.html', locals())
+
