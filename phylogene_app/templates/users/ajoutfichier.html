@@ -24,6 +24,10 @@
 <div class="container" style="padding-top: 70px;">
     <div class="row">
         <div class="col-12">
+        <div id="content">
+            {% include 'phylEntropy/message.html' %}
+            {% block content %}  {% endblock content %}
+        </div>
             <p><h1>Django File Upload Save to Mysql Database</h1></p>
             <form method="POST" class="post-form" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -34,4 +38,11 @@
     </div>
 </div>
 </body>
+<script>
+    setTimeout(function(){
+      if ($('#msg').length > 0) {
+        $('#msg').remove();
+      }
+    }, 2000)
+  </script>
 </html>
