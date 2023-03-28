@@ -1020,7 +1020,7 @@ def run_algo(request):
             text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML FILE
-            html_string = '''<html> <head><title>Nayves Bayes</title></head> <script 
+            html_string = '''<html> <head><title>Naives Bayes</title></head> <script 
             src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" 
             crossorigin="anonymous"></script> <script 
@@ -1034,7 +1034,7 @@ def run_algo(request):
 
                           <body>
                           <div class="container-fluid" style="background-color: #a6aaa9;" >
-                                <h1 style="text-align: center;" >Nayves Bayes</h1>
+                                <h1 style="text-align: center;" >Naives Bayes</h1>
                             </div>
                           <p> Accuracy Score : {score_nb} </p>
                           <p> Precision Score : {precision_nb} </p>  

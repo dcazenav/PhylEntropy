@@ -1,0 +1,14 @@
+geneID,start,stop,strand,genome_size,type,location
+gene1,200,450,1,4000,resistance,genome_01
+gene2,640,820,-1,4000,resistance,genome_01
+gene1,240,520,1,5000,replication,genome_02
+gene2,440,820,1,5000,resistance,genome_02
+gene3,1250,1540,-1,5000,replication,genome_02
+gene4,2640,2920,1,5000,resistance,genome_02
+gene1,300,700,1,4200,resistance,genome_03
+gene2,800,1000,1,4200,resistance,genome_03
+gene1,200,450,1,4300,resistance,genome_04
+gene2,640,820,1,4300,resistance,genome_04
+gene3,1220,1420,1,4300,resistance,genome_04
+gene1,200,500,1,4500,resistance,genome_05
+gene2,600,880,1,4500,resistance,genome_05
