@@ -64,3 +64,4 @@ detect_delimiter
 captcha~=0.4
 django-recaptcha
 pygenomeviz
+django-cleanup
