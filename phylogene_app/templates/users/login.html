@@ -5,6 +5,8 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <head>
+    <title>Sign In</title>
+
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <link rel="shortcut icon" href="../../static/img/karubionet2favicon.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -18,11 +20,11 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
+                <legend class="border-bottom mb-4">Sign In</legend>
                     {{ form|crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Login</button>
+                <button class="btn btn-outline-info" type="submit">Sign in</button>
             </div>
         </form>
         <div class="border-top pt-3">
