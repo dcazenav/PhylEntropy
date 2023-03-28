@@ -42,9 +42,10 @@
                                     <option value="exemple_2.csv">exemple2.csv</option>
                                     <option value="machinelearning_example_file.csv">machinelearning_example_file.csv</option>
                                     <option value="spol43.csv">spol43.csv</option>
+                                    <option value="gene.csv">gene.csv</option>
                                 </select>
                                 <input name="import" type="button" class="btn btn-primary" id="inputDataSampleDownload" value="Download File"/>
-                                <button name="import_load" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
+                                <button name="import_load" type="submit" class="offset-md-6 btn btn-primary" id="testfile" hidden="hidden"> Load File </button>
                         {% endif %}
                     </form>
                 </div>{% comment %}
@@ -56,21 +57,21 @@
         </div>
 
     <script>
+
         // on click on example download, call Home controller DownloadFile action
-		$("#inputDataSampleDownload").on('click', function() {
-			if ($("#inputDataSampleSelect option:selected" ).text().length > 0) {
-				window.location.href = "../static/FILENAME".replace("FILENAME", $("#inputDataSampleSelect option:selected" ).text());
-			}else{
-					alert("Sample file not found");
-			}
-		});
+        $("#inputDataSampleDownload").on('click', function() {
+            if ($("#inputDataSampleSelect option:selected" ).text().length > 0) {
+                window.location.href = "../static/FILENAME".replace("FILENAME", $("#inputDataSampleSelect option:selected").text());
+            }else{
+                    alert("Sample file not found");
+            }
+        });
 
         $("#testfile").on('click', function() {
             if ($("#inputDataSampleSelect option:selected").text().length > 0) {
 
             }
         });
-
 
     </script>
 
@@ -81,13 +82,13 @@
     {% endif %}
     <div class="row">
         <div class="col-md-12">
-            <form method="post" action="#" enctype="multipart/form-data">
+            <form id="form_file" method="post" action="#" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group files">
-                <label class="text-primary">Upload Your File</label>
-                <input name="csv_file" id="csv_file" type="file" class="form-control" >
+                    <label class="text-primary">Upload Your File</label>
+                    <input name="csv_file" id="csv_file" type="file" class="form-control" >
                 </div>
-                    <button name="import" type="submit" class="offset-md-6 btn btn-primary" > Load File </button>
+                <button id="button_file" name="import" type="submit" class="offset-md-6 btn btn-primary" hidden="hidden"> Load File </button>
 
                 <div class="row">
                     <div class="text-center">
@@ -97,7 +98,12 @@
         </div>
     </div>
 </div>
+<script>
 
+    document.getElementById("csv_file").onchange = function() {
+        document.getElementById("button_file").click();
+    }
+</script>
 {% if info_submit %}
 
 <br>
@@ -161,7 +167,7 @@
                 <div class="card-header">
                     Choose an analysis option
                     <ul class="nav nav-tabs card-header-tabs" id="myTab">
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <a href="#genomics" class="nav-link active" data-bs-toggle="tab">Genomics</a>
                         </li>
                         <li class="nav-item">
@@ -186,13 +192,13 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade" id="genomics">
+                        <div class="tab-pane fade active show" id="genomics">
                             <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">To test, "gene.csv" or "pyge.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit22" name="pyGenomeViz"   class="btn btn-primary" type="submit" value="pyGenomeViz" onclick="this.form.submited=this.value;" >
                             <input id="submit23" name="pyCircos"   class="btn btn-primary" type="submit" value="pyCircos" onclick="this.form.submited=this.value;" >
                        </div>
-                        <div class="tab-pane fade show active" id="graph">
+                        <div class="tab-pane fade" id="graph">
                             <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">To test, use "exemple2.csv" then click on Select All > Store Value > the option you want to use.</p>
                             <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
@@ -223,7 +229,7 @@
                        </div>
                         <div class="tab-pane fade" id="machinelearning">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, "machinelearning_example_file.csv" then click on Select All > the option you want to use.</p>
+                            <p class="card-text">To test, use "spol43.csv" then click on Select All > the option you want to use.</p>
                             <div class="dropdown text-center">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Supervized Learning
@@ -251,7 +257,7 @@
                         </div>
                         <div class="tab-pane fade" id="fuzzylogic">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, "metrics_example.csv" or "machinelearning_example_file.csv"  then click on Select All > the option you want to use.</p>
+                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit24" name="FuzzyWuzzy"   class="btn btn-primary" type="submit" value="FuzzyWuzzy" onclick="this.form.submited=this.value;" >
                        </div>
                     </div>
