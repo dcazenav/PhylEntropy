@@ -1,5 +1,5 @@
 {% load static %}
-<html>
+<html lang="en">
 <head>
 <title>Add files</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
@@ -32,9 +32,26 @@
             <form method="POST" class="post-form" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ formulaire.as_p}}
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <button name="upload" type="submit" class="btn btn-primary">Save</button>
             </form>
         </div>
+        {% for file in files %}
+            {% if file.username == user.username %}
+                <div class="font-monospace" value="{{ file.file }}">
+                    <div class="mt-4">
+                        {{ file.file }}
+                        <button class="bg-blue-500 rounded">
+                            <a href="{% url 'delete-file' file.pk %}">
+                                Delete file
+                            </a>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+
     </div>
 </div>
 </body>
