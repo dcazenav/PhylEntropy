@@ -13,8 +13,8 @@ import seaborn as sns
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.utils.safestring import SafeString
 from sklearn import svm
 from sklearn import tree
@@ -134,21 +134,31 @@ def profile(request, username):
 #         return render(request,"users/ajoutfichier.html",{'form':StudentForm()})
 
 def adduserfile(request):
-    if request.method == 'POST':
-        student = UserFilesFormulaire(request.user, request.POST, request.FILES)
-        if student.is_valid():
-            handle_uploaded_file(request.FILES['file'])
+    #error = False
+    info = []
+    student = UserFilesFormulaire(request.user, request.POST, request.FILES)
+    files_upload = UserFilesForm.objects.all()
+    user = request.user
+    if 'upload' in request.POST:
+        upload_file = request.FILES['file']
+        print(upload_file)
+        if not upload_file.name.endswith(('.csv')):
+            messages.warning(request, 'Youre file is not good (only .csv files) !')
+        else:
+            with open('phylogene_app/static/upload/' + upload_file.name, 'wb+') as destination:
+                for chunk in upload_file.chunks():
+                    destination.write(chunk)
             model_instance = student.save(commit=False)
             model_instance.save()
             messages.success(request, 'Youre file has been updated succesfully !')
-            # return HttpResponse('''File uploaded successfuly
-            #                     <small class="text-muted">
-            #     retour<a class="ml-2" href="{% url 'adduserfile' %}">Retour</a>
-            # </small><br>''')
-            return HttpResponseRedirect(reverse_lazy('adduserfile'))
+        # return HttpResponse('''File uploaded successfuly
+        #                     <small class="text-muted">
+        #     retour<a class="ml-2" href="{% url 'adduserfile' %}">Retour</a>
+        # </small><br>''')
+        return HttpResponseRedirect(reverse_lazy('adduserfile'))
     else:
         userfile = UserFilesFormulaire(request.user)
-        context = {'formulaire' : userfile}
+        context = {'formulaire' : userfile, 'files' : files_upload}
         return render(request,"users/ajoutfichier.html", context)
 
 # def listfiles(request):
@@ -157,6 +167,16 @@ def adduserfile(request):
 #
 #     return render(request, 'phylEntropy/affichfiles.html', context)
 
+def delete_file(request, pk):
+    file = get_object_or_404(UserFilesForm, pk=pk)
+    file.delete_file()
+    return redirect('adduserfile')
+
+# def delete_file(request, id):
+#     file = UserFilesForm.objects.get(id=id)
+#     print(file)
+#     file.delete_file()
+#     return redirect('adduserfile')
 
 def import_data(request):
     error = False
@@ -165,7 +185,7 @@ def import_data(request):
     if 'import' in request.POST:
         csv_file = request.FILES["csv_file"]
         print(request.FILES["csv_file"])
-        if not csv_file.name.endswith('.csv'):
+        if not csv_file.name.endswith(('.csv')):
             error = True
             return render(request, 'phylEntropy/import_data.html', locals())
         else:
@@ -175,7 +195,7 @@ def import_data(request):
             request.session['info'] = info
             return redirect(import_data)
 
-    # elif 'import_load' in request.POST:
+    elif 'import_load' in request.POST:
     #     #print(request.get_all('csv_file'))
     #     #csv_file = request.FILES["csv_file"]
     #     csv_file2 = request.FILES['csv_file2']
@@ -184,11 +204,14 @@ def import_data(request):
     #         error = True
     #         return render(request, 'phylEntropy/import_data.html', locals())
     #     else:
-    #         csv_file2 = request.FILES["csv_file2"].read().decode("utf-8").split()
-    #         for elmt in csv_file2:
-    #             info.append(elmt.split(detect(elmt)))
-    #         request.session['info'] = info
-    #         return redirect(import_data)
+
+        print(request.POST)
+        csv_file2 = request.FILES["csv_file2"].read().decode("utf-8").split()
+        print(csv_file2)
+        for elmt in csv_file2:
+            info.append(elmt.split(detect(elmt)))
+        request.session['info'] = info
+        return redirect(import_data)
 
     if 'info' in request.session:
         fichier = request.session['info']
@@ -530,7 +553,6 @@ def run_algo(request):
               <p> Accuracy Score : {score_dt} </p>  
               <p> Precision Score : {precision_dt} </p>  
              
-              
                 {table}
                 
               </body>
@@ -1326,7 +1348,7 @@ def run_algo(request):
 
                     if i == 6:
                         liste = {"name": row[i], "size": int(row[4]),
-                                 "cds_list": (int(row[1]), int(row[2]), int(row[3]))}
+                                 "cds_list": (int(row[1]), int(row[2]), int(row[3]),str(row[0]))}
 
                 maListe.append(liste)
 
@@ -1349,8 +1371,8 @@ def run_algo(request):
                 name, size, cds_list = genome["name"], genome["size"], genome["cds_list"]
                 track = gv.add_feature_track(name, size)
                 for idx, cds in enumerate(cds_list, 1):
-                    start, end, strand = cds
-                    track.add_feature(start, end, strand, label=f"gene{idx:02d}", linewidth=1, labelrotation=0,
+                    start, end, strand , gene = cds
+                    track.add_feature(start, end, strand, label=gene , linewidth=1, labelrotation=0,
                                       labelvpos="top",
                                       labelhpos="center", labelha="center")
 
