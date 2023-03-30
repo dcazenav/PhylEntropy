@@ -1,4 +1,7 @@
 import json
+import sys
+
+import numpy
 from pygenomeviz import GenomeViz
 
 from detect_delimiter import detect
@@ -471,6 +474,24 @@ def run_algo(request):
             return render(request, 'graph/test2.html', locals())
 
         if algo == "Global Map":
+            fichier = request.session['info']
+            df = pd.DataFrame(fichier)
+
+            new_matrix = numpy.transpose(data)
+            np.set_printoptions(threshold=sys.maxsize)
+            print(new_matrix.tolist())
+            print(index_entete)
+
+            print(data)
+            # print(fichier[0])
+            #
+            new_index = []
+            # index_bact = df['ID']
+
+            for i in range(len(fichier)):
+                new_index.append(fichier[i][0])
+
+            print(new_index)
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'maps/chart.html', locals())
@@ -552,11 +573,11 @@ def run_algo(request):
                 </div>
               <p> Accuracy Score : {score_dt} </p>  
               <p> Precision Score : {precision_dt} </p>  
-             
+             <div id="example_wrapper" class="dataTables_wrapper no-footer">
                 {table}
-                
+             </div>   
               </body>
-            </html>.
+            </html>
             '''
             html = html_string.format(score_dt=score_dt, precision_dt=precision_dt,
                                       table=htmlfinal.to_html(
