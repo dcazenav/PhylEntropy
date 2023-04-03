@@ -132,7 +132,7 @@
                         <!-- Fin ajout-->
                      <tr id="test_head">
                         {% for column in row %}
-                            <th>{{column}}</th>
+                            <th id="name_head">{{column}}</th>
                         {% endfor %}
                     </tr>
                     </tr>
@@ -171,7 +171,7 @@
                             <a href="#genomics" class="nav-link active" data-bs-toggle="tab">Genomics</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#graph" class="nav-link" data-bs-toggle="tab">Graph</a>
+                            <a href="#graph" class="nav-link" data-bs-toggle="tab">Graphs/Trees</a>
                         </li>
                         <li class="nav-item">
                             <a href="#statistics" class="nav-link" data-bs-toggle="tab">Statistics</a>
@@ -200,7 +200,7 @@
                        </div>
                         <div class="tab-pane fade" id="graph">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit1" name="kruskal" class="btn btn-primary" type="submit" value="Minimun Spanning Tree" onclick="this.form.submited=this.value;" >
                             <input id="submit2" name="upgma"   class="btn btn-primary" type="submit" value="UPGMA" onclick="this.form.submited=this.value;" >
                             <input id="submit3" name="neighbor-joining"   class="btn btn-primary" type="submit" value="Neighbor-Joining" onclick="this.form.submited=this.value;" >
@@ -216,20 +216,20 @@
                         </div>
                         <div class="tab-pane fade" id="maps">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > Store Value > the option you want to use.</p>
+                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit8" name="Global Map"   class="btn btn-primary" type="submit" value="Global Map" onclick="this.form.submited=this.value;" >
                             <input id="submit11" name="Global City Map"   class="btn btn-primary" type="submit" value="Global City Map" onclick="this.form.submited=this.value;" hidden="hidden">
                         </div>
                         <div class="tab-pane fade" id="metrics">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, "exemple2.csv" or "spol43.csv"  then click on Select All > the option you want to use.</p>
+                            <p class="card-text">To test, "exemple2.csv" or "spol43.csv" Select All > then click on the option you want to use.</p>
                             <input id="submit7" name="Entropy"   class="btn btn-primary" type="submit" value="Entropy" onclick="this.form.submited=this.value;" >
                             <input id="submit9" name="Hunter-Gaston"   class="btn btn-primary" type="submit" value="Hunter-Gaston" onclick="this.form.submited=this.value;" >
                             <input id="submit10" name="Shannon-Entropy"   class="btn btn-primary" type="submit" value="Shannon-Entropy" onclick="this.form.submited=this.value;" >
                        </div>
                         <div class="tab-pane fade" id="machinelearning">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, use "spol43.csv" then click on Select All > the option you want to use.</p>
+                            <p class="card-text">To test, use "spol43.csv" Select All > then click on the option you want to use.</p>
                             <div class="dropdown text-center">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                 Supervized Learning
@@ -257,7 +257,7 @@
                         </div>
                         <div class="tab-pane fade" id="fuzzylogic">
                             <h5 class="card-title">Instructions about how to launch</h5>
-                            <p class="card-text">To test, use "exemple2.csv" then click on Select All > the option you want to use.</p>
+                            <p class="card-text">To test, use "exemple2.csv" then click on the option you want to use.</p>
                             <input id="submit24" name="FuzzyWuzzy"   class="btn btn-primary" type="submit" value="FuzzyWuzzy" onclick="this.form.submited=this.value;" >
                        </div>
                     </div>

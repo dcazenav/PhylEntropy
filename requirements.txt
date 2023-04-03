@@ -65,3 +65,5 @@ captcha~=0.4
 django-recaptcha
 pygenomeviz
 django-cleanup
+fuzzywuzzy
+Levenshtein

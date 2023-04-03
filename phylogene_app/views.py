@@ -3,7 +3,7 @@ import sys
 
 import numpy
 from pygenomeviz import GenomeViz
-
+from fuzzywuzzy import fuzz
 from detect_delimiter import detect
 import os
 import random
@@ -1408,4 +1408,71 @@ def run_algo(request):
 
 
             return render(request, 'machine_learning/outGV_gene.html', locals())
+
+        if algo == "FuzzyWuzzy":
+            fichier = request.session['info']
+            df = pd.DataFrame(fichier)
+            result = list()
+            new_matrix = numpy.transpose(data)
+            np.set_printoptions(threshold=sys.maxsize)
+            # print(new_matrix.tolist())
+            new_index = []
+
+            for i in range(len(fichier)):
+                new_index.append(fichier[i][0])
+
+            mato = []
+            mato = new_matrix.tolist()
+            print(mato)
+
+            for i in range(len(mato)):
+                for j in range(len(mato)):
+                    Ratio = fuzz.ratio(mato[i], mato[j])
+                    result.append(Ratio)
+
+            B = np.reshape(result, (-1, len(mato)))
+
+            df = pd.DataFrame(B, columns=new_index[1:], index=new_index[1:])
+            print(df)
+            # table_html = df.to_html(table_id="table")
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+            file_name = os.path.join('../templates/fuzzylogic/fuzzywuzzy.html')
+            text_file = open(file_name, "w+")
+
+            html_string = """
+                <html>
+                <header>
+                <title>Fuzzy Wuzzy</title></head> 
+                    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+                </header>
+                <body>
+                {table}
+                <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+                <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+                <script>
+                    $(document).ready( function () {{
+                        $('#table').DataTable({{
+                            // paging: false,    
+                            // scrollY: 400,
+                        }});
+                    }});
+                </script>
+                </body>
+                </html>
+                """
+            html = html_string.format
+
+            html = html_string.format(table=df.to_html(table_id="table",
+                classes='dataframe display table table-striped table-bordered table-hover responsive nowrap '
+                        'cell-border compact stripe'))
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'table': html}
+
+            return render(request, 'fuzzylogic/fuzzywuzzy.html', context)
 
