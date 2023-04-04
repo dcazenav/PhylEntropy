@@ -19,21 +19,23 @@
     <legend class="border-bottom mb-4">Profile Information:</legend>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+{% comment %}
         <div class="media">
-            {% if user.username == form.instance.username %}
-                <input id="id_image" type="file" name="image" hidden/>
-                    <label for="id_image">
-                        <img class="rounded-circle account-img profile-image"
-                            style="cursor: pointer"
-                            src="{{ form.instance.image.url }}"
-                            title="Upload new image">
-                    </label>
-            {% else %}
-                <img class="rounded-circle account-img profile-image", src="{{ form.instance.image.url }}">
-            {% endif %}
+{% endcomment %}
+{#            {% if user.username == form.instance.username %}#}
+{#                <input id="id_image" type="file" name="image" hidden/>#}
+{#                    <label for="id_image">#}
+{#                        <img class="rounded-circle account-img profile-image"#}
+{#                            style="cursor: pointer"#}
+{#                            src="{{ form.instance.image.url }}"#}
+{#                            title="Upload new image">#}
+{#                    </label>#}
+{#            {% else %}#}
+{#                <img class="rounded-circle account-img profile-image" src="{{ form.instance.image.url }}">#}
+{#            {% endif %}#}
             <div class="media-body">
                 <h2 class="account-heading">{{ form.instance.username }}
-                    <small class="text-muted">({{ form.instance.status }})</small>
+                    <small class="text-muted">(En ligne)</small>
                 </h2>
                 <p class="text-secondary">{{ form.instance.first_name }} {{ form.instance.last_name }}</p>
                 <p class="text-secondary">{{ form.instance.email }}</p>
@@ -41,7 +43,9 @@
                 <p class="text-secondary">{{ form.instance.description }}</p>
 {% endcomment %}
             </div>
+{% comment %}
         </div>
+{% endcomment %}
 
         {% if user.username == form.instance.username %}
             <fieldset class="form-group">
@@ -59,7 +63,9 @@
                 {{ form.description|as_crispy_field }}
 {% endcomment %}
 
+{% comment %}
                 <a href="/">Change password?</a>
+{% endcomment %}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Update</button>
