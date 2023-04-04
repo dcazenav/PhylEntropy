@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../../static/css/wrimagecard.css">
 {% comment %}
         <link rel="stylesheet" href="../static/css/phylotree.css.tmp">
 {% endcomment %}
@@ -100,7 +101,7 @@
 
                 <!--DEBUT TABULATIONS -->
                     <div class="col-lg-12" style="padding-top: 70px;">
-                        <h1 >Bienvenue sur phylEntropy</h1>
+                        <h1 >Welcome to phylEntropy</h1>
                         <br/>
                         <br/>
 
@@ -119,59 +120,40 @@
                         </table>
                     </div>
                 </div>
-                <footer style="height: 100%;">
-                    <table class="footer" width="100%" style="margin-top: 1em;">
-
-
-                    <tr>
-
-                      <td width="37%">
-                        <div id="info"><i>Copyright &copy; 2022, <a href="http://web.pasteur-guadeloupe.fr/"
-                              target="_blank">Institut Pasteur de la Guadeloupe</a>. All rights reserved. </i> </div>
-                      </td>
-                      <td height="21" colspan="2">
-                        <div id="info" >You can also follow us on <a
-                            href="https://www.facebook.com/Institut.Pasteur.Guadeloupe/" target="_blank">Facebook</a></div>
-                      </td>
-                    </tr>
-                    <!-- <tr>
-                              <td height="21" colspan="2">&nbsp;</td>
-                              <td width="37%"><div id="info" align="right"><a href="mailto:tburguiere@pasteur-guadeloupe.fr">Thomas Burguiere</a> &nbsp; <a href="mailto:dcouvin@pasteur-guadeloupe.fr">David Couvin</a> </div></td>
-                            </tr>-->
-
-                    <tr>
-                      <td height="21" colspan="3">
-                        <hr>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td width="50%" height="46">Portions of this page are reproduced from work created and <a
-                          href="https://google-developers.appspot.com/site-policies" target="_blank">shared by Google</a> and used
-                        according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0/"
-                          target="_blank">Creative Commons 3.0 Attribution License</a>.</td>
-                      <!--<a href="http://validator.w3.org/check?uri=referer" target="_blank">
-                        <img src="http://www.w3.org/Icons/valid-html401" alt="w3c" width="88" height="31" border="0" longdesc="http://validator.w3.org/check?uri=referer" >	</a></td>-->
-                      <td>
-                        <div>version &#946; 2.0 </div>
-                      </td>
-                      <td width="50%">
-                        <div><em>This site uses </em>&nbsp;
-                          <a href="https://www.djangoproject.com/" target="_blank">
-                            <img src="../../static/img/djangologo.png" alt="django" width="68" height="35" border="0"> </a>&nbsp;
-                          <a href="https://getbootstrap.com/" target="_blank">
-                            <img src="../../static/img/bootstraplogo.png" alt="bootstrap" width="68" height="35" border="0"> </a>&nbsp;
-                          <a href="https://www.python.org/" target="_blank">
-                            <img src="../../static/img/pythonlogo.jpg" alt="bootstrap" width="68" height="35" border="0"> </a>&nbsp;
-                        </div>
-                      </td>
-                    </tr>
-
-                    </table>
-                </footer>
+                {% include 'phylEntropy/footer.html' %}
             </div>
-
-
+            <div class="row justify-content-center">
+                <div class="col-md-2 col-sm-3 ">
+                    <div class="wrimagecard wrimagecard-topimage" style="text-align:center;">
+                        <a href="{% url 'phylogene_import' %}">
+                            <div class="wrimagecard-topimage_header" style="background-color:rgb(50,130,255,0.1);">
+                                <img style="width:100%;" src="../../static/img/analysis.jpeg">
+                                <h3>Genomics, Graps, Metrics, etc...</h3>
+                            </div>
+                            <div class="wrimagecard-topimage_title">
+                                <h2>Analysis</h2>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-3 ">
+                </div>
+                <div class="col-md-2 col-sm-3 ">
+                    <div class="wrimagecard wrimagecard-topimage" style="text-align:center;">
+                        <a href="https://github.com/dcazenav/PhylEntropy">
+                            <div class="wrimagecard-topimage_header" style="background-color:rgb(50,130,255,0.1);">
+                                <div style="text-align: center;">
+                                    <img style="width:60%;" src="../../static/img/tuto.jpeg">
+                                </div>
+                                <h4>All you need to know on how to use phylEntropy!</h4>
+                            </div>
+                            <div class="wrimagecard-topimage_title">
+                                <h2>Tutorial</h2>
+                                <div class="pull-right badge" id="WrControls"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
         </div>
 
 
