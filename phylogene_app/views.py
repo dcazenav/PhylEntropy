@@ -144,7 +144,7 @@ def adduserfile(request):
     user = request.user
     if 'upload' in request.POST:
         upload_file = request.FILES['file']
-        print(upload_file)
+        # print(upload_file)
         if not upload_file.name.endswith(('.csv')):
             messages.warning(request, 'Youre file is not good (only .csv files) !')
         else:
@@ -187,7 +187,7 @@ def import_data(request):
     files = UserFilesForm.objects.all()
     if 'import' in request.POST:
         csv_file = request.FILES["csv_file"]
-        print(request.FILES["csv_file"])
+        # print(request.FILES["csv_file"])
         if not csv_file.name.endswith(('.csv')):
             error = True
             return render(request, 'phylEntropy/import_data.html', locals())
@@ -208,9 +208,9 @@ def import_data(request):
     #         return render(request, 'phylEntropy/import_data.html', locals())
     #     else:
 
-        print(request.POST)
+        # print(request.POST)
         csv_file2 = request.FILES["csv_file2"].read().decode("utf-8").split()
-        print(csv_file2)
+        # print(csv_file2)
         for elmt in csv_file2:
             info.append(elmt.split(detect(elmt)))
         request.session['info'] = info
@@ -406,9 +406,9 @@ def run_algo(request):
             cov_mat = (X_std - testnp2).T.dot((X_std - testnp2)) / (X_std.shape[0] - 1)
             cov_mat = np.cov(X_std.T)
             eig_vals, eig_vecs = np.linalg.eig(cov_mat)
-            print(eig_vals.dtype)
+            # print(eig_vals.dtype)
             tot = sum(eig_vals)
-            print(tot.dtype)
+            # print(tot.dtype)
 
             var_exp = [(i / tot.real) * 100 for i in sorted(eig_vals.real, reverse=True)]
             cum_var_exp = np.cumsum(var_exp)
@@ -479,19 +479,12 @@ def run_algo(request):
 
             new_matrix = numpy.transpose(data)
             np.set_printoptions(threshold=sys.maxsize)
-            print(new_matrix.tolist())
-            print(index_entete)
 
-            print(data)
-            # print(fichier[0])
-            #
             new_index = []
-            # index_bact = df['ID']
 
             for i in range(len(fichier)):
                 new_index.append(fichier[i][0])
 
-            print(new_index)
             minimal_tree = kruskal(tab_reduce, label_reduce)
             minimal_tree = [SafeString(elmt) for elmt in minimal_tree]
             return render(request, 'maps/chart.html', locals())
@@ -1405,8 +1398,6 @@ def run_algo(request):
             # text_file = open(file_name, "w+")
 
             # OUTPUT AN HTML
-
-
             return render(request, 'machine_learning/outGV_gene.html', locals())
 
         if algo == "FuzzyWuzzy":
@@ -1415,7 +1406,6 @@ def run_algo(request):
             result = list()
             new_matrix = numpy.transpose(data)
             np.set_printoptions(threshold=sys.maxsize)
-            # print(new_matrix.tolist())
             new_index = []
 
             for i in range(len(fichier)):
@@ -1423,7 +1413,7 @@ def run_algo(request):
 
             mato = []
             mato = new_matrix.tolist()
-            print(mato)
+            # print(mato)
 
             for i in range(len(mato)):
                 for j in range(len(mato)):
@@ -1433,8 +1423,7 @@ def run_algo(request):
             B = np.reshape(result, (-1, len(mato)))
 
             df = pd.DataFrame(B, columns=new_index[1:], index=new_index[1:])
-            print(df)
-            # table_html = df.to_html(table_id="table")
+            # print(df)
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
             file_name = os.path.join('../templates/fuzzylogic/fuzzywuzzy.html')
