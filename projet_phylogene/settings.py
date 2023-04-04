@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # add manually
     'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
+    'django_extensions',
     # 'django_cleanup.apps.CleanupConfig',
 
 ]
