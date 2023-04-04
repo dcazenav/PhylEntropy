@@ -67,3 +67,4 @@ pygenomeviz
 django-cleanup
 fuzzywuzzy
 Levenshtein
+django-extensions
