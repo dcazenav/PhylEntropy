@@ -5,6 +5,11 @@ A Django web application to make simple data analysis and data vizualisation.
 
 # Installation
 
+First, clone this repo:
+```
+git clone https://github.com/dcazenav/PhylEntropy.git
+```
+
 Phylentropy requires python 3.10.
 
 To install it:
