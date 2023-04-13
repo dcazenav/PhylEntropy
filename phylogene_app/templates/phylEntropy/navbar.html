@@ -1,3 +1,6 @@
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
 <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
     <a class="navbar-brand" href="{% url 'intro' %}">phylEntropy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,3 +64,10 @@
         </div>
     </div>
 </nav>
+
+<script>
+    $(".nav .nav-link").on("click", function(){
+       $(".nav").find(".active").removeClass("active");
+       $(this).addClass("active");
+    });
+</script>
