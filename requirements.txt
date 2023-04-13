@@ -68,3 +68,4 @@ django-cleanup
 fuzzywuzzy
 Levenshtein
 django-extensions
+django-schema-graph
