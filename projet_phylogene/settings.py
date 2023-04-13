@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
     'django_extensions',
+    # 'schema_graph', retirer en production
     # 'django_cleanup.apps.CleanupConfig',
 
 ]
