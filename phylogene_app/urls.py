@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+# from schema_graph.views import Schema
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -19,7 +20,8 @@ urlpatterns = [
                 path('profile/<username>', views.profile, name="profile"),
                 path('adduserfile', views.adduserfile, name='adduserfile'),
                 #path('delete/<int:id>/', views.delete_file, name='delete-file')
-                path('delete/<int:pk>/', views.delete_file, name='delete-file' )
+                path('delete/<int:pk>/', views.delete_file, name='delete-file' ),
+                # path("schema/", Schema.as_view()), (à retirer en production)
                 # path('listfiles', views.listfiles, name='listfiles'),
                   # path('test/', views.test, name='phylogene_test'),
                 # path('Rtest/', views.run_algo, name='Rtest'),
