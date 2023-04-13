@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'phylEntropy/base.html' %}
+{% load static %}
 {% block content %}
 <head>
   <title>Analysis</title>
@@ -301,7 +302,10 @@
     right: 0;
     height: 56px;
     content: "";
-    background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+    background-image: url("{% static 'img/download.png' %}");
+    {% comment %}
+    <a href="https://www.flaticon.com/free-icons/download" title="download icons">Download icons created by Good Ware - Flaticon</a>
+    {% endcomment %}
     display: block;
     margin: 0 auto;
     background-size: 100%;
