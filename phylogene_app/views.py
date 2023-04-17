@@ -1351,13 +1351,15 @@ def run_algo(request):
             new_fichier = fichier[1:]
 
             maListe = list()
+            type = list()
             cds_list = ()
             finalList = list()
             listeTampon = {}
             name = ''
 
             for row in new_fichier:
-
+                loop_type = row[5]
+                type.append(loop_type)
                 for i in range(len(row)):
 
                     if i == 6:
@@ -1365,6 +1367,19 @@ def run_algo(request):
                                  "cds_list": (int(row[1]), int(row[2]), int(row[3]),str(row[0]))}
 
                 maListe.append(liste)
+
+            print(type)
+            new_type = list(set(type))
+            # print(new_type)
+            color = ["#" + ''.join([random.choice('0123456789ABCDEF') for i in range(6)])
+                     for j in range(len(new_type))]
+            # print(color)
+
+            dict_from_list = dict(zip(new_type, color))
+            # print(dict_from_list)
+
+            phoenetic = [dict_from_list[letter] for letter in type]
+            print(phoenetic)
 
             for row in maListe:
 
@@ -1381,6 +1396,7 @@ def run_algo(request):
             finalList.remove({})
 
             gv = GenomeViz(tick_style="axis")
+            index = 0
             for genome in finalList:
                 name, size, cds_list = genome["name"], genome["size"], genome["cds_list"]
                 track = gv.add_feature_track(name, size)
@@ -1388,7 +1404,8 @@ def run_algo(request):
                     start, end, strand , gene = cds
                     track.add_feature(start, end, strand, label=gene , linewidth=1, labelrotation=0,
                                       labelvpos="top",
-                                      labelhpos="center", labelha="center")
+                                      labelhpos="center", labelha="center", facecolor=phoenetic[index])
+                    index += 1
 
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
             os.chdir(BASE_DIR1 + "/static")
