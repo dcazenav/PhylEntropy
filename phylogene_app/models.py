@@ -8,7 +8,6 @@ class UserFilesForm(models.Model):
     # file = models.FileField(upload_to='upload/', validators=[FileExtensionValidator( ['csv'] ) ])  # for creating file input
     file = models.FileField("Load .csv file", upload_to='upload/') # for creating file input
 
-
     def delete_file(self):
         print('model',self.file)
         self.file.delete()

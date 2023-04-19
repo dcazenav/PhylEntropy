@@ -5,8 +5,6 @@ from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 
 from phylogene_app.models import UserFilesForm
-
-
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(help_text='A valid email address, please.', required=True)
 
@@ -33,7 +31,7 @@ class UserLoginForm(AuthenticationForm):
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+    # captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
