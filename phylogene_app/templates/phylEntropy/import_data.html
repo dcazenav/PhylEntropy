@@ -109,6 +109,9 @@
 
 <br>
     <div id="tab_data" class="row" style="position: relative; table-layout: auto;">
+    <div id="content">
+            {% include 'phylEntropy/message.html' %}
+        </div>
         <form id="form1" autocomplete="off" method="POST" action="" >
             {% csrf_token %}
             <table id="example" style="width:100%;" class="display table table-striped table-bordered table-hover responsive nowrap cell-border compact stripe" cellspacing="0" cellpadding="0">
