@@ -24,6 +24,7 @@
     var newArr = [];
     var datacolor1 = [];
     var label = [];
+    var size_pie = [];
 
 
 
@@ -67,6 +68,20 @@
         "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
         "#20f6ba", "#07d7f6", "#dce77a", "#77ecca" ];
 
+   {% comment %} function findSum(arr, size)
+    {
+        let sum = 0;
+
+    for(let i=0; i<size; i++)
+        {
+        sum += arr[i];
+        }
+
+    return sum;
+
+    }{% endcomment %}
+
+
 
     damienitem.splice(damienitem.length - 2, 2)
     for(var i = 0; i < damienitem.length; i++)
@@ -87,6 +102,16 @@
 
     var allValues  = damienitem[0].map((_, colIndex) => damienitem.map(row => row[colIndex]));
 
+    for (var j = 0; j < allValues.length; j++){
+            var sum = 0;
+
+            for(var i=0; i<allValues[j].length; i++)
+            {
+            sum += +allValues[j][i];
+            }
+            size_pie.push(sum);
+        }
+
     var hashcolor = [];
 
 
@@ -103,12 +128,14 @@
             type: 'pie',
             name: ID[i],
             marker: {
-                colors: hashcolor[i]
+                colors: hashcolor[i],
+                size:size_pie[i],
             },
             domain: {
                 row: 0,
                 column: i
             },
+            {#size:size_pie[i],#}
             hoverinfo: 'name+value+percent+label',
             textinfo: 'none'
         });
@@ -128,8 +155,6 @@
               }
         };
     }
-
-
 
     Plotly.newPlot('myDiv', data, layout);
 
