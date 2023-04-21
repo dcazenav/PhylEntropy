@@ -9,6 +9,8 @@ import os
 import random
 import uuid
 import mttkinter
+import math
+from math import *
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.figure_factory as ff
@@ -42,6 +44,26 @@ from .models import UserFilesForm
 
 
 # Create your views here.
+def intro(request):
+    return render(request, 'phylEntropy/intro.html')
+
+
+def base(request):
+    return render(request, 'phylEntropy/base.html')
+
+
+def aboutphylentropy(request):
+    return render(request, "phylEntropy/about.html")
+
+
+def links(request):
+    return render(request, "phylEntropy/links.html")
+
+
+def credits(request):
+    return render(request, "phylEntropy/credits.html")
+
+
 def register(request):
     if request.user.is_authenticated:
         return redirect('/')
@@ -224,27 +246,6 @@ def import_data(request):
     #context = {'files': files}
     return render(request, 'phylEntropy/import_data.html', locals())
 
-
-def intro(request):
-    return render(request, 'phylEntropy/intro.html')
-
-
-def base(request):
-    return render(request, 'phylEntropy/base.html')
-
-
-def aboutphylentropy(request):
-    return render(request, "phylEntropy/about.html")
-
-
-def links(request):
-    return render(request, "phylEntropy/links.html")
-
-
-def credits(request):
-    return render(request, "phylEntropy/credits.html")
-
-
 def ajax_1(request):
     if request.method == 'POST':
         data = json.loads(request.POST['tasks'])
@@ -260,6 +261,10 @@ def ajax_1(request):
 def run_algo(request):
     if 'data_file' in request.session and 'algo' in request.session:
         data = request.session['data_file']
+        # if not data:
+        #     messages.warning(request, 'Select checkboxes')
+        # else:
+        # nb_bact = len(data[0])
         fichier = request.session['info']
         entete_colonne_selected = []
         index_entete = request.session['entete']
@@ -309,6 +314,48 @@ def run_algo(request):
 
         if algo == "Pie Chart":
             return render(request, 'graph/pie_chart.html', locals())
+
+        if algo == "Pie Chart with proportion":
+            new_names = []
+            new_data = []
+            new_data_helper = []
+            pie_size = []
+            new_fichier = fichier[1:]
+
+            ultimatecolor = ["#e23dd0", "#d3486d", "#00f7f9", "#474893", "#3cec35", "#1c65cb", "#5d1d0c",
+                            "#2d7d2a", "#ff3420", "#5cdd87", "#a259a4", "#e4ac44", "#1bede6", "#8798a4",
+                            "#d7790f", "#b2c24f", "#de73c2", "#d70a9c", "#88e9b8", "#c2b0e2", "#86e98f",
+                            "#ae90e2", "#1a806b", "#436a9e", "#0ec0ff", "#f812b3", "#b17fc9", "#8d6c2f",
+                            "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
+                            "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
+
+            for i in range(len(new_fichier)):
+                new_names.append([new_fichier[i][0]])
+                del new_fichier[i][0]
+                del new_fichier[i][-2:]
+
+            print(new_names)
+            # print(ceil((len(new_fichier)/len(new_fichier[0]))/len(new_fichier[0])))
+
+            count_column = ceil((len(new_fichier)/len(new_fichier[0]))/len(new_fichier[0]))
+
+            for i in range(len(new_fichier)):
+                new_data_helper = []
+                for j in range(count_column):
+                    new_data_helper.append(new_fichier[j])
+                print(new_data_helper)
+
+
+
+            for i in range(len(new_fichier)):
+                sum_size_pie = 0
+                for j in range(len(new_fichier[i])):
+                    sum_size_pie = int(sum_size_pie) + int(new_fichier[i][j])
+                pie_size.append([sum_size_pie])
+
+            print(len(pie_size))
+            return render(request, 'graph/multi_piechart_proportionnal.html', locals())
+
 
         if algo == "Minimun Spanning Tree":
             minimal_tree = kruskal(tab_reduce, label_reduce)
