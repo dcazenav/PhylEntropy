@@ -15,24 +15,41 @@
     </head>
         {% include 'phylEntropy/navbar.html' %}
 
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join phylEntropy Today</legend>
-                {{ form|crispy }}
-            </fieldset>
+    <div class="container-fluid" style="background-color: #ffffff;" >
+            <!--BANDEAU -->
+        <div class="container" id="Page1" style="background-color: #ffffff;">
+            <div class="col-lg-12" style="padding-top: 70px;">
 
-            By registering, you accept the Terms of Service and Privacy Notice
-
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                        <!-- FIN TABULATION -->
+                    <!--PIED DE PAGE -->
+                <div style="text-align: center;">
+                    <table class="footer" width="100%" border="0">
+                    </table>
+                </div>
             </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Already Have An Account? <a class="ml-2" href="/login">Sign In</a>
-            </small>
+            <div class="row justify-content-center">
+                    <div class="col-md-auto col-sm-auto">
+                        <h1 style="text-align: center;">Join phylEntropy Today</h1>
+                        <div class="content-section">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <fieldset class="form-group">
+                                    <legend class="border-bottom mb-4"></legend>
+                                    {{ form|crispy }}
+                                </fieldset>
+                                By registering, you accept the Terms of Service and Privacy Notice
+                                <div class="form-group">
+                                    <button class="btn btn-outline-info" type="submit">Sign Up</button>
+                                </div>
+                            </form>
+                            <div class="border-top pt-3">
+                                <small class="text-muted">
+                                    Already Have An Account? <a class="ml-2" href="/login">Sign In</a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
