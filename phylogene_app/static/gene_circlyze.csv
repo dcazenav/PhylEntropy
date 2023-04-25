@@ -1,0 +1,4 @@
+geneID,start,stop,strand,genome_size,type,location
+gene1,200,450,1,4000,resistance,genome_01
+gene2,640,820,-1,4000,resistance,genome_01
+
