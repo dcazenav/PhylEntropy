@@ -1452,9 +1452,9 @@ def run_algo(request):
                 track = gv.add_feature_track(name, size)
                 for idx, cds in enumerate(cds_list, 1):
                     start, end, strand , gene = cds
-                    track.add_feature(start, end, strand, label=gene , linewidth=1, labelrotation=60,
+                    track.add_feature(start, end, strand, label=gene , linewidth=1, labelrotation=70,
                                       labelvpos="top",
-                                      labelhpos="center", labelha="center", facecolor=phoenetic[index], labelsize=5)
+                                      labelhpos="center", labelha="center", facecolor=phoenetic[index], labelsize=8)
                     index += 1
 
             BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
