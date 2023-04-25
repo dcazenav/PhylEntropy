@@ -46,7 +46,7 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
-Note that you can replace '<port>' by an available port number (e.g. 8000) as follows:
+Note that you can replace ```<port>``` by an available port number (e.g. 8000) as follows:
 ```
 python manage.py runserver 0.0.0.0:8000
 ```
