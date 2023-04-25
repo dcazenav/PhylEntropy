@@ -1,7 +1,7 @@
 # Phylentropy
 
 
-A Django web application to make simple data analysis and data vizualisation.
+A Django web application to make simple data analysis and vizualisation.
 
 # Installation
 
@@ -46,6 +46,11 @@ python manage.py createsuperuser
 python manage.py runserver 0.0.0.0:<port>
 ```
 
+Note that you can replace '<port>' by an available port number (e.g. 8000) as follows:
+```
+python manage.py runserver 0.0.0.0:8000
+```
+
 ## Manage downloaded files (optional)
 
 cron and crontab installation tutorial :
@@ -78,11 +83,11 @@ I’m using Ubuntu, but you can use this tutorial on another operating system (O
 
 Then you will find all the installing instructions in the READ.ME, follow them to launch the WEB application.
 
-Then load ".csv" file
+Then load a ".csv" file
 
-We have several option, but you can’t use them without an input file. It must be a ".csv" file with semicolon as field separator (no tabulation or commas).
+Several options are available, but you cannot use them without an input file. It must be a ".csv" file with a semicolon or comma as field separator (no tabs).
 
-(Depending on the option chosen, you will have to refer to the formalism of the example file.)
+Depending on the option chosen, you will have to refer to the formalism of the example file.
 
 Once your input file is in good shape, you can load/drag it into the area provided for this purpose.
 
