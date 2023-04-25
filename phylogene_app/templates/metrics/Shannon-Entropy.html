@@ -90,11 +90,15 @@ height: 600px;
                           .reduce((sum, f) => sum - f/len * Math.log2(f/len), 0)
                       }
                     
-                      console.log(entropy('1223334444')) 
+                      {% comment %} vérifie si l
+                      For this task, use X="1223334444" as an example. The result should be 1.84644... bits/symbol.
+                      This assumes X was a random variable, which may not be the case, or it may depend on the observer.
+
+                      console.log(entropy('1223334444')) {% endcomment %}
                     
-                      for(var i = 0; i < damien.length; i++){
+                      {% comment %}for(var i = 0; i < damien.length; i++){
                         console.log("entropy:" + entropy(damien[i]))
-                      }
+                      }{% endcomment %}
                     
                     
                       nameList.forEach((item, index, arr) => {
