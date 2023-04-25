@@ -200,7 +200,7 @@
                             <h5 class="card-title">Instructions about how to launch</h5>
                             <p class="card-text">To test, "gene.csv" or "pyge.csv" then click on Select All > the option you want to use.</p>
                             <input id="submit23" name="pyGenomeViz"   class="btn btn-primary" type="submit" value="pyGenomeViz" onclick="this.form.submited=this.value;" >
-                            <input id="submit24" name="pyCircos"   class="btn btn-primary" type="submit" value="pyCircos" onclick="this.form.submited=this.value;" >
+                            <input id="submit24" name="CGView"   class="btn btn-primary" type="submit" value="CGView" onclick="this.form.submited=this.value;" >
                        </div>
                         <div class="tab-pane fade" id="graph">
                             <h5 class="card-title">Instructions about how to launch</h5>
@@ -389,7 +389,6 @@ $(document).ready(function (){
        {
         label.push(value);
        });
-
     // Handle click event on a checkbox
     $('#example_wrapper').on('click', 'thead .column-selector input[type="checkbox"]', function(e){
          var colIdx = $(this).closest('th').index();
@@ -400,6 +399,7 @@ $(document).ready(function (){
         {
             table.column(colIdx).select();
             uniq = [...new Set(array)];
+
         }
         else
         {
@@ -474,6 +474,7 @@ $(document).ready(function (){
             });
             console.log("true:" + data_column_selected);
             sessionStorage.setItem('TableauduCSV', JSON.stringify(data_column_selected));
+            sessionStorage.setItem('entete', JSON.stringify(label));
 
         }
         else{
@@ -488,6 +489,7 @@ $(document).ready(function (){
             table.columns().deselect();
             console.log("else:" + data_column_selected);
             sessionStorage.clear('TableauduCSV');
+            sessionStorage.clear('entete');
 
             });
         }

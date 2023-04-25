@@ -315,6 +315,9 @@ def run_algo(request):
         if algo == "Pie Chart":
             return render(request, 'graph/pie_chart.html', locals())
 
+        if algo == "CGView":
+            return render(request, 'genomics/CGView.html', locals())
+
         if algo == "Pie Chart with proportion":
             new_names = []
             new_data = []
