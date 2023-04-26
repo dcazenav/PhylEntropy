@@ -77,6 +77,14 @@
 
     for(var i in data){
         cgv.addFeatures(data[i])
+        {% comment %}cgv.addTracks({
+            name: entete[i],
+            separateFeaturesBy: 'strand',
+            position: 'both',
+            dataType: 'feature',
+            dataMethod: 'source',
+            dataKeys: test[5][i]
+        }){% endcomment %}
     }
 
     var legendItem = cgv.legend.items(1);
