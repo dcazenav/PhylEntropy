@@ -31,6 +31,7 @@
 
 <script>
     var data = [];
+    var track = [];
 
     var retrievedObject = sessionStorage.getItem('TableauduCSV');
     var retrievedObject2 = sessionStorage.getItem('entete');
@@ -38,6 +39,7 @@
     var test = JSON.parse(retrievedObject);
     var entete = JSON.parse(retrievedObject2);
 
+    track = [...new Set(test[5])]
 
     for(var j in entete) {
         data.push({
@@ -77,15 +79,18 @@
 
     for(var i in data){
         cgv.addFeatures(data[i])
-        {% comment %}cgv.addTracks({
-            name: entete[i],
+    }
+
+    {% comment %}for(var i in track){
+        cgv.addTracks({
+            name: track[i],
             separateFeaturesBy: 'strand',
-            position: 'both',
+            position: 'inside',
             dataType: 'feature',
             dataMethod: 'source',
-            dataKeys: test[5][i]
-        }){% endcomment %}
-    }
+            dataKeys: track[i]
+        })
+    }{% endcomment %}
 
     var legendItem = cgv.legend.items(1);
     legendItem.color = 'green';
@@ -93,10 +98,10 @@
 
 
     var plot = new CGV.Plot(cgv, {
-      {% comment %}positions: [50, 200, 400, 500, 600, 800],
+      positions: [50, 200, 400, 500, 600, 800],
       scores: [0.4, 0.75, 0.25, 0.5, 0.6, 0.1],
-      baseline: 0.5,{% endcomment %}
-      source: test[5][0],
+      baseline: 0.5,
+      source: test[5][i],
       {% comment %}legendPositive: new CGV.LegendItem(cgv.legend, {swatchColor: 'blue', name: 'Plot +'}),
       legendNegative: new CGV.LegendItem(cgv.legend, {swatchColor: 'red', name: 'Plot -'})
 {% endcomment %}
