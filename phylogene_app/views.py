@@ -2,6 +2,8 @@ import json
 import sys
 
 import numpy
+import numpy as np
+from numpy import newaxis
 from pygenomeviz import GenomeViz
 from fuzzywuzzy import fuzz
 from detect_delimiter import detect
@@ -11,6 +13,8 @@ import uuid
 import mttkinter
 import math
 from math import *
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.figure_factory as ff
@@ -332,32 +336,132 @@ def run_algo(request):
                             "#d3277a", "#2ca1ae", "#9685eb", "#8a96c6", "#dba2e6", "#76fc1b", "#608fa4",
                             "#20f6ba", "#07d7f6", "#dce77a", "#77ecca"]
 
+            ultimatecolor2 = ['aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black',
+                             'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse',
+                             'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue',
+                             'darkcyan',
+                             'darkgoldenrod', 'darkgray', 'darkgreen', 'darkkhaki', 'darkmagenta', 'darkolivegreen',
+                             'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen', 'darkslateblue',
+                             'darkslategray', 'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue', 'dimgray',
+                             'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro',
+                             'ghostwhite', 'gold', 'goldenrod', 'gray', 'green', 'greenyellow', 'honeydew', 'hotpink',
+                             'indianred', 'indigo', 'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen',
+                             'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan', 'lightgoldenrodyellow',
+                             'lightgreen', 'lightgray', 'lightpink', 'lightsalmon', 'lightseagreen', 'lightskyblue',
+                             'lightslategray', 'lightsteelblue', 'lightyellow', 'lime', 'limegreen', 'linen', 'magenta',
+                             'maroon', 'mediumaquamarine', 'mediumblue', 'mediumorchid', 'mediumpurple',
+                             'mediumseagreen',
+                             'mediumslateblue', 'mediumspringgreen', 'mediumturquoise', 'mediumvioletred',
+                             'midnightblue',
+                             'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'navy', 'oldlace', 'olive',
+                             'olivedrab',
+                             'orange', 'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise',
+                             'palevioletred',
+                             'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'purple', 'red',
+                             'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell',
+                             'sienna', 'silver', 'skyblue', 'slateblue', 'slategray', 'snow', 'springgreen',
+                             'steelblue',
+                             'tan', 'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'white', 'whitesmoke',
+                             'yellow', 'yellowgreen']
+
             for i in range(len(new_fichier)):
                 new_names.append([new_fichier[i][0]])
                 del new_fichier[i][0]
                 del new_fichier[i][-2:]
 
-            print(new_names)
+            print(len(new_names))
+            print(entete_colonne_selected[:-2])
             # print(ceil((len(new_fichier)/len(new_fichier[0]))/len(new_fichier[0])))
 
             count_column = ceil((len(new_fichier)/len(new_fichier[0]))/len(new_fichier[0]))
 
-            for i in range(len(new_fichier)):
-                new_data_helper = []
-                for j in range(count_column):
-                    new_data_helper.append(new_fichier[j])
-                print(new_data_helper)
-
-
-
+            # 1d to 2d
+            # for i in range(len(new_fichier)):
+            #     new_data_helper = []
+            #     for j in range(count_column):
+            #         new_data_helper.append(new_fichier[j])
+            # print(new_data_helper)
+            #
             for i in range(len(new_fichier)):
                 sum_size_pie = 0
                 for j in range(len(new_fichier[i])):
                     sum_size_pie = int(sum_size_pie) + int(new_fichier[i][j])
-                pie_size.append([sum_size_pie])
+                pie_size.append(sum_size_pie)
+            print(pie_size)
 
-            print(len(pie_size))
-            return render(request, 'graph/multi_piechart_proportionnal.html', locals())
+            #2d to 3d
+            # X_data = np.array(new_fichier)
+            # b = X_data[..., newaxis]
+            # print(b[0][0])
+
+            plt.rcParams.update({'font.size': 5})
+            # fig, axs = plt.subplots(len(b), len(b[0]), figsize=(20, 14))  # figsize=(10, 7)
+            fig, axs = plt.subplots(1, len(pie_size), figsize=(30, 21))  # figsize=(10, 7)
+
+            # for x in range(len(b[0])):
+            #     for z in range(len(b)):
+            #         print("x",x)
+            #         print("z",z)
+            #
+            # for x in range(7):
+            #     axs[0][x].pie(data[0][x], colors=colors, startangle=90,
+            #                   radius=0.002 + math.log(sizes[0][x], 25))  # labels=labels  , autopct='%1.1f%%',
+            #     # axs[0][x].set_title(communes[0][x])  #print("We're on time %d" % (x))
+            #     axs[1][x].pie(data[1][x], colors=colors, startangle=90,
+            #                   radius=0.002 + math.log(sizes[1][x], 25))  # labels=labels,
+            #     # axs[1][x].set_title(communes[1][x])  #print("We're on time %d" % (x))
+            #     axs[2][x].pie(data[2][x], colors=colors, startangle=90,
+            #                   radius=0.002 + math.log(sizes[2][x], 25))  # labels=labels,
+            #     # axs[2][x].set_title(communes[2][x])  #print("We're on time %d" % (x)),  autopct='%1.1f%%',
+
+
+            for x in range(len(pie_size)):
+                axs[x].pie(new_fichier[x], colors=ultimatecolor, startangle=90,
+                              radius=1 + math.log(pie_size[x], 25), textprops={'size': 'smaller'}, labels = entete_colonne_selected[:-2])  # labels=labels  , autopct='%1.1f%%',
+                axs[x].set_title(new_names[x])
+
+            plt.subplots_adjust(wspace=2)
+            # plt.show()
+            # plotting the results:
+
+            plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+                       fancybox=True, shadow=True, ncol=5)
+
+            # pc ipg
+            BASE_DIR1 = os.path.dirname(os.path.abspath(__file__))
+            os.chdir(BASE_DIR1 + "/static")
+
+            filename = str(uuid.uuid4()) + ".png"
+            plt.savefig(BASE_DIR1 + "/static/machine_learning/" + filename, dpi=100, bbox_inches='tight')
+
+            # For accessing the file in a folder contained in the current folder
+            file_name = os.path.join('../templates/graph/multi_piechart_proportionnal.html')
+            text_file = open(file_name, "w+")
+
+            # OUTPUT AN HTML FILE
+            html_string = '''
+                                                    <html>
+                                                        <head>
+                                                          <meta charset="utf-8">
+                                                          <meta name="viewport" content="width=device-width, initial-scale=1">
+                                                          <title>multip</title>
+                                                        </head>
+                                                        <body>
+                                                            <a href="../static/machine_learning/{file}" download>Link 1</a>                                                      
+
+                                                        </body>
+                                                    </html>
+                                                '''
+            html = html_string.format(file=filename)
+
+            with text_file as f:
+                f.write(html)
+
+            text_file.close()
+
+            context = {'html': html}
+            plt.close()
+            return render(request, 'graph/multi_piechart_proportionnal.html', context)
 
 
         if algo == "Minimun Spanning Tree":
