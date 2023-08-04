@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 # from schema_graph.views import Schema
 from django.conf import settings
@@ -20,10 +20,12 @@ urlpatterns = [
                 path('profile/<username>', views.profile, name="profile"),
                 path('adduserfile', views.adduserfile, name='adduserfile'),
                 #path('delete/<int:id>/', views.delete_file, name='delete-file')
+                path('django_plotly_dash/', include('django_plotly_dash.urls')),
                 path('delete/<int:pk>/', views.delete_file, name='delete-file' ),
+                path('other_tools/', views.genomics, name='other_tools'),
                 # path("schema/", Schema.as_view()), (à retirer en production)
                 # path('listfiles', views.listfiles, name='listfiles'),
-                  # path('test/', views.test, name='phylogene_test'),
+                # path('test/', views.test, name='phylogene_test'),
                 # path('Rtest/', views.run_algo, name='Rtest'),
                 # path('chart/', views.chart, name='chart'),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

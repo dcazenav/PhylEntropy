@@ -1,0 +1,16 @@
+{%load plotly_dash%}
+<!DOCTYPE html>
+<html lang="en">
+{%block content%}
+
+<head>
+    <meta charset="UTF-8">
+    <title>testdash</title>
+</head>
+<body>
+    <div id="graph" style="height: 100px">
+      {%plotly_app name="SimpleExample"%}
+    </div>
+{%endblock%}
+</body>
+</html>

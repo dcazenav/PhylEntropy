@@ -49,12 +49,13 @@ INSTALLED_APPS = [
     'corsheaders',
     'phylogene_app.apps.PhylogeneAppConfig',
     'django_extensions',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     # 'schema_graph', retirer en production
     # 'django_cleanup.apps.CleanupConfig',
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',

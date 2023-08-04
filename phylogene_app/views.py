@@ -1,6 +1,13 @@
 import json
 import sys
 
+import plotly.express as px
+from django_plotly_dash import DjangoDash
+import dash
+from dash import Dash, dcc, Input, Output
+from dash import html as dashhtml
+import dash_bio as dashbio
+import urllib.request as urlreq
 import numpy
 import numpy as np
 from numpy import newaxis
@@ -67,6 +74,8 @@ def links(request):
 def credits(request):
     return render(request, "phylEntropy/credits.html")
 
+def genomics(request):
+    return render(request, "phylEntropy/other_tools.html")
 
 def register(request):
     if request.user.is_authenticated:
@@ -611,7 +620,7 @@ def run_algo(request):
                     mode='markers',
                     name=name,
                     marker=dict(
-                        symbol="diamond",
+                        symbol="circle",
                         color=col,
                         size=12,
                         line=dict(
@@ -1636,3 +1645,129 @@ def run_algo(request):
 
             return render(request, 'fuzzylogic/fuzzywuzzy.html', context)
 
+        if algo == "dashclustermap" :
+            app = Dash(__name__)
+
+            df = pd.read_csv('https://git.io/clustergram_brain_cancer.csv').set_index('ID_REF')
+
+            columns = list(df.columns.values)
+            rows = list(df.index)
+
+            app.layout = dashhtml.Div([
+                "Rows to display",
+                dcc.Dropdown(
+                    id='dropdown',
+                    options=[
+                        {'label': row, 'value': row} for row in list(df.index)
+                    ],
+                    value=rows[:10],
+                    multi=True
+                ),
+
+                dashhtml.Div(id='graph')
+            ])
+
+            @app.callback(
+                Output('graph', 'children'),
+                Input('dropdown', 'value')
+            )
+            def update_clustergram(rows):
+                if len(rows) < 2:
+                    return "Please select at least two rows to display."
+
+                return dcc.Graph(figure=dashbio.Clustergram(
+                    data=df.loc[rows].values,
+                    column_labels=columns,
+                    row_labels=rows,
+                    color_threshold={
+                        'row': 250,
+                        'col': 700
+                    },
+                    hidden_labels='row',
+                    height=800,
+                    width=700
+                ))
+
+            print(__name__)
+            if __name__ == 'phylogene_app.views':
+                app.run_server(debug=False)
+
+            return render(request, 'graph/dashclustermap.html', locals())
+
+        if algo == "testdash":
+            app = DjangoDash('SimpleExample')  # replaces dash.Dash
+
+            print(entete_colonne_selected[:-2])
+            #df = pd.read_csv('https://git.io/clustergram_brain_cancer.csv').set_index('ID_REF')
+            df = pd.DataFrame(fichier[1:], columns=fichier[0]).set_index('ID')
+            df[entete_colonne_selected[:-2]] = df[entete_colonne_selected[:-2]].astype(object).astype(float)
+            df = df.drop(columns=['Type', 'Location'])
+            print(df.dtypes)
+
+
+            columns = list(df.columns.values)
+            rows = list(df.index)
+
+            app.layout = dashhtml.Div([
+                "Rows to display",
+                dcc.Dropdown(
+                    id='dropdown',
+                    options=[
+                        {'label': row, 'value': row} for row in list(df.index)
+                    ],
+                    value=rows[:10],
+                    multi=True,
+                    style={"height": "100vh", 'width': "100vh"},
+                ),
+
+                dashhtml.Div(id='graph')
+            ])
+
+            @app.callback(
+                Output('graph', 'children'),
+                Input('dropdown', 'value')
+            )
+            def update_clustergram(rows):
+                if len(rows) < 2:
+                    return "Please select at least two rows to display."
+
+                return dcc.Graph(figure=dashbio.Clustergram(
+                    data=df.loc[rows].values,
+                    column_labels=columns,
+                    row_labels=rows,
+                    color_threshold={
+                        'row': 250,
+                        'col': 700
+                    },
+                    hidden_labels='row',
+                    height=800,
+                    width=700
+                ))
+
+            return render(request, 'machine_learning/testdash.html', locals())
+
+        if algo == "testheatmapdash":
+            print(fichier)
+            z = [[.1, .3, .5, .7, .9],
+                 [1, .8, .6, .4, .2],
+                 [.2, 0, .5, .7, .9],
+                 [.9, .8, .4, .2, 0],
+                 [.3, .4, .5, .7, 1]]
+
+            fig = px.imshow(data, text_auto=True, aspect="auto")
+            fig.show()
+            return render(request, 'machine_learning/testheatmapdash.html', locals())
+
+        if algo == "testaligmentchartdash":
+            app = DjangoDash('aligmentchart')  # replaces dash.Dash
+
+            datafasta = urlreq.urlopen('https://git.io/alignment_viewer_p53.fasta').read().decode('utf-8')
+
+            app.layout = dashhtml.Div([
+                dashbio.AlignmentChart(
+                    id='alignment-viewer',
+                    data=datafasta,
+                ),
+            ])
+
+            return render(request, 'machine_learning/testaligmentchart.html', locals())

@@ -9,7 +9,7 @@ colour==0.1.5
 contourpy==1.0.5
 cycler==0.11.0
 dash==2.6.2
-dash-bio==1.0.1
+dash-bio==1.0.2
 dash-core-components==2.0.0
 dash-html-components==2.0.0
 dash-table==5.0.0
