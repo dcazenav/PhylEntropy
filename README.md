@@ -1,4 +1,4 @@
-# Phylentropy
+# phylEntropy
 
 
 A Django web application to make simple data analysis and vizualisation.
