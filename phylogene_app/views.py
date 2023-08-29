@@ -4,7 +4,7 @@ import sys
 import plotly.express as px
 from django_plotly_dash import DjangoDash
 import dash
-from dash import Dash, dcc, Input, Output
+from dash import Dash, dcc, Input, Output, callback, State
 from dash import html as dashhtml
 import dash_bio as dashbio
 import urllib.request as urlreq
@@ -259,6 +259,49 @@ def import_data(request):
     #context = {'files': files}
     return render(request, 'phylEntropy/import_data.html', locals())
 
+def import_data_other_tool(request):
+    error = False
+    info = []
+    files = UserFilesForm.objects.all()
+    if 'import' in request.POST:
+        fasta_file = request.FILES["fasta_file"]
+        # print(request.FILES["csv_file"])
+        if not fasta_file.name.endswith(('.fasta')):
+            error = True
+            return render(request, 'phylEntropy/import_data_other_tools.html', locals())
+        else:
+            fasta_file = request.FILES["fasta_file"].read().decode("utf-8")
+            # request.session['info'] = info
+            request.session['info'] = fasta_file
+            return redirect(import_data_other_tool)
+
+    elif 'import_load_other' in request.POST:
+    #     #print(request.get_all('csv_file'))
+    #     #csv_file = request.FILES["csv_file"]
+    #     csv_file2 = request.FILES['csv_file2']
+    #     print(request.FILES['csv_file2'])
+    #     if not csv_file2.name.endswith('.csv'):
+    #         error = True
+    #         return render(request, 'phylEntropy/import_data.html', locals())
+    #     else:
+
+        # print(request.POST)
+        fasta_file2 = request.FILES["fasta_file2"].read().decode("utf-8").split()
+        # print(csv_file2)
+
+        for elmt in fasta_file2:
+            info.append(elmt.split(detect(elmt)))
+        request.session['info'] = info
+        return redirect(import_data_other_tool)
+
+    if 'info' in request.session:
+        fichier = request.session['info']
+        info_submit = True
+    else:
+        info_submit = False
+    #context = {'files': files}
+    return render(request, 'phylEntropy/import_data_other_tools.html', locals())
+
 def ajax_1(request):
     if request.method == 'POST':
         data = json.loads(request.POST['tasks'])
@@ -269,6 +312,117 @@ def ajax_1(request):
         request.session['labelSeq'] = data2
         request.session['entete'] = index_entete
         return HttpResponse('')
+
+def ajax_other_tools(request):
+    if request.method == 'POST':
+        data = request.POST['tasks']
+        request.session['data_file2'] = data
+        request.session['algo2'] = request.POST['algo2']
+        return HttpResponse('')
+
+def run_algo_other_tools(request):
+    if 'data_file2' in request.session and 'algo2' in request.session:
+        data = request.session['data_file2']
+        fichier = request.session['info']
+        algo = request.session['algo2']
+
+        if algo == "testaligmentchartdash":
+            app = DjangoDash('aligmentchart')  # replaces dash.Dash
+
+            # datafasta = urlreq.urlopen('https://git.io/alignment_viewer_p53.fasta').read().decode('utf-8')
+            datafasta = data
+
+            app.layout = dashhtml.Div([
+                dashbio.AlignmentChart(
+                    id='alignment-viewer',
+                    data=datafasta,
+                ),
+            ], style={'marginLeft': 10, 'marginRight': 10, 'marginTop': 10, 'marginBottom': 10,
+           'backgroundColor':'#F7FBFE',
+           'border': 'thin lightgrey dashed', 'padding': '6px 0px 0px 8px'})
+
+            return render(request, 'machine_learning/testaligmentchart.html', locals())
+
+        if algo == "circosdash":
+            app = DjangoDash('circos')  # replaces dash.Dash
+
+            # data = urlreq.urlopen(
+            #     "https://git.io/circos_graph_data.json"
+            # ).read().decode("utf-8")
+            datafasta = data
+
+            circos_graph_data = json.loads(datafasta)
+
+            app.layout = dashhtml.Div(
+                [
+                    dashbio.Circos(
+                        id="my-dashbio-phylentropy-circos",
+                        layout=circos_graph_data["GRCh37"],
+                        selectEvent={"0": "hover"},
+                        tracks=[
+                            {
+                                "type": "CHORDS",
+                                "data": circos_graph_data["chords"],
+                                "config": {
+                                    "tooltipContent": {
+                                        "source": "source",
+                                        "sourceID": "id",
+                                        "target": "target",
+                                        "targetID": "id",
+                                        "targetEnd": "end",
+                                    }
+                                },
+                            }
+                        ],
+                    ),
+                    "Graph type:",
+                    dcc.Dropdown(
+                        id="histogram-chords-default-circos",
+                        options=[{"label": x, "value": x} for x in ["histogram", "chords"]],
+                        value="chords",
+                    ),
+                    "Event data:",
+                    dashhtml.Div(id="default-circos-output-phylentropy"),
+                ], style={'marginLeft': 10, 'marginRight': 10, 'marginTop': 10, 'marginBottom': 10,
+           'backgroundColor':'#F7FBFE',
+           'border': 'thin lightgrey dashed', 'padding': '6px 0px 0px 8px'}
+            )
+
+            @callback(
+                Output("default-circos-output", "children"),
+                Input("my-dashbio-default-circos", "eventDatum"),
+            )
+            def update_output(value):
+                if value is not None:
+                    return [dashhtml.Div("{}: {}".format(v.title(), value[v])) for v in value.keys()]
+                return "There are no event data. Hover over a data point to get more information."
+
+            @callback(
+                Output("my-dashbio-default-circos", "tracks"),
+                Input("histogram-chords-default-circos", "value"),
+                State("my-dashbio-default-circos", "tracks"),
+            )
+            def change_graph_type(value, current):
+                if value == "histogram":
+                    current[0].update(data=circos_graph_data["histogram"], type="HISTOGRAM")
+
+                elif value == "chords":
+                    current[0].update(
+                        data=circos_graph_data["chords"],
+                        type="CHORDS",
+                        config={
+                            "tooltipContent": {
+                                "source": "source",
+                                "sourceID": "id",
+                                "target": "target",
+                                "targetID": "id",
+                                "targetEnd": "end",
+                            }
+                        },
+                    )
+                return current
+
+            return render(request, 'machine_learning/testcircosdash.html', locals())
 
 
 def run_algo(request):
@@ -1757,17 +1911,3 @@ def run_algo(request):
             fig = px.imshow(data, text_auto=True, aspect="auto")
             fig.show()
             return render(request, 'machine_learning/testheatmapdash.html', locals())
-
-        if algo == "testaligmentchartdash":
-            app = DjangoDash('aligmentchart')  # replaces dash.Dash
-
-            datafasta = urlreq.urlopen('https://git.io/alignment_viewer_p53.fasta').read().decode('utf-8')
-
-            app.layout = dashhtml.Div([
-                dashbio.AlignmentChart(
-                    id='alignment-viewer',
-                    data=datafasta,
-                ),
-            ])
-
-            return render(request, 'machine_learning/testaligmentchart.html', locals())
