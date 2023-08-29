@@ -63,9 +63,10 @@ zipp==3.9.0
 detect_delimiter
 captcha~=0.4
 django-recaptcha
-pygenomeviz
+pygenomeviz~=0.3.2
 django-cleanup
-fuzzywuzzy
+fuzzywuzzy~=0.18.0
 Levenshtein
 django-extensions
 django-schema-graph
+django-plotly-dash
