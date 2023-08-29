@@ -34,7 +34,7 @@
                     <label class="text-primary">Upload Your File</label>
                     <input name="fasta_file" id="fasta_file" type="file" class="form-control" >
                 </div>
-                <button id="button_file" name="import" type="submit" class="offset-md-6 btn btn-primary" hidden="hidden"> Load File </button>
+                <button id="button_file_other" name="import_other" type="submit" class="offset-md-6 btn btn-primary" hidden="hidden"> Load File </button>
 
                 <div class="row">
                     <div class="text-center">
@@ -47,7 +47,7 @@
 <script type="text/javascript">
 
     document.getElementById("fasta_file").onchange = function() {
-        document.getElementById("button_file").click();
+        document.getElementById("button_file_other").click();
     }
 
 </script>
@@ -236,14 +236,14 @@ $(document).on('submit','#form1',function(e)
         type:'POST',
         url: '{% url 'phylogene_ajax_other_tools' %}',
         data:{
-                tasks: document.getElementById("message_fasta").value,
+                tasks2: document.getElementById("message_fasta").value,
                 algo2: nom_algo,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
              },
          success: function()
         {
-           url_algo ='{% url 'phylogene_run_algo_other_tools' %}';
-           window.open( url_algo , '_blank');
+           url_algo2 ='{% url 'phylogene_run_algo_other_tools' %}';
+           window.open( url_algo2 , '_blank');
         }
     });
 

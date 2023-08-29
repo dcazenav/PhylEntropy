@@ -263,16 +263,16 @@ def import_data_other_tool(request):
     error = False
     info = []
     files = UserFilesForm.objects.all()
-    if 'import' in request.POST:
+    if 'import_other' in request.POST:
         fasta_file = request.FILES["fasta_file"]
         # print(request.FILES["csv_file"])
-        if not fasta_file.name.endswith(('.fasta')):
+        if not fasta_file.name.endswith(('.fasta','.json','.fna')):
             error = True
             return render(request, 'phylEntropy/import_data_other_tools.html', locals())
         else:
             fasta_file = request.FILES["fasta_file"].read().decode("utf-8")
             # request.session['info'] = info
-            request.session['info'] = fasta_file
+            request.session['info_other'] = fasta_file
             return redirect(import_data_other_tool)
 
     elif 'import_load_other' in request.POST:
@@ -291,11 +291,11 @@ def import_data_other_tool(request):
 
         for elmt in fasta_file2:
             info.append(elmt.split(detect(elmt)))
-        request.session['info'] = info
+        request.session['info_other'] = info
         return redirect(import_data_other_tool)
 
-    if 'info' in request.session:
-        fichier = request.session['info']
+    if 'info_other' in request.session:
+        fichier = request.session['info_other']
         info_submit = True
     else:
         info_submit = False
@@ -315,7 +315,7 @@ def ajax_1(request):
 
 def ajax_other_tools(request):
     if request.method == 'POST':
-        data = request.POST['tasks']
+        data = request.POST['tasks2']
         request.session['data_file2'] = data
         request.session['algo2'] = request.POST['algo2']
         return HttpResponse('')

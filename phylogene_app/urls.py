@@ -9,7 +9,6 @@ urlpatterns = [
                 path('', views.intro, name='intro'),
                 path('import_data/', views.import_data, name='phylogene_import'),
                 path('import_data_other_tools/', views.import_data_other_tool, name='phylogene_import_other'),
-
                 path('ajax1/', views.ajax_1, name='phylogene_ajax1'),
                 path('ajax_other_tools/', views.ajax_other_tools, name='phylogene_ajax_other_tools'),
                 path('run_algo/', views.run_algo, name='phylogene_run_algo'),
