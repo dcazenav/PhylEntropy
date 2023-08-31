@@ -323,7 +323,7 @@ def ajax_other_tools(request):
 def run_algo_other_tools(request):
     if 'data_file2' in request.session and 'algo2' in request.session:
         data = request.session['data_file2']
-        fichier = request.session['info']
+        fichier = request.session['info_other']
         algo = request.session['algo2']
 
         if algo == "testaligmentchartdash":
